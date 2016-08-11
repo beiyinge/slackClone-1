@@ -67,9 +67,9 @@ function createDB (filename){
             db.run(createTeamUsersTableSql);
             db.run(createChannelsTableSql);
             db.run(createMessageTableSql);
-            db.close()
+            db.close();
         
-        }
+        });
     }
 }
 
@@ -98,7 +98,7 @@ exports.InsertTeamUsers=InsertTeamUsers;
 
 function InsertTeamUsers(userid, teamid, dbConn){
     var insertTeamUsers = "INSERT INTO TEAMUSERS ( USERID,TEAMID) " +
-             "VALUES (" + userid + ", " + teamid)";
+             "VALUES (" + userid + ", " + teamid + ")";
     dbConn.run(insertTeamUsers)
 }
 
