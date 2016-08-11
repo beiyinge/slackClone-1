@@ -11,6 +11,7 @@ var userid;
 var filename = 'slack.db';
 
 exports.createDB=createDB;
+
 function createDB (filename){
     var dbexists = false;
     try {
@@ -124,3 +125,35 @@ function InsertMsgData(msg, channelId, userId, dbConn){
     dbConn.run(insertMSG);            
         
 }
+
+//------------------------------------------
+ 
+ var teamName = function getChannelsFromTeam(dbConn, teamName){
+     
+     var sql= "SELECT NAME FROM CHANNELS WHERE TEAMID = (SELECT TEAMID FROM TEAM WHERE NAME = '" + teamName + "') ORDER BY NAME";
+
+      var channel = [];
+	    //var data[];
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            query, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		channel.push(row.NAME);
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	//callBack(err, JSON.stringify(followers));
+	                	//resolve(JSON.stringify(user));
+                        resolve (channel);
+	            	}
+	           }
+	        );
+	    });
+ }
