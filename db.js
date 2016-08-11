@@ -28,17 +28,17 @@ function createDB (filename){
 
         db.serialize(function() {
             var createUserTableSql = "CREATE TABLE IF NOT EXISTS USERS " +
-                        "(USERID         INTEGER AUTOINCREMENT    PRIMARY KEY     NOT NULL," +
+                        "(USERID         INTEGER     PRIMARY KEY   AUTOINCREMENT  NOT NULL," +
                         " NAME           CHAR(50)                    NOT NULL, " + 
                         " PASSWORD       CHAR(50)                    NOT NULL, " +
                         " EMAIL          CHAR(50)                    NOT NULL )"; 
 
             var createTeamTableSql = "CREATE TABLE IF NOT EXISTS TEAM " +
-                        "(TEAMID        INTEGER AUTOINCREMENT    PRIMARY KEY     NOT NULL," +
+                        "(TEAMID        INTEGER     PRIMARY KEY AUTOINCREMENT    NOT NULL," +
                         " NAME         CHAR(50)   NOT NULL)"; 
 
             var createTeamUsersTableSql = "CREATE TABLE IF NOT EXISTS TEAMUSERS " +
-                        "(ID         INTEGER AUTOINCREMENT    PRIMARY KEY     NOT NULL," +
+                        "(ID         INTEGER     PRIMARY KEY    AUTOINCREMENT NOT NULL," +
                         " TEAMID         INTEGER, " +
                         " USERID         INTEGER , " +
                         " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID)," +
@@ -46,7 +46,7 @@ function createDB (filename){
 
 
             var createChannelsTableSql = "CREATE TABLE IF NOT EXISTS CHANNELS " +
-                        "(ID         INTEGER AUTOINCREMENT    PRIMARY KEY     NOT NULL," +
+                        "(ID         INTEGER     PRIMARY KEY   AUTOINCREMENT  NOT NULL," +
                         "NAME        CHAR(50)   NOT NULL," +
                         "DESC         CHAR(250) ,    " +
                         " TEAMID         INTEGER, " +
@@ -54,7 +54,7 @@ function createDB (filename){
                         " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID)" ; 
 
                 var createMessageTableSql = "CREATE TABLE IF NOT EXISTS MESSAGE " +
-                    "(ID         INTEGER AUTOINCREMENT    PRIMARY KEY     NOT NULL," +
+                    "(ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
                     " MSG           TEXT , " +
                     " CHANNELID     INTEGER,"+
                     " USERID         INTEGER , " +
@@ -150,8 +150,8 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 	            		reject(err);
 	            	}else{
 	                	//callBack(err, JSON.stringify(followers));
-	                	//resolve(JSON.stringify(user));
-                        resolve (channel);
+	                	resolve(JSON.stringify(channel));
+                        //resolve (channel);
 	            	}
 	           }
 	        );
