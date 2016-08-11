@@ -49,7 +49,7 @@ describe("DB module",()=>{
     it('given team name, return all channel names from team',()=>{
        
         var teamName = 'IronYard';
-        var expected=['4Week', 'General'];
+        var expected=[{'channel':'4Week'}, {'channel':'General'}];
         var actual =db.getChannelsFromTeam(dbTest, teamName);
         assert(actual,expected);
     });
