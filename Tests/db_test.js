@@ -7,6 +7,7 @@ var db=require ('../db.js');
 var filename="testSlack.db"
 
 db.createDB(filename);
+
 var dbTest=  new sqlite3.Database(filename);
 
 function PropData(){
@@ -31,85 +32,92 @@ function PropData(){
     
 }
 
-PropData();
+//PropData();
 
 
-// describe("DB module",()=>{
+describe("DB module",()=>{
 
-//     var conn;
+    before(()=>{
+        PropData();
+
+    });
+    after(()=>{
+        dbTest.rollback;
+    });
+  
    
-//     it('given team name, return all channel names from team',()=>{
+    it('given team name, return all channel names from team',()=>{
        
-//         var teamName = 'Yankees';
-//         var expected=['Orange', 'Blue', 'Red'];
-//         var actual =db.getChannelsFromTeam(conn, teamName);
-//         assert(actual,expected);
-//     });
+        var teamName = 'IronYard';
+        var expected=['4Week', 'General'];
+        var actual =db.getChannelsFromTeam(dbTest, teamName);
+        assert(actual,expected);
+    });
 
-//     //----------------------------------------
+    //----------------------------------------
 
-//       it('given channel, return all users',()=>{
+      it('given channel, return all users',()=>{
        
-//         var channel = 'bootCamp';
-//         var expected=['Zedong','Chedva','Brian'];
-//         var actual =db.getUsersFromChannel(conn, channel);
-//         assert(actual,expected);
-//     });
+        var channel = 'bootCamp';
+        var expected=['Zedong','Chedva','Brian'];
+        var actual =db.getUsersFromChannel(conn, channel);
+        assert(actual,expected);
+    });
 
-//     //--------------------------------------
+    //--------------------------------------
 
 
-//      it('given user, get channels',()=>{
+     it('given user, get channels',()=>{
        
-//         var user = 'Zedong';
-//         var expected=['General','bootCamp'];
-//         var actual =db.getChannelFromUsers(conn, channel);
-//         assert(actual,expected);
-//     });
+        var user = 'Zedong';
+        var expected=['General','bootCamp'];
+        var actual =db.getChannelFromUsers(conn, channel);
+        assert(actual,expected);
+    });
 
 
-//     //--------------------------------------------
-//      it('given user name, return  team',()=>{
+    //--------------------------------------------
+     it('given user name, return  team',()=>{
         
-//         var userName = 'Brian';
-//         var expected=['IronYard'];
-//         var actual =db.getChannels(conn, userName);
-//         assert(actual,expected);
-//     });
-//     //-----------------------------------------------------------
+        var userName = 'Brian';
+        var expected=['IronYard'];
+        var actual =db.getChannels(conn, userName);
+        assert(actual,expected);
+    });
+    //-----------------------------------------------------------
 
-//      it('given channel name, return all msgs',()=>{
-//         conn={
-//             insert: function (){
+     it('given channel name, return all msgs',()=>{
+        conn={
+            insert: function (){
 
-//             },
-//             select: function (){
-//                 return ['this is a test','and another test'];
-//             }
-//         }
-//         var channel = 'bootCamp';
-//         var expected=['this is a test','and another test'];
-//         var actual =db.getChannels(conn, channel);
-//         assert(actual,expected);
-//     });
+            },
+            select: function (){
+                return ['this is a test','and another test'];
+            }
+        }
+        var channel = 'bootCamp';
+        var expected=['this is a test','and another test'];
+        var actual =db.getChannels(conn, channel);
+        assert(actual,expected);
+    });
 
-//     //--------------------------------------------
-//      it('insert user',()=>{
-//         conn={
-//             insert: function (){
+    //--------------------------------------------
+     it('insert user',()=>{
+        conn={
+            insert: function (){
 
-//             },
-//             select: function (){
-//                 return ['this is a test','and another test'];
-//             }
-//         }
-//         var channel = 'bootCamp';
-//         var expected=['this is a test','and another test'];
-//         var actual =db.getChannels(conn, channel);
-//         assert(actual,expected);
-//     })
+            },
+            select: function (){
+                return ['this is a test','and another test'];
+            }
+        }
+        var channel = 'bootCamp';
+        var expected=['this is a test','and another test'];
+        var actual =db.getChannels(conn, channel);
+        assert(actual,expected);
+    })
 
-// });
+});
 
-// //--------------------------------------------------------------------
+//--------------------------------------------------------------------
 
