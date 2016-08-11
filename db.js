@@ -1,7 +1,7 @@
 
 
 
-var express = require('exress');
+var express = require('express');
 var app=express();
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
@@ -119,7 +119,7 @@ exports.InsertMsgData=InsertMsgData;
 
 function InsertMsgData(msg, channelId, userId, dbConn){
      var insertMSG= "INSERT INTO MESSAGE ( MSG, CHANNELID, USERID)  " +
-        "VALUES ('" + msg + "', " + channelId + ", " + userId + "")";
+        "VALUES ('" + msg + "', " + channelId + ", " + userId + ")";
 
     dbConn.run(insertMSG);            
         
