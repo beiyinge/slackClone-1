@@ -75,8 +75,8 @@ describe("DB module",()=>{
 it('given user, get channels',(done)=>{
        
         var userName = 1;
-        var expected=[{'channel:':'4Week'}, {'channel':'General'}];
-
+        var expected=JSON.stringify([{'channel':'4Week'}, {'channel':'General'}]);
+        console.log ("expected-" + expected);
          db.getChannelsForUser(dbTest,userName).should.eventually.equal(expected).notify(done);
 
     });
@@ -90,8 +90,8 @@ it('given user, get channels',(done)=>{
 
 it('given user name, return teams',(done)=>{
        
-        var userName = 'Zedong';
-        var expected=[{'team:':'IronYard'}];
+        var userName = '2';
+        var expected=JSON.stringify([{'team':'IronYard'}]);
         db.getTeamsForUser(dbTest,userName).should.eventually.equal(expected).notify(done);
     });
 

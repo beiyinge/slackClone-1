@@ -137,7 +137,7 @@ function getChannelsFromTeam (dbConn, team){
      var sql= "SELECT NAME FROM CHANNELS WHERE TEAMID = " + team + " ORDER BY NAME";
 
       var channel = [];
-	    //var data[];
+	    
 	    dbConn.serialize(function() {
             
 	        dbConn.each(
@@ -148,21 +148,18 @@ function getChannelsFromTeam (dbConn, team){
 	            		reject (err);
 	            	}else{  
 	            		channel.push({"channel":row.NAME});
-                       // channel.push(row.NAME);
-                       // console.log ("push - " + row.NAME);
+                      
 	                	
 	                }
 	            },
 	            function (err, nRows) {
 	            	if (err){
 	            		reject(err);
-                       // console.log ("promise reject");
+                     
 	            	}else{
-	                	//callBack(err, JSON.stringify(followers));
-                       // console.log(JSON.stringify(channel));
-                        //console.log("promise: - " + channel);
+	                
 	                	resolve(JSON.stringify(channel));//
-                        //resolve (channel);
+                    
 	            	}
 	           }
 	        );
@@ -179,17 +176,16 @@ function getChannelsFromTeam (dbConn, team){
 
 function getUsersFromChannel (dbConn, channel){
      return new Promise((resolve,reject)=>{
-     var sql= "select distinct users.name from users" +  
-        "inner join teamusers on users.userid=teamusers.userid" +
-        "inner join team on teamusers.teamid=team.teamid" +
-        "inner join channels on channels.teamid=team.teamid" +
-        "where channels.id =" + channel + " ORDER BY USERS.NAME";
+     var sql= "SELECT DISTINCT USERS.NAME FROM USERS " +  
+        "INNER JOIN TEAMUSERS ON USERS.USERID=TEAMUSERS.USERID " +
+        "INNER JOIN TEAM ON TEAMUSERS.TEAMID=TEAM.TEAMID " +
+        "INNER JOIN CHANNELS ON CHANNELS.TEAMID=TEAM.TEAMID " +
+        "WHERE CHANNELS.ID = " + channel + " ORDER BY USERS.NAME";
 
       var users = [];
 	    //var data[];
 	    dbConn.serialize(function() {
-            console.log ("here");
-	        dbConn.each(
+              dbConn.each(
 	            sql, 
 	            function(err, row) {
 	            	if (err){
@@ -203,9 +199,8 @@ function getUsersFromChannel (dbConn, channel){
 	            	if (err){
 	            		reject(err);
 	            	}else{
-	                	//callBack(err, JSON.stringify(followers));
 	                	resolve(JSON.stringify(users));
-                        //resolve (channel);
+                        
 	            	}
 	           }
 	        );
@@ -219,9 +214,10 @@ function getUsersFromChannel (dbConn, channel){
 
 function getChannelsForUser (dbConn, user){
      return new Promise((resolve,reject)=>{
-     var sql= "select distinct channels.name from channels " +
-        "inner join teamusers on teamusers.teamid=channels.teamid " +
-        "where userid=1" + user + ";) ORDER BY NAME";
+     var sql= "SELECT DISTINCT CHANNELS.NAME FROM CHANNELS  " +
+        "INNER JOIN TEAMUSERS ON TEAMUSERS.TEAMID = CHANNELS.TEAMID " +
+        "WHERE USERID = " + user + " ORDER BY NAME";
+    
 
       var channels = [];
 	    //var data[];
@@ -232,7 +228,7 @@ function getChannelsForUser (dbConn, user){
 	            	if (err){
 	            		reject (err);
 	            	}else{  
-	            		channel.push({"channel" : row.NAME});
+	            		channels.push({"channel" : row.NAME});
 	                	
 	                }
 	            },
@@ -240,9 +236,10 @@ function getChannelsForUser (dbConn, user){
 	            	if (err){
 	            		reject(err);
 	            	}else{
-	                	//callBack(err, JSON.stringify(followers));
+	                	
+                        console.log("actual-" + JSON.stringify(channels));
 	                	resolve(JSON.stringify(channels));
-                        //resolve (channel);
+                        
 	            	}
 	           }
 	        );
@@ -255,12 +252,14 @@ function getChannelsForUser (dbConn, user){
 
 function getTeamsForUser (dbConn, user){
      return new Promise((resolve,reject)=>{
-     var sql= "select distinct channels.name from channels " +
-        "inner join teamusers on teamusers.teamid=channels.teamid " +
-        "where userid=1" + user + ";) ORDER BY NAME";
-
+     var sql= "SELECT TEAM.NAME FROM TEAM " + 
+            "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
+            "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
+            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";
+        
+     
       var team = [];
-	    //var data[];
+	   
 	    dbConn.serialize(function() {
 	        dbConn.each(
 	            sql, 
@@ -268,7 +267,7 @@ function getTeamsForUser (dbConn, user){
 	            	if (err){
 	            		reject (err);
 	            	}else{  
-	            		channel.push({"channel" : row.NAME});
+	            		team.push({"team" : row.NAME});
 	                	
 	                }
 	            },
@@ -276,9 +275,8 @@ function getTeamsForUser (dbConn, user){
 	            	if (err){
 	            		reject(err);
 	            	}else{
-	                	//callBack(err, JSON.stringify(followers));
-	                	resolve(JSON.stringify(channels));
-                        //resolve (channel);
+	                	resolve(JSON.stringify(team));
+                        
 	            	}
 	           }
 	        );
