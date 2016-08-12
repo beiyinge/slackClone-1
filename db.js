@@ -129,6 +129,8 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 
 //------------------------------------------
  
+ exports.getChannelsFromTeam=getChannelsFromTeam;
+ 
  var teamName = function getChannelsFromTeam(dbConn, teamName){
      
      var sql= "SELECT NAME FROM CHANNELS WHERE TEAMID = (SELECT TEAMID FROM TEAM WHERE NAME = '" + teamName + "') ORDER BY NAME";
@@ -157,4 +159,4 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 	           }
 	        );
 	    });
- }
+ };
