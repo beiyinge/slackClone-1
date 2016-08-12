@@ -283,3 +283,177 @@ function getTeamsForUser (dbConn, user){
 	    });
      });
  };
+
+ //------------------------------------------------------------
+
+ exports.getMsgForChannel=getMsgForChannel;
+
+ function getChannelsForUser (dbConn, user){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT DISTINCT CHANNELS.NAME FROM CHANNELS  " +
+        "INNER JOIN TEAMUSERS ON TEAMUSERS.TEAMID = CHANNELS.TEAMID " +
+        "WHERE USERID = " + user + " ORDER BY NAME";
+    
+
+      var channels = [];
+	    //var data[];
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		channels.push({"channel" : row.NAME});
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	
+                        console.log("actual-" + JSON.stringify(channels));
+	                	resolve(JSON.stringify(channels));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+
+ //-------------------------------------------------------------
+ exports.getMsgForChannel=getMsgForChannel;
+
+function getMsgForChannel (dbConn, channel){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT USERS.NAME, MSG, TIMESTAMP FROM MESSAGE " + 
+            "INNER JOIN USERS ON MESSAGE.USERID=USERS.USERID " +
+            "WHERE MESSAGE.CHANNELID = " + channel + " ORDER BY MESSAGE.TIMESTAMP, USERS.NAME";
+        
+     
+      var msg = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		msg.push({"userName" : row.NAME, "date": row.TIMESTAMP, "msg": row.MSG} );
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(msg));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+
+ //--------------------------------------------------
+ exports.getTeamIdFromName=getTeamIdFromName;
+
+ function getTeamIdFromName(dbConn, teamName){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT TEAM.TEAMID FROM TEAM WHERE NAME ='" + teamName + "'";
+     
+      var team = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		team.push({"teamId" : row.TEAMID} );
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(team));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+
+////-------------------------------------------------
+exports.getChannelIdFromName=getChannelIdFromName;
+
+ function getChannelIdFromName(dbConn, channelName){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT ID FROM CHANNELS WHERE NAME ='" + channelName + "'";
+     
+      var channel = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		channel.push({"channelName" : row.ID} );
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(channel));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+
+ //----------------------------------------------------------------------------
+ exports.getUserIdFromName=getUserIdFromName;
+
+ function getUserIdFromName(dbConn, userName){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT USERID FROM USERS WHERE NAME ='" + userName + "'";
+     
+      var user = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		user.push({"userName" : row.USERID} );
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(user));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };

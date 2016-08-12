@@ -43,16 +43,18 @@ var filename="testSlack.db"
 
 describe("DB module",()=>{
 
-    // beforeEach(()=>{
+     before(()=>{
     //    // PropData();
+    
 
-    // });
-    // afterEach(()=>{
-    //     dbTest.rollback;
-    // });
+     });
+    after(()=>{
+         dbTest.exec('ROLLBACK');
+     });
   
    
-    it('given team name, return all channel names from team',(done)=>{
+    it('#1 given team name, return all channel names from team',(done)=>{
+        
        
         var team = '11';
         var expected=JSON.stringify([{'channel':'4Week'}, {'channel':'General'}]);
@@ -62,7 +64,7 @@ describe("DB module",()=>{
    });
 
 //     //----------------------------------------
-    it('given channel, return all users',(done)=>{
+    it('#2 given channel, return all users',(done)=>{
         var channel = 1;
         var expected=JSON.stringify([{'name':'Chedva'},{'name':'Zedong'}]);
         db.getUsersFromChannel(dbTest,channel).should.eventually.equal(expected).notify(done);
@@ -72,7 +74,7 @@ describe("DB module",()=>{
 
 //     //--------------------------------------
 
-it('given user, get channels',(done)=>{
+it('#3 given user, get channels',(done)=>{
        
         var userName = 1;
         var expected=JSON.stringify([{'channel':'4Week'}, {'channel':'General'}]);
@@ -88,9 +90,9 @@ it('given user, get channels',(done)=>{
 //     //--------------------------------------------
 
 
-it('given user name, return teams',(done)=>{
+it('#4 given user name, return teams',(done)=>{
        
-        var userName = '2';
+        var userName = 2;
         var expected=JSON.stringify([{'team':'IronYard'}]);
         db.getTeamsForUser(dbTest,userName).should.eventually.equal(expected).notify(done);
     });
@@ -99,46 +101,103 @@ it('given user name, return teams',(done)=>{
 
 
 
-it('given channel, get all msgs',(done)=>{
+it('#5 given channel, get all msgs',(done)=>{
        
-        var channel = '4Week';
-        var expected=[{'msg:':'This is a test'}, {'msg':'This is another test'}];
+        var channel = 1;
+        var expected=JSON.stringify([{"userName" : "Zedong", "date":"2016-08-12 13:49:51", "msg": "This is a test"},
+             {"userName" : "Chedva", "date":"2016-08-12 13:49:52", "msg": "This is another test"}]);
 
          db.getMsgForChannel(dbTest,channel).should.eventually.equal(expected).notify(done);
     });
 
 
 //     //--------------------------------------------
-
-// it('add new team and get back team name',(done)=>{
+it ('#6 get team id from team name',(done)=>{
        
-//         var team = 'NewTeam';
-//         var expected=[{'teamname':'NewTeam'}];
-//         var teamid= db.InsertTeam(team).then ((val)=> {
-// 		console.log (val);
-// 		//res.send (val);
-// 		//db.close();
-// 	}).catch((err)=>{
-// 		//res.send("");
-// 		console.log ("Unable to get channels from team name");
-// 		//db.close();
-// 	});
+        var team = "IronYard";
+        var expected=JSON.stringify([{"teamId" : 11}]);
 
-//         var actual =db.getTeamNameFromID(dbTest, teamid).then ((val)=> {
-// 		console.log (val);
-// 		//res.send (val);
-// 		//db.close();
-// 	}).catch((err)=>{
-// 		//res.send("");
-// 		console.log ("Unable to get channels from team name");
-// 		//db.close();
-// 	});
-// //;
-//         assert(actual,expected);
-//         done();
-//     });
+         db.getTeamIdFromName(dbTest,team).should.eventually.equal(expected).notify(done);
+    });
+
+    //------------------------------------------------
+
+    it ('#7 get channel id from channel name',(done)=>{
+       
+        var channel = "4Week";
+        var expected=JSON.stringify([{"channelName" : 1}]);
+
+         db.getChannelIdFromName(dbTest,channel).should.eventually.equal(expected).notify(done);
+    });
+
+    //----------------------------------------------------------------
+
+    it ('#8 get user id from user name',(done)=>{
+       
+        var user = "Brian";
+        var expected=JSON.stringify([{"userId" : 3}]);
+
+         db.getUserIdFromName(dbTest,user).should.eventually.equal(expected).notify(done);
+    });
+
+    //-----------------------------------------------------------------
+    it ('#9 insert team',(done)=>{
+       
+        var team = "NewTeam";
+        var expected=JSON.stringify([{"teamName" : "NewTeam"}]);
+
+         db.insertTeam(dbTest,team).should.eventually.equal(expected).notify(done);
+        
+    });
+
 // //----------------------------------------------------------------------------
+  it ('#10 insert channel',(done)=>{
+       
+        var channel = "NewChannel";
+        var team="NewTeam"
+        var expected=JSON.stringify([{"channelName" : "NewChannel", "teamName": "NewTeam"}]);
 
+         db.insertChannel(dbTest,channel).should.eventually.equal(expected).notify(done);
+        
+    });
+
+// //----------------------------------------------------------------------------
+  it ('#11 insert user',(done)=>{
+       
+        var user = "NewUser";
+         var expected=JSON.stringify([{"userName" : "NewUser", }]);
+
+         db.insertUser(dbTest,user).should.eventually.equal(expected).notify(done);
+        
+    });
+
+
+// //----------------------------------------------------------------------------
+  it ('#12 insert user in  team',(done)=>{
+       
+        var team = "NewTeam";
+        var user="NewUser";
+        var expected=JSON.stringify([{"teamName" : "Team", "userName":"NewUser"}]);
+
+         db.insertUserToTeam(dbTest,team,user).should.eventually.equal(expected).notify(done);
+        
+    });
+
+
+// //----------------------------------------------------------------------------
+  it ('#13 insert msg ',(done)=>{
+       
+        var msg = "NewMessage";
+        var user="NewUser";
+        var team="NewTeam";
+        var expected=JSON.stringify([{"teamName" : "Team", "userName":"NewUser", "msg":"NewMessage"}]);
+
+         db.insertMsg(dbTest,team,user,msg).should.eventually.equal(expected).notify(done);
+        
+    });
+    
+
+// //----------------------------------------------------------------------------
 });
 
 
