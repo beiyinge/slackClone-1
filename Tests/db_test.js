@@ -117,7 +117,7 @@ it('given user name, return teams',(done)=>{
        
         var userName = 'Zedong';
         var expected=[{'team:':'IronYard'}];
-        var actual =db.getChannelsForUser(dbTest, userName).then ((val)=> {
+        var actual =db.getTeamsForUser(dbTest, userName).then ((val)=> {
 		console.log (val);
 		//res.send (val);
 		//db.close();
@@ -133,56 +133,29 @@ it('given user name, return teams',(done)=>{
 
 //     //-----------------------------------------------------------
 
-//      it('given channel name, return all msgs',()=>{
-//         conn={
-//             insert: function (){
-
-//             },
-//             select: function (){
-//                 return ['this is a test','and another test'];
-//             }
-//         }
-//         var channel = 'bootCamp';
-//         var expected=['this is a test','and another test'];
-//         var actual =db.getChannels(conn, channel);
-//         assert(actual,expected);
-//     });
 
 
-// it('given channel, get all msgs',(done)=>{
+it('given channel, get all msgs',(done)=>{
        
-//         var userName = 'Zedong';
-//         var expected=[{'channel:':'4Week'}, {'channel':'General'}];
-//         var actual =db.getChannelsForUser(dbTest, userName).then ((val)=> {
-// 		console.log (val);
-// 		//res.send (val);
-// 		//db.close();
-// 	}).catch((err)=>{
-// 		//res.send("");
-// 		console.log ("Unable to get channels from team name");
-// 		//db.close();
-// 	});
-// //;
-//         assert(actual,expected);
-//         done();
-//     });
+        var channel = '4Week';
+        var expected=[{'msg:':'This is a test'}, {'msg':'This is another test'}];
+        var actual =db.getMsgForChannel(dbTest, channel).then ((val)=> {
+		console.log (val);
+		//res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		//res.send("");
+		console.log ("Unable to get channels from team name");
+		//db.close();
+	});
+//;
+        assert(actual,expected);
+        done();
+    });
 
 
 //     //--------------------------------------------
-//      it('insert user',()=>{
-//         conn={
-//             insert: function (){
 
-//             },
-//             select: function (){
-//                 return ['this is a test','and another test'];
-//             }
-//         }
-//         var channel = 'bootCamp';
-//         var expected=['this is a test','and another test'];
-//         var actual =db.getChannels(conn, channel);
-//         assert(actual,expected);
-//     })
 
  });
 
