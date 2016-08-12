@@ -156,10 +156,10 @@ function getChannelsFromTeam (dbConn, team){
 	            function (err, nRows) {
 	            	if (err){
 	            		reject(err);
-                        console.log ("promise reject");
+                       // console.log ("promise reject");
 	            	}else{
 	                	//callBack(err, JSON.stringify(followers));
-                        console.log(JSON.stringify(channel));
+                       // console.log(JSON.stringify(channel));
                         //console.log("promise: - " + channel);
 	                	resolve(JSON.stringify(channel));//
                         //resolve (channel);
@@ -183,18 +183,19 @@ function getUsersFromChannel (dbConn, channel){
         "inner join teamusers on users.userid=teamusers.userid" +
         "inner join team on teamusers.teamid=team.teamid" +
         "inner join channels on channels.teamid=team.teamid" +
-        "where channels.teamid =" + channel + ";) ORDER BY NAME";
+        "where channels.id =" + channel + " ORDER BY USERS.NAME";
 
       var users = [];
 	    //var data[];
 	    dbConn.serialize(function() {
+            console.log ("here");
 	        dbConn.each(
 	            sql, 
 	            function(err, row) {
 	            	if (err){
 	            		reject (err);
 	            	}else{  
-	            		channel.push({"name" : row.NAME});
+	            		users.push({"name" : row.NAME});
 	                	
 	                }
 	            },
