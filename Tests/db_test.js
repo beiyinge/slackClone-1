@@ -3,6 +3,10 @@ var app=express();
 var sqlite3 = require('sqlite3').verbose();
 var assert = require('assert');
 var db=require ('../db.js');
+var chai=require("chai");
+var chaiAsPromised=require("chai-as-promised");
+chai.use(chaiAsPromised);
+chai.should();
 
 var filename="testSlack.db"
 
@@ -39,50 +43,74 @@ var filename="testSlack.db"
 
 describe("DB module",()=>{
 
-    before(()=>{
-       // PropData();
+    // beforeEach(()=>{
+    //    // PropData();
 
-    });
-    after(()=>{
-        dbTest.rollback;
-    });
+    // });
+    // afterEach(()=>{
+    //     dbTest.rollback;
+    // });
   
    
     it('given team name, return all channel names from team',(done)=>{
        
-        var teamName = 'IronYard';
-        var expected=[{'channel':'4Week'}, {'channel':'General'}];
-        var actual =db.getChannelsFromTeam(dbTest, teamName).then ((val)=> {
-		console.log (val);
-		//res.send (val);
-		//db.close();
-	}).catch((err)=>{
-		//res.send("");
-		console.log ("Unable to get channels from team name");
-		//db.close();
-	});
+        var team = '11';
+        var expected=JSON.stringify([{'channel':'4Week'}, {'channel':'General'}]);
+        console.log ("expected - " + expected);
+        //var expected=['4Week','General'];
+        db.getChannelsFromTeam(dbTest,team).should.eventually.equal(expected).notify(done);
+       
+        
+//         var actual =db.getChannelsFromTeam(dbTest, teamName).then ((val)=> {
+
+//             console.log ("expected: " + expected[0] + "--actual: " + actual[0])
+//             assert(actual,expected);
+//             done();
+
+//         }).catch((err)=>{
+//             console.log ("Unable to get channels from team name");
+//     });
+  
+// // //;
+// //     //    assert(actual,expected);
+// //     //     done();
+//     });
+//    it('given team name, return all channel names from team', function (done){
+//        var teamName = 'IronYard';
+//        var expected=[{"channel":"4Week"}, {"channel":"General"}];
+//        //var expected=['4Week', 'General'];
+//        db.getChannelsFromTeam(dbTest, teamName).then (
+//       function (val) {
+//         console.log (val);
+//        try {
+//        assert.deepEqual(val,expected);
+//        done();
+//         //res.send (val);
+//         //db.close();
+//        }catch (err){
+//                console.log ('in done try err, '+ err);
+//            }
+//    },
+//    function (err) {
+//            done(err);
+//        }
+//     );
 //;
-        assert(actual,expected);
-        done();
-    });
+       //assert("actual",expected);
+       //done();
+   });
 
 //     //----------------------------------------
-it('given channel, return all users',(done)=>{
-       
-        var channel = '4Week';
+    it('given channel, return all users',(done)=>{
+        var channel = 1;
         var expected=[{'name':'Brian'}, {'name':'Chedva'},{'name':'Zedong'}];
-        var actual =db.getUsersFromChannel(dbTest, channel).then ((val)=> {
-		console.log (val);
-		//res.send (val);
-		//db.close();
-	}).catch((err)=>{
-		//res.send("");
-		console.log ("Unable to get channels from user name");
-		//db.close();
-	});
-//;
-        assert(actual,expected);
-        done();
+        db.getUsersFromChannel(dbTest,channel).should.eventually.equal(expected).notify(done);
+        // var actual =db.getUsersFromChannel(dbTest, channel).then ((val)=> {
+        //     assert(actual,expected);
+        //     done();
+        // }).catch((err)=>{
+        //     console.log ("Unable to get channels from user name");
+        // });
     });
 
 
@@ -90,20 +118,22 @@ it('given channel, return all users',(done)=>{
 
 it('given user, get channels',(done)=>{
        
-        var userName = 'Zedong';
+        var userName = 1;
         var expected=[{'channel:':'4Week'}, {'channel':'General'}];
-        var actual =db.getChannelsForUser(dbTest, userName).then ((val)=> {
-		console.log (val);
-		//res.send (val);
-		//db.close();
-	}).catch((err)=>{
-		//res.send("");
-		console.log ("Unable to get channels from team name");
-		//db.close();
-	});
-//;
-        assert(actual,expected);
-        done();
+
+         db.getChannelsForUser(dbTest,userName).should.eventually.equal(expected).notify(done);
+//         var actual =db.getChannelsForUser(dbTest, userName).then ((val)=> {
+// 		console.log (val);
+// 		//res.send (val);
+// 		//db.close();
+// 	}).catch((err)=>{
+// 		//res.send("");
+// 		console.log ("Unable to get channels from team name");
+// 		//db.close();
+// 	});
+// //;
+//         assert(actual,expected);
+//         done();
     });
 
 
@@ -117,18 +147,19 @@ it('given user name, return teams',(done)=>{
        
         var userName = 'Zedong';
         var expected=[{'team:':'IronYard'}];
-        var actual =db.getTeamsForUser(dbTest, userName).then ((val)=> {
-		console.log (val);
-		//res.send (val);
-		//db.close();
-	}).catch((err)=>{
-		//res.send("");
-		console.log ("Unable to get channels from team name");
-		//db.close();
-	});
-//;
-        assert(actual,expected);
-        done();
+        db.getTeamsForUser(dbTest,userName).should.eventually.equal(expected).notify(done);
+//         var actual =db.getTeamsForUser(dbTest, userName).then ((val)=> {
+// 		console.log (val);
+// 		//res.send (val);
+// 		//db.close();
+// 	}).catch((err)=>{
+// 		//res.send("");
+// 		console.log ("Unable to get channels from team name");
+// 		//db.close();
+// 	});
+// //;
+//         assert(actual,expected);
+//         done();
     });
 
 //     //-----------------------------------------------------------
@@ -139,7 +170,40 @@ it('given channel, get all msgs',(done)=>{
        
         var channel = '4Week';
         var expected=[{'msg:':'This is a test'}, {'msg':'This is another test'}];
-        var actual =db.getMsgForChannel(dbTest, channel).then ((val)=> {
+
+         db.getMsgForChannel(dbTest,channel).should.eventually.equal(expected).notify(done);
+//         var actual =db.getMsgForChannel(dbTest, channel).then ((val)=> {
+// 		console.log (val);
+// 		//res.send (val);
+// 		//db.close();
+// 	}).catch((err)=>{
+// 		//res.send("");
+// 		console.log ("Unable to get channels from team name");
+// 		//db.close();
+// 	});
+// //;
+//         assert(actual,expected);
+//         done();
+    });
+
+
+//     //--------------------------------------------
+
+it('add new team and get back team name',(done)=>{
+       
+        var team = 'NewTeam';
+        var expected=[{'teamname':'NewTeam'}];
+        var teamid= db.InsertTeam(team).then ((val)=> {
+		console.log (val);
+		//res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		//res.send("");
+		console.log ("Unable to get channels from team name");
+		//db.close();
+	});
+
+        var actual =db.getTeamNameFromID(dbTest, teamid).then ((val)=> {
 		console.log (val);
 		//res.send (val);
 		//db.close();
@@ -152,10 +216,7 @@ it('given channel, get all msgs',(done)=>{
         assert(actual,expected);
         done();
     });
-
-
-//     //--------------------------------------------
-
+//----------------------------------------------------------------------------
 
  });
 
