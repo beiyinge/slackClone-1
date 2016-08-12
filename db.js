@@ -130,16 +130,16 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 //------------------------------------------
  
  exports.getChannelsFromTeam=getChannelsFromTeam;
- 
- var teamName = function getChannelsFromTeam(dbConn, teamName){
-     
+
+function getChannelsFromTeam (dbConn, teamName){
+     return new Promise((resolve,reject)=>{
      var sql= "SELECT NAME FROM CHANNELS WHERE TEAMID = (SELECT TEAMID FROM TEAM WHERE NAME = '" + teamName + "') ORDER BY NAME";
 
       var channel = [];
 	    //var data[];
 	    dbConn.serialize(function() {
 	        dbConn.each(
-	            query, 
+	            sql, 
 	            function(err, row) {
 	            	if (err){
 	            		reject (err);
@@ -159,4 +159,5 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 	           }
 	        );
 	    });
+     });
  };
