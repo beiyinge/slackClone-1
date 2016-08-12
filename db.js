@@ -7,8 +7,8 @@ var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
 var userid;
 //var db;
-
-var filename = 'slack.db';
+var filename;
+var filename = 'testSlack.db';
 
 exports.createDB=createDB;
 
@@ -51,7 +51,7 @@ function createDB (filename){
                         "DESC         CHAR(250) ,    " +
                         " TEAMID         INTEGER, " +
                         " TYPE          CHAR(1) , " +
-                        " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID)" ; 
+                        " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID))" ; 
 
                 var createMessageTableSql = "CREATE TABLE IF NOT EXISTS MESSAGE " +
                     "(ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
@@ -74,6 +74,7 @@ function createDB (filename){
     }
 }
 
+createDB(filename);
 //--------------------------------
 exports.InsertTeamData=InsertTeamData;
 function InsertTeamData( name, dbConn){
