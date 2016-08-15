@@ -441,7 +441,7 @@ exports.getChannelIdFromName=getChannelIdFromName;
 	            	if (err){
 	            		reject (err);
 	            	}else{  
-	            		user.push({"userName" : row.USERID} );
+	            		user.push({"userId" : row.USERID} );
 	                	
 	                }
 	            },
@@ -457,3 +457,10 @@ exports.getChannelIdFromName=getChannelIdFromName;
 	    });
      });
  };
+
+ //--------------------------------------------------------
+ exports.insertTeam=insertTeam;
+
+ function insertTeam(dbConn, team){
+	 
+ }
