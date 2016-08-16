@@ -1,0 +1,17 @@
+<h1>SSA Slack</h1>
+
+<div style="display:inline-block;vertical-align:top">
+<ul>
+	<li ng-repeat="channel in channels">{{channel}}</li>
+</ul>
+</div>
+
+<div style="display:inline-block;vertical-align:top">
+
+	<div ng-repeat="message in messages" style="margin:10px;">
+		<div>{{message.userName}}</div>
+		<div>{{message.date}}</div>
+		<div>{{message.msg}}</div>
+	</div>
+
+</div>

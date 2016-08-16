@@ -1,0 +1,72 @@
+<html ng-app="slackApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Slack Mock Project</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.10/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.10/angular-route.min.js"></script>
+    
+    <script>
+
+    var slackApp = angular.module('slackApp', ['ngRoute']);
+      
+    slackApp.config(function($routeProvider) {
+        $routeProvider.
+          when('/', {
+            templateUrl: 'home.html',
+            controller: 'HomeCtrl'
+          }).
+   //        when('/:categoryName', {
+   //          templateUrl: 'category-detail.html',
+   //          controller: 'CategoryDetailCtrl'
+   //        }).
+   //        when('/cart/:cart', {
+			// templateUrl: 'cart.html',
+   //          controller: 'CartCtrl'
+   //        }).
+          otherwise({
+            redirectTo: '/'
+          });
+      });
+
+      slackApp.factory('cart', function($http){
+        var cartItems = [];
+        function getCartItems(callback){
+        	console.log('call cartItems');
+			callback(cartItems);
+        }
+
+        return {
+        	list: getCartItems,
+          	add: function(name, callback){
+          		cartItems.push(name);
+          		console.log(cartItems);
+          		callback();
+          	}
+        };
+      });
+
+      slackApp.controller('HomeCtrl', function ($scope, $http){
+        $http.get('/channel/user/1').success(function(data) {
+          $scope.channels = data;
+        });
+        $http.get('/message/channel/1').success(function(data) {
+          $scope.messages = data;
+          console.log($scope.messages);
+        });
+      });
+
+
+</script>
+
+  </head>
+
+  <body>
+
+    <div ng-include="'header.html'"></div>
+
+    <div ng-view></div>
+
+    <div ng-include="'footer.html'"></div>
+
+  </body>
+</html>
