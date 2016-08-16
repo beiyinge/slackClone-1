@@ -2,7 +2,7 @@
 
 <div style="display:inline-block;vertical-align:top">
 <ul>
-	<li ng-repeat="channel in channels">{{channel}}</li>
+	<li ng-repeat="channel in channels"><a href="" ng-click="getChannelMessage(channel.id)">{{channel.id}} {{channel.name}}</a></li>
 </ul>
 </div>
 

@@ -28,32 +28,24 @@
           });
       });
 
-      slackApp.factory('cart', function($http){
-        var cartItems = [];
-        function getCartItems(callback){
-        	console.log('call cartItems');
-			callback(cartItems);
-        }
-
-        return {
-        	list: getCartItems,
-          	add: function(name, callback){
-          		cartItems.push(name);
-          		console.log(cartItems);
-          		callback();
-          	}
-        };
-      });
-
+      //var channels = [];
       slackApp.controller('HomeCtrl', function ($scope, $http){
+        //$scope.channels = [];
+
         $http.get('/channel/user/1').success(function(data) {
           $scope.channels = data;
+          $scope.getChannelMessage($scope.channels[0].id);
         });
-        $http.get('/message/channel/1').success(function(data) {
-          $scope.messages = data;
-          console.log($scope.messages);
-        });
-      });
+
+        $scope.getChannelMessage = function(channel) {
+          console.log(channel);
+          $http.get('/message/channel/' + channel).success(function(data) {
+            $scope.messages = data;
+            console.log($scope.messages);
+          });
+        };
+
+    });
 
 
 </script>

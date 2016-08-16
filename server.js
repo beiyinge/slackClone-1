@@ -35,7 +35,7 @@ var server = app.listen(3000, function () {
 // });
 
 function getChannelsForUser (userid, callBack){
- 	var query = "SELECT DISTINCT CHANNELS.NAME FROM CHANNELS  " +
+ 	var query = "SELECT DISTINCT CHANNELS.NAME, CHANNELS.ID FROM CHANNELS  " +
         "INNER JOIN TEAMUSERS ON TEAMUSERS.TEAMID = CHANNELS.TEAMID " +
         "WHERE USERID = " + userid + " ORDER BY NAME";
     
@@ -46,7 +46,7 @@ function getChannelsForUser (userid, callBack){
             query, 
             function(err, row) {
             	//console.log(row);
-            	channels.push(row.NAME); 
+            	channels.push({id: row.ID, name: row.NAME}); 
             },
             function (err) {
                 callBack(err, JSON.stringify(channels));
