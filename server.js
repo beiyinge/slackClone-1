@@ -2,6 +2,11 @@ var express = require('express');
 var app=express();
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
+var bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+
+
 var dbFile=require ('./db.js');
 
 //var dbHandler=require ('db.js');
@@ -16,7 +21,7 @@ app.get('/channel/user/:id', function (req, res) {
 });
 
 app.get('/message/channel/:id', function (req, res) {
-	var userId = req.param('id');
+	var userId = parseInt(req.param('id'));
 	getMsgForChannel(userId, function(err, messages) {
 		res.send(messages);
 	});
@@ -48,6 +53,25 @@ app.get('/user/user/:id', function (req, res) {
 
 	
 });
+
+
+app.post('/message/message', function (req, res){
+	console.log ("arrived at server");
+
+	var userId=parseInt(req.body.userId);
+	var channelId=parseInt(req.body.channelId);
+	var msg=req.body.msg;
+
+	dbFile.InsertMsgData(msg,channelId,userId, db).then ((val)=>{
+		console.log ("insert message promise OK");
+		res.send(val);
+	}).catch((err)=>{
+		res.send("");
+		console.log ("promise rejected");
+	});
+});
+
+
 
 app.use(express.static(__dirname + '/webapp'));
 

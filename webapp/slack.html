@@ -38,12 +38,12 @@
             $window.location.href = '/login.html';
           }
           else {
-            $http.get('/channel/user/1').success(function(data) {
+            $http.get('/channel/user/' + $scope.userId).success(function(data) {
               $scope.channels = data;
               $scope.getChannelMessage($scope.channels[0].id);         
             });
 
-              $http.get('/user/user/1').success(function (data){
+              $http.get('/user/user/' + $scope.userId).success(function (data){
                  //    console.log ("got user name");
                     $scope.userName=data[0].userName;
                  console.log("name--" + $scope.userName);
@@ -63,23 +63,50 @@
          
         };
 
+        $scope.Save2DB=function(messageData){
+          console.log(messageData);
+          $http.post('/message/message', messageData).success(function (data,status, headers, config) {
+                $scope.PostDataResponse = data;
+                console.log ("success:"+ data);
+            })
+            .error(function (data, status, headers, config) {
+              console.log("failed to save");
+            });
+
+
+
+
+        //     $http({
+        //          method: 'POST',
+        //          url: 'http://localhost:3000/message/message',
+        //          headers: {
+        //            'Content-Type': "application/json"
+        //          },
+        //          data: messageData  // why zero????
+        //          }).
+        //          success( function (data) {
+        //            alert("message saved!");        
+        //            });
+        // }
+        };
+
          $scope.IsEnter=function(event){
           // console.log (" a keypress");
         
              if (event.keyCode===13){
-              // console.log("enter pressed")
+              
               var currentdate = new Date();
              var datetime = currentdate.getDay() + "/"+currentdate.getMonth() 
               + "/" + currentdate.getFullYear() + " " 
               + currentdate.getHours() + ":" 
                 + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-               console.log ("msg: " ,$scope.msg);//[$scope.message.length-1]);
-              //  , "date":Date.now(), "msg":$scope.message)
-            
+                          
                $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
-                 $scope.$apply();
-
+              
               document.getElementById("txtMsg").value = "";
+
+              
+               $scope.Save2DB({"userId":$scope.userId, "channelId":$scope.channels[0].id, "msg":$scope.msg});         
             
             }
          };

@@ -137,13 +137,37 @@ function InsertChannelData(name, teamid, desc, type, dbConn){
 
 exports.InsertMsgData=InsertMsgData;
 
-function InsertMsgData(msg, channelId, userId, dbConn){
-     var insertMSG= "INSERT INTO MESSAGE ( MSG, CHANNELID, USERID)  " +
-        "VALUES ('" + msg + "', " + channelId + ", " + userId + ")";
 
-    dbConn.run(insertMSG);            
-        
-}
+function InsertMsgData(msg, channelId, userId, dbConn){
+	return new Promise((resolve,reject)=>{
+		var insertMSG= "INSERT INTO MESSAGE ( MSG, CHANNELID, USERID)  " +
+			"VALUES ('" + msg + "', " + channelId + ", " + userId + ")";
+
+			
+			dbConn.serialize(function() {
+            
+				dbConn.run(
+					insertMSG, 
+					
+					function (err) {
+						if (err){
+							console.log("sql insert msg err: " + err);
+							reject(err);
+							
+						
+						}else{
+							console.log ("sql insert msg success");
+							resolve();//
+						
+						}
+				}
+				);
+
+		//
+		
+		});
+	});     
+}	
 
 //------------------------------------------
  
