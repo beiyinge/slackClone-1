@@ -1,0 +1,22 @@
+<div style="display:inline-block;vertical-align:top">
+ <div style="display:inline-block;vertical-align:top; width:250px">   
+    <ul>
+        <li ng-repeat="channel in channels track by $index"><input type="radio" name="radChannel" ng-model="" ng-true-value="true"" >{{channel.id}} {{channel.name}}</li>
+    </ul>
+</div>
+
+
+    <div style="display:inline-block;vertical-align:top"> 
+        
+       <p>Enter a new Channel
+        
+            <input type="text" id="txtChannel" ng-model="newChannel" ng-keyup="IsEnter($event)">
+        </p>
+    </div>
+    <!--<div style="display:inline-block;vertical-align:top" ng-show="bNew">
+         <select multiple>
+            <option ng-repeat value={{user.userid}} >{{user.name}}</option>
+         </select>
+    </div> -->
+
+</div>

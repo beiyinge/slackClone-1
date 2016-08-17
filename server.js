@@ -25,7 +25,7 @@ app.get('/channel/user/:id', function (req, res) {
 });
 
 app.get('/message/channel/:id', function (req, res) {
-	var userId = parseInt(req.param('id'));
+	var userId = req.param('id');
 	getMsgForChannel(userId, function(err, messages) {
 		res.send(messages);
 	});
@@ -77,7 +77,7 @@ app.post('/message/message', function (req, res){
 
 	var userId=parseInt(req.body.userId);
 	var channelId=parseInt(req.body.channelId);
-	var msg=req.body.msg;
+	var msg=req.msg;
 
 	dbFile.InsertMsgData(msg,channelId,userId, db).then ((val)=>{
 		console.log ("insert message promise OK");

@@ -78,37 +78,56 @@ createDB(filename);
 //--------------------------------
 exports.InsertTeamData=InsertTeamData;
 function InsertTeamData( name, dbConn){
-	//  return new Promise((resolve,reject)=>{
-			dbConn.serialize(function() {
+	return new Promise((resolve, reject)=>{	
 
-      
-    //   var insertTeam = "INSERT INTO TEAM (NAME) " +
-    //             "VALUES ('" + name + "')";
-    //   dbConn.run (insertTeam);
-
-	  			dbConn.run("INSERT INTO TEAM (NAME) VALUES ('" + name + "')");
-				  
-		// 			(err, row) =>{
-	    //         	if (err){
-                        
-	    //         		reject (err);
-	    //         	}else{  
-	            		
-        //               resolve(true)
-	                	
-	    //             }
-	    //         };
-	            
-	  	// });
+      	var insertTeam="INSERT INTO TEAM (NAME) VALUES ('" + name + "')"
+    			  
+		dbConn.serialize(function() {
+        	dbConn.run(
+					insertTeam,
+					
+					function (err) {
+						if (err){
+							console.log("sql insert team err: " + err);
+							reject(err);
+							
+						
+						}else{
+							console.log ("sql insert team success");
+							resolve();//
+						
+						}
+					}
+				);
+		});	
 	});
 };
 
 //-----------------------------------------------
 exports.InsertUserData=InsertUserData;
 function InsertUserData(name, pswd, email, dbConn){
-    var insertUsers = "INSERT INTO USERS ( NAME, PASSWORD, EMAIL) " +
+	return new Promise((resolve, reject)=>{	
+    	var insertUsers = "INSERT INTO USERS ( NAME, PASSWORD, EMAIL) " +
              "VALUES ('" + name + "', '" + pswd + "', '" + email + "')";
-    dbConn.run(insertUsers);
+   		dbConn.serialize(function() {
+        	dbConn.run(
+					insertUsers,
+					
+					function (err) {
+						if (err){
+							console.log("sql insert channel err: " + err);
+							reject(err);
+							
+						
+						}else{
+							console.log ("sql insert channel success");
+							resolve();//
+						
+						}
+					}
+				);
+		});	
+	});
 
 }
 
@@ -117,20 +136,57 @@ function InsertUserData(name, pswd, email, dbConn){
 exports.InsertTeamUsers=InsertTeamUsers;
 
 function InsertTeamUsers(userid, teamid, dbConn){
+	return new Promise((resolve, reject)=>{
     var insertTeamUsers = "INSERT INTO TEAMUSERS ( USERID,TEAMID) " +
              "VALUES (" + userid + ", " + teamid + ")";
-    dbConn.run(insertTeamUsers)
+    dbConn.serialize(function() {
+        	dbConn.run(
+					insertTeamUsers,
+					
+					function (err) {
+						if (err){
+							console.log("sql insert teamusers err: " + err);
+							reject(err);
+							
+						
+						}else{
+							console.log ("sql insert teamusers success");
+							resolve();//
+						
+						}
+					}
+				);
+		});	
+	});
 }
 
 //--------------------------------------------
 exports.InsertChannelData=InsertChannelData;
 
 function InsertChannelData(name, teamid, desc, type, dbConn){
-    var insertChannels= "INSERT INTO CHANNELS ( NAME, TEAMID, DESC, TYPE) " +
+	return new Promise((resolve, reject)=>{
+    	var insertChannels= "INSERT INTO CHANNELS ( NAME, TEAMID, DESC, TYPE) " +
             "VALUES('" + name  + "', " + teamid + " , '" + desc + "', '" + type + "')";
     
-    dbConn.run(insertChannels);
-
+    	dbConn.serialize(function() {
+        	dbConn.run(
+					insertChannels,
+					
+					function (err) {
+						if (err){
+							console.log("sql insert channel err: " + err);
+							reject(err);
+							
+						
+						}else{
+							console.log ("sql insert channel success");
+							resolve();//
+						
+						}
+					}
+				);
+		});	
+	});
 }
 
 //-------------------------------
@@ -160,11 +216,8 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 							resolve();//
 						
 						}
-				}
+					}
 				);
-
-		//
-		
 		});
 	});     
 }	
@@ -569,8 +622,3 @@ exports.getUserNameFromID=getUserNameFromID;
  };
 
  //--------------------------------------------------------
- exports.insertTeam=insertTeam;
-
- function insertTeam(dbConn, team){
-	 
- }

@@ -15,6 +15,11 @@
             templateUrl: 'home.html',
             controller: 'HomeCtrl'
           }).
+          when('/channel.html', {
+            templateUrl: 'channel.html',
+            controller: 'ChannelCtrl'
+
+          }).
    //        when('/login.html', {
    //          templateUrl: 'login.html',
    //          controller: 'LoginCtrl'
@@ -29,6 +34,30 @@
       });
 
       //var channels = [];
+      slackApp.controller('ChannelCtrl', function  ($scope, $http, $cookieStore, $window){
+          $scope.userId = $cookieStore.get('userId'); 
+           $http.get('/channel/user/' + $scope.userId).success(function(data) {
+              $scope.channels = data;
+           });
+
+       
+        $scope.IsEnter=function(event){
+            if (event.keyCode===13){                                       
+                 $scope.bNew=true
+                document.getElementById("txtChannel").value = "";
+           
+               $scope.SaveChannel2DB({"userId":$scope.userId, "channelName":$scope.newChannel});         
+            }
+         };
+
+
+        $scope.getChannelMessage = function(channel) {
+
+
+
+      }
+    });
+
 
       slackApp.controller('HomeCtrl', function ($scope, $http, $cookieStore, $window){
         //$scope.channels = [];
@@ -54,6 +83,7 @@
 
         $scope.getChannelMessage = function(channel) {
           console.log(channel);
+          $scope.channel=channel;
           $http.get('/message/channel/' + channel).success(function(data) {
             $scope.messages = data;
             console.log($scope.messages);
@@ -73,21 +103,6 @@
               console.log("failed to save");
             });
 
-
-
-
-        //     $http({
-        //          method: 'POST',
-        //          url: 'http://localhost:3000/message/message',
-        //          headers: {
-        //            'Content-Type': "application/json"
-        //          },
-        //          data: messageData  // why zero????
-        //          }).
-        //          success( function (data) {
-        //            alert("message saved!");        
-        //            });
-        // }
         };
 
          $scope.IsEnter=function(event){
@@ -106,7 +121,7 @@
               document.getElementById("txtMsg").value = "";
 
               
-               $scope.Save2DB({"userId":$scope.userId, "channelId":$scope.channels[0].id, "msg":$scope.msg});         
+               $scope.Save2DB({"userId":$scope.userId, "channelId":$scope.channel, "msg":$scope.msg});         
             
             }
          };
