@@ -1,21 +1,22 @@
 <h1>SSA Slack</h1>
 
-<div style="display:inline-block;vertical-align:top">
+<table>
+<tr><td style="width:150px;vertical-align:top;background-color:#f0f0f0;">
+<div style="margin:10px;">
 <ul>
 	<li ng-repeat="channel in channels"><a href="" ng-click="getChannelMessage(channel.id)">{{channel.id}} {{channel.name}}</a></li>
 </ul>
 </div>
-
-<div style="display:inline-block;vertical-align:top">
-
-	<div ng-repeat="message in messages" style="margin:10px;">
-		<div>{{message.userName}}</div>
-		<div>{{message.date}}</div>
-		<div>{{message.msg}}</div>
+</td>
+<td>
+	<div ng-repeat="message in messages" style="margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;">
+		<div style="font-weight:bold">{{message.userName}}</div>
+		<div style="color:#aaa">{{message.date}}</div>
+		<div style="margin-top:5px;">{{message.msg}}</div>
 	</div>
-
 
 	<!--<input type="text" name="txtMsg" ng-model="msg" ng-keypress="IsEnter($event)></input>-->
 	<textarea name="txtMsg" rows="4" cols="50" id = "txtMsg" ng-model="msg" ng-keyup="IsEnter($event)"></textarea>
 	<!--style="width:250px;height:150px;-->
-</div>
+</td></tr>
+</table>
