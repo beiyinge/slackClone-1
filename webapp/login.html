@@ -1,0 +1,50 @@
+<html ng-app="slackApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Slack Mock Project</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-cookies.js"></script>
+    <script>
+
+    var slackApp = angular.module('slackApp', ['ngCookies']);
+    
+  	slackApp.controller('LoginCtrl', function ($scope, $http, $cookieStore, $window){
+
+		$scope.submit = function() {
+        if ($scope.username && $scope.password) {
+        	console.log($scope.username + " " + $scope.password);
+			$http.get('/user/login?username=' + $scope.username + '&password=' + $scope.password).success(function(data) {
+          		if(data.length == 1) {
+          			$scope.userId = data[0].userId;
+              		console.log($scope.userId);
+              		$cookieStore.put('userId', $scope.userId);
+              		$window.location.href = '/slack.html';
+  				}
+  				else {
+  					$scope.loginErr = "Wrong Username or Password!";
+  					console.log($scope.loginErr);
+  				}
+            });
+        }
+      };
+    });
+
+
+</script>
+
+  </head>
+
+  <body>
+
+<h1>SSA Slack</h1>
+
+<h3>Login</h3>
+<form ng-submit="submit()" ng-controller="LoginCtrl">
+<h4 ng-show="loginErr" style="color:red">{{loginErr}}</h4>
+<p>Username: <input type="text" ng-model="username" id="username"></p>
+<p>Password: <input type="password" ng-model="password" id="password"></p>
+<p><input type="submit" id="submit" value="Submit"></p>
+</form>
+
+  </body>
+</html>
