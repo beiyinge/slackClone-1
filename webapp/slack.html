@@ -34,8 +34,19 @@
 
         $http.get('/channel/user/1').success(function(data) {
           $scope.channels = data;
-          $scope.getChannelMessage($scope.channels[0].id);
+          $scope.getChannelMessage($scope.channels[0].id);         
         });
+
+
+
+          $http.get('/user/user/1').success(function (data){
+             //    console.log ("got user name");
+                $scope.userName=data[0].userName;
+             console.log("name--" + $scope.userName);
+          });
+
+
+     
 
         $scope.getChannelMessage = function(channel) {
           console.log(channel);
@@ -43,7 +54,31 @@
             $scope.messages = data;
             console.log($scope.messages);
           });
+
+
+         
         };
+
+         $scope.IsEnter=function(event){
+          // console.log (" a keypress");
+        
+             if (event.keyCode===13){
+              // console.log("enter pressed")
+              var currentdate = new Date();
+             var datetime = currentdate.getDay() + "/"+currentdate.getMonth() 
+              + "/" + currentdate.getFullYear() + " " 
+              + currentdate.getHours() + ":" 
+                + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+               console.log ("msg: " ,$scope.msg);//[$scope.message.length-1]);
+              //  , "date":Date.now(), "msg":$scope.message)
+            
+               $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
+                 $scope.$apply();
+
+              document.getElementById("txtMsg").value = "";
+            
+            }
+         };
 
     });
 
@@ -57,6 +92,7 @@
     <div ng-include="'header.html'"></div>
 
     <div ng-view></div>
+
 
     <div ng-include="'footer.html'"></div>
 
