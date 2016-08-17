@@ -38,12 +38,12 @@
             $window.location.href = '/login.html';
           }
           else {
-            $http.get('/channel/user/1').success(function(data) {
+            $http.get('/channel/user/' + $scope.userId).success(function(data) {
               $scope.channels = data;
               $scope.getChannelMessage($scope.channels[0].id);         
             });
 
-              $http.get('/user/user/1').success(function (data){
+              $http.get('/user/user/' + $scope.userId).success(function (data){
                  //    console.log ("got user name");
                     $scope.userName=data[0].userName;
                  console.log("name--" + $scope.userName);
@@ -77,7 +77,7 @@
               //  , "date":Date.now(), "msg":$scope.message)
             
                $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
-                 $scope.$apply();
+                 //$scope.$apply();
 
               document.getElementById("txtMsg").value = "";
             
