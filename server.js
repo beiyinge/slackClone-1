@@ -88,7 +88,21 @@ app.post('/message/message', function (req, res){
 	});
 });
 
+app.post('/channel/channel', function (req, res){
+	console.log ("arrived at server");
 
+	var userId=parseInt(req.body.userId);
+	var channelName=parseInt(req.body.channelName);
+	
+
+	// dbFile.InsertChannelData(msg,channelId,userId, db).then ((val)=>{
+	// 	console.log ("insert message promise OK");
+	// 	res.send(val);
+	// }).catch((err)=>{
+	// 	res.send("");
+	// 	console.log ("promise rejected");
+	// });
+});
 
 app.use(express.static(__dirname + '/webapp'));
 

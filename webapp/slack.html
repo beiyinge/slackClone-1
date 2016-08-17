@@ -51,11 +51,17 @@
          };
 
 
-        $scope.getChannelMessage = function(channel) {
+        $scope.SaveChannel2DB=function(channelData){
+          console.log(messageData);
+          $http.post('/channel/channel', channelData).success(function (data,status, headers, config) {
+                $scope.PostDataResponse = data;
+                console.log ("success saving channel:"+ data);
+            })
+            .error(function (data, status, headers, config) {
+              console.log("failed to save channel");
+            });
 
-
-
-      }
+        };
     });
 
 
