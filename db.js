@@ -78,12 +78,30 @@ createDB(filename);
 //--------------------------------
 exports.InsertTeamData=InsertTeamData;
 function InsertTeamData( name, dbConn){
+	//  return new Promise((resolve,reject)=>{
+			dbConn.serialize(function() {
+
       
-      var insertTeam = "INSERT INTO TEAM (NAME) " +
-                "VALUES ('" + name + "')";
-      dbConn.run (insertTeam)
-    
-}
+    //   var insertTeam = "INSERT INTO TEAM (NAME) " +
+    //             "VALUES ('" + name + "')";
+    //   dbConn.run (insertTeam);
+
+	  			dbConn.run("INSERT INTO TEAM (NAME) VALUES ('" + name + "')");
+				  
+		// 			(err, row) =>{
+	    //         	if (err){
+                        
+	    //         		reject (err);
+	    //         	}else{  
+	            		
+        //               resolve(true)
+	                	
+	    //             }
+	    //         };
+	            
+	  	// });
+	});
+};
 
 //-----------------------------------------------
 exports.InsertUserData=InsertUserData;
@@ -358,6 +376,41 @@ function getMsgForChannel (dbConn, channel){
 	    });
      });
  };
+//------------------------------------------------------------
+
+exports.getTeamNameFromId=getTeamNameFromId;
+
+function getTeamNameFromId(dbConn, teamId){
+	 return new Promise((resolve,reject)=>{
+     var sql= "SELECT NAME FROM TEAM WHERE TEAMID =  " + teamId;
+
+	
+     
+      var team = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		team.push({"teamName" : row.NAME} );
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(team));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
 
  //--------------------------------------------------
  exports.getTeamIdFromName=getTeamIdFromName;
@@ -442,6 +495,39 @@ exports.getChannelIdFromName=getChannelIdFromName;
 	            		reject (err);
 	            	}else{  
 	            		user.push({"userId" : row.USERID} );
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(user));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+//------------------------------------------------------------------------
+
+exports.getUserNameFromID=getUserNameFromID;
+
+ function getUserNameFromID(dbConn, userID){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT NAME FROM USERS WHERE USERID = " + userID;
+     
+      var user = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		user.push({"userName" : row.NAME} );
 	                	
 	                }
 	            },

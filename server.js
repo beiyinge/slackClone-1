@@ -2,13 +2,14 @@ var express = require('express');
 var app=express();
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
+var dbFile=require ('./db.js');
 
 //var dbHandler=require ('db.js');
 var filename = 'testSlack.db';
 var db = new sqlite3.Database(filename);
 
 app.get('/channel/user/:id', function (req, res) {
-	var userId = req.param('id');
+	var userId = parseInt(req.param('id'));
 	getChannelsForUser(userId, function(err, channels) {
 		res.send(channels);
 	});
@@ -29,6 +30,23 @@ app.get('/user/login', function (req, res) {
 		//console.log(err);
 	 	res.send(data);
 	});
+});
+
+app.get('/user/user/:id', function (req, res) {
+	var userId = parseInt(req.param('id'));
+	console.log ("user id : " + userId);
+
+	dbFile.getUserNameFromID(db, userId).then ((val)=> {
+		console.log ("user name : " + val);
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get user name");
+	//	db.close();
+	});
+
+	
 });
 
 app.use(express.static(__dirname + '/webapp'));

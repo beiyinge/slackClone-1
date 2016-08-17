@@ -14,4 +14,8 @@
 		<div>{{message.msg}}</div>
 	</div>
 
+
+	<!--<input type="text" name="txtMsg" ng-model="msg" ng-keypress="IsEnter($event)></input>-->
+	<textarea name="txtMsg" rows="4" cols="50" id = "txtMsg" ng-model="msg" ng-keyup="IsEnter($event)"></textarea>
+	<!--style="width:250px;height:150px;-->
 </div>
