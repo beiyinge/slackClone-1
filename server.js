@@ -1,5 +1,6 @@
 var express = require('express');
 var app=express();
+var bodyParser = require("body-parser");
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
 var bodyParser = require("body-parser");
@@ -8,6 +9,9 @@ app.use(bodyParser.json());
 
 
 var dbFile=require ('./db.js');
+
+//app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //var dbHandler=require ('db.js');
 var filename = 'testSlack.db';
@@ -34,6 +38,19 @@ app.get('/user/login', function (req, res) {
 	getUserIdByUsernamePassword(username, password, function(err, data) {
 		//console.log(err);
 	 	res.send(data);
+	});
+});
+
+app.post('/user/signup', function (req, res) {
+	var username = req.body.username;
+	var password = req.body.password;
+	var email = req.body.email;
+	console.log(username + " " + password + " " + email);
+	//res.end("yes");
+	signupUser(username, password, email, function(err) {
+		getUserIdByUsername(username, function(err, data){
+			res.send(data);
+		});
 	});
 });
 
@@ -149,4 +166,45 @@ function getUserIdByUsernamePassword (username, password, callBack){
            }
         );
     });
+};
+
+function getUserIdByUsername (username, callBack){
+
+ 	var sql = "SELECT USERID FROM USERS where " + 
+            "NAME = '" + username + "'";
+       	   
+   	var userid = [];
+
+    db.serialize(function() {
+        db.each(
+            sql, 
+            function(err, row) { 
+            	console.log(row);
+        		userid.push({'userId':row.USERID});
+            },
+            function (err) {
+				callBack(err, userid);	
+           }
+        );
+    });
+};
+
+function signupUser (username, password, email, callBack){
+
+ 	var sql = "insert into USERS(NAME, PASSWORD, EMAIL) values('" + 
+            username + "','" + password + "','" + email + "')";
+
+    db.serialize(function() {
+        db.each(
+            sql, 
+            function(err) { 
+            	//console.log(row);
+        		//userid.push({'userId':row.USERID});
+            },
+            function (err) {
+				callBack(err);	
+           }
+        );
+    });
+
  };

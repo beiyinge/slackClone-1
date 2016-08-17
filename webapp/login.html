@@ -9,6 +9,8 @@
     var slackApp = angular.module('slackApp', ['ngCookies']);
     
   	slackApp.controller('LoginCtrl', function ($scope, $http, $cookieStore, $window){
+  		$cookieStore.remove('userId');
+  		$cookieStore.remove('userName');
 
 		$scope.submit = function() {
         if ($scope.username && $scope.password) {
@@ -18,6 +20,7 @@
           			$scope.userId = data[0].userId;
               		console.log($scope.userId);
               		$cookieStore.put('userId', $scope.userId);
+              		$cookieStore.put('userName', $scope.username);
               		$window.location.href = '/slack.html';
   				}
   				else {
@@ -35,6 +38,8 @@
   </head>
 
   <body>
+
+<div><a href="signup.html">Sign Up</a></div>
 
 <h1>SSA Slack</h1>
 
