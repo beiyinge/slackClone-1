@@ -276,13 +276,9 @@
                $http.post(uploadUrl, fd, {
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
-               })
-                .success(' ....... okay ....').error('...not goood ....');
-       
-            //   .success(function(){
-            //    })
-            //   .error(function(){
-            //   });
+               }).then(function successCallback(response) {
+                 console.log("File uploaded success!");
+               });
             }
          }]);
 
