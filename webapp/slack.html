@@ -100,7 +100,7 @@
         };
 
         $scope.Save2DB=function(messageData){
-          console.log(messageData);
+          
           $http.post('/message/message', messageData).success(function (data,status, headers, config) {
                 $scope.PostDataResponse = data;
                 console.log ("success:"+ data);
@@ -121,6 +121,7 @@
               + "/" + currentdate.getFullYear() + " " 
               + currentdate.getHours() + ":" 
                 + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+                console.log ($scope.msg);
                           
                $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
 

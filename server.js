@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 var dbFile=require ('./db.js');
 
 //app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 //var dbHandler=require ('db.js');
 var filename = 'testSlack.db';
@@ -77,7 +76,8 @@ app.post('/message/message', function (req, res){
 
 	var userId=parseInt(req.body.userId);
 	var channelId=parseInt(req.body.channelId);
-	var msg=req.msg;
+	var msg=req.body.msg;
+	console.log (msg);
 
 	dbFile.InsertMsgData(msg,channelId,userId, db).then ((val)=>{
 		console.log ("insert message promise OK");
