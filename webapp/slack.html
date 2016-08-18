@@ -24,16 +24,25 @@
             controller: 'ChannelCtrl'
 
           }).
+          when('/administration.html', {
+            templateUrl: '/administration.html',
+            controller: 'AdministrationCtrl'
+
+          }).
           when('/Teams.html', {
             templateUrl: 'Teams.html',
             controller: 'TeamCtrl'
 
           }).
-          when('/administration.html', {
-            templateUrl: 'administration.html',
-            controller: 'AdministrationCtrl'
+   //        when('/login.html', {
+   //          templateUrl: 'login.html',
+   //          controller: 'LoginCtrl'
+   //        }).
+   //        when('/cart/:cart', {
+			// templateUrl: 'cart.html',
+   //          controller: 'CartCtrl'
+   //        }).
 
-          }).
           otherwise({
             redirectTo: '/'
           });
@@ -73,7 +82,9 @@
 
 
 
+slackApp.controller('AdministrationCtrl', function  ($scope, $http,$routeParams, $cookieStore, $window) {
 
+});
 
 
 
@@ -122,10 +133,25 @@
         };
 
 
-        slackApp.controller('AdministrationCtrl', function  ($scope, $http,$routeParams, $cookieStore, $window) {
+        // $scope.SaveChannels=function(){
 
+        //    for (var x in $scope.channels){
+        //      if ($scope.channels[x].bSave){
+        //        $scope.channelTeams.push({"teamName":$scope.teamName, "channelId":$scope.channels[x].id});
+        //      }
+        //    } 
 
-        });
+        //    var data={"myData":$scope.channelTeams}; 
+        //    $http.post('/team/channel', data).success(function (data,status, headers, config) {
+        //   //       $scope.PostDataResponse = data;
+        //         console.log ("success saving channels to teams");
+        //     })
+        //     .error(function (data, status, headers, config) {
+        //       console.log("failed to save channels to team");
+        //     });
+          
+        // }
+    });
 
 
 
