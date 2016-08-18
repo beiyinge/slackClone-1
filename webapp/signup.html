@@ -32,27 +32,38 @@
 
         $scope.signUpErr = "";
 
-        //var signupData = {username:$scope.username, password:$scope.password, email:$scope.email};
-        //console.log(signupData);
-        $http({
-            method: 'POST',
-            url: '/user/signup',
-            data: {'username':$scope.username, 'password':$scope.password, 'email':$scope.email}
-            //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function successCallback(response) {
-          $scope.signUpSucceed = "Sign up successed!";
-          $cookieStore.put(response.data[0]);
-          $cookieStore.put('userId', response.data[0].userId);
-          $cookieStore.put('userName', $scope.username);
-          //$window.location.href = '/login.html';
-        }, function errorCallback(response) {
-          $scope.signUpErr = "Error: username already existed!";
-          // called asynchronously if an error occurs
-          // or server returns response with an error status.
-        });
+        $http.get('/user/checkuser?username=' + $scope.username).success(function(data) {
+            console.log(data);
+            if(Object.keys(data).length != 0) {
+          		$scope.signUpErr = "Error: username already existed!";
+            }
+            else {
+              $http({
+                  method: 'POST',
+                  url: '/user/signup',
+                  data: {'username':$scope.username, 'password':$scope.password, 'email':$scope.email}
+                  //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+              }).then(function successCallback(response) {
+                $scope.signUpErr = "";
+                $scope.signUpSucceed = "Sign up successed!";
+                $cookieStore.put(response.data[0]);
+                $cookieStore.put('userId', response.data[0].userId);
+                $cookieStore.put('userName', $scope.username);
+                //$window.location.href = '/login.html';
+              }, function errorCallback(response) {
+                $scope.signUpErr = "Error: username already existed!";
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+              });
+            }
+          });
+            // .failed(function(data) {
+            //   console.log("failed");
+  
+    //   }
+    // });
       }
-    });
-
+});
 
 </script>
 

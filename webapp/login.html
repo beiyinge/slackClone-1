@@ -16,7 +16,7 @@
         if ($scope.username && $scope.password) {
         	console.log($scope.username + " " + $scope.password);
 			$http.get('/user/login?username=' + $scope.username + '&password=' + $scope.password).success(function(data) {
-          		if(data.length == 1) {
+          		if(data.length >= 1) {
           			$scope.userId = data[0].userId;
               		console.log($scope.userId);
               		$cookieStore.put('userId', $scope.userId);

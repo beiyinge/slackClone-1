@@ -30,6 +30,14 @@ app.get('/message/channel/:id', function (req, res) {
 	});
 });
 
+app.get('/user/checkuser', function (req, res) {
+	var username = req.param('username');
+	getUserIdByUsername(username, function(err, data) {
+		//console.log(err);
+	 	res.send(data);
+	});
+});
+
 app.get('/user/login', function (req, res) {
 	var username = req.param('username');
 	var password = req.param('password');
