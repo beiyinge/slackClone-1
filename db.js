@@ -165,8 +165,12 @@ exports.InsertChannelData=InsertChannelData;
 
 function InsertChannelData(name, teamid, desc, type, dbConn){
 	return new Promise((resolve, reject)=>{
+
+		
     	var insertChannels= "INSERT INTO CHANNELS ( NAME, TEAMID, DESC, TYPE) " +
             "VALUES('" + name  + "', " + teamid + " , '" + desc + "', '" + type + "')";
+		
+		console.log (insertChannels);
     
     	dbConn.serialize(function() {
         	dbConn.run(

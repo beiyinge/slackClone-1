@@ -149,6 +149,28 @@ app.post('/team/newTeam', function (req, res){
 });
 
 
+app.post('/team/channel', function (req, res){
+	console.log ("arrived at server to save new channel");
+
+	var channelName=req.body.channelName;
+	var desc=req.body.desc;
+	var teamId=parseInt(req.body.teamId);
+	var type=req.body.type;
+
+	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
+
+	
+
+	dbFile.InsertChannelData(channelName,  teamId, desc, type, db).then ((val)=>{
+		console.log ("insert new channel promise OK");
+		res.send(val);
+	}).catch((err)=>{
+		res.send("");
+		console.log ("new channel rejected");
+	});
+});
+
+
 
 app.post('/channel/channel', function (req, res){
 	console.log ("arrived at server");
