@@ -172,7 +172,7 @@ function getChannelsForUser (userid, callBack){
 function getUserIdByUsernamePassword (username, password, callBack){
 
  	var sql = "SELECT USERID FROM USERS where " + 
-            "NAME = '" + username + "' and PASSWORD = '" + password + "'";
+            "LOWER(NAME) = '" + username.toLowerCase() + "' and PASSWORD = '" + password + "'";
        	   
    	var userid = [];
 
@@ -193,7 +193,7 @@ function getUserIdByUsernamePassword (username, password, callBack){
 function getUserIdByUsername (username, callBack){
 
  	var sql = "SELECT USERID FROM USERS where " + 
-            "NAME = '" + username + "'";
+            "LOWER(NAME) = '" + username.toLowerCase() + "'";
        	   
    	var userid = [];
 
