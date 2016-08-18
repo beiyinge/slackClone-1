@@ -80,6 +80,23 @@ app.get('/user/user/:id', function (req, res) {
 	
 });
 
+app.get('/availableTeams/:userName', function (req, res) {
+	var userName = req.param('userName');
+	console.log ("user name : " + userName);
+
+	dbFile.getAvailableTeamsForUser(db, userName).then ((val)=> {
+		console.log ("team name : " + val);
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get user name");
+	//	db.close();
+	});
+
+	
+});
+
 app.get('/team/team', function (req, res) {
 	console.log("got to team select");
 	
@@ -97,7 +114,7 @@ app.get('/team/team', function (req, res) {
 });
 
 app.get('/allusers', function (req, res) {
-	console.log("got to team select");
+	console.log("all user names...");
 	
 	dbFile.getAllUserNames(db).then ((val)=> {
 		console.log(val);
