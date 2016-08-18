@@ -51,6 +51,7 @@
       //var channels = [];
       slackApp.controller('ChannelCtrl', function  ($scope, $http, $cookieStore, $window){
           $scope.userId = $cookieStore.get('userId'); 
+          $scope.userName = $cookieStore.get('userName'); 
            $http.get('/channel/user/' + $scope.userId).success(function(data) {
               $scope.channels = data;
            });
@@ -165,7 +166,7 @@
           else {
             $http.get('/channel/user/' + $scope.userId).success(function(data) {
               $scope.channels = data;
-              $scope.getChannelMessage($scope.channels[0].id);         
+              $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name);         
             });
 
               $http.get('/user/user/' + $scope.userId).success(function (data){
@@ -177,10 +178,11 @@
           }
      
 
-        $scope.getChannelMessage = function(channel) {
-          console.log(channel);
-          $scope.channel=channel;
-          $http.get('/message/channel/' + channel).success(function(data) {
+        $scope.getChannelMessage = function(channelId, channelName) {
+          console.log(channelName);
+          $scope.channel=channelId;
+          $scope.channelName=channelName;
+          $http.get('/message/channel/' + channelId).success(function(data) {
             $scope.messages = data;
             console.log($scope.messages);
           });
