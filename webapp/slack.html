@@ -155,13 +155,42 @@ slackApp.controller('AdministrationCtrl', function  ($scope, $http,$routeParams,
     });
 
 
+    slackApp.directive('fileModel', ['$parse', function ($parse) {   
+            return {
+               restrict: 'A',
+               link: function(scope, element, attrs) {
+                  var model = $parse(attrs.fileModel);
+                  var modelSetter = model.assign;
+                  
+                  element.bind('change', function(){
+                     scope.$apply(function(){
+                        modelSetter(scope, element[0].files[0]);
+                     });
+                  });
+               }
+            };
+         }]);
+      
+    slackApp.service('fileUpload', ['$http', function ($http) {
+            this.uploadFileToUrl = function(file, uploadUrl){
+               var fd = new FormData();
+               fd.append('file', file);
+            
+               $http.post(uploadUrl, fd, {
+                  transformRequest: angular.identity,
+                  headers: {'Content-Type': undefined}
+               })
+                .success(' ....... okay ....').error('...not goood ....');
+       
+            //   .success(function(){
+            //    })
+            //   .error(function(){
+            //   });
+            }
+         }]);
 
-
-
-
-
-
-      slackApp.controller('HomeCtrl', function ($scope, $http, $cookieStore, $window){
+      slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore', '$window', 
+      function ($scope, fileUpload, $http, $cookieStore, $window){
         //$scope.channels = [];
         $scope.userId = $cookieStore.get('userId');
           console.log($scope.userId);
@@ -182,6 +211,15 @@ slackApp.controller('AdministrationCtrl', function  ($scope, $http,$routeParams,
 
           }
      
+          $scope.uploadFile = function(){
+               var file = $scope.myFile;
+               
+               console.log('file is ' );
+               console.dir(file);
+               
+               var uploadUrl = "/channel/uploadFile";
+               fileUpload.uploadFileToUrl(file, uploadUrl);
+            };
 
         $scope.getChannelMessage = function(channelId, channelName) {
           console.log(channelName);
@@ -229,7 +267,7 @@ slackApp.controller('AdministrationCtrl', function  ($scope, $http,$routeParams,
             
             }
          };
-    });
+    }]);
 
     slackApp.controller('AdministrationCtrl', function ($scope, $http, $cookieStore, $window) {
 
