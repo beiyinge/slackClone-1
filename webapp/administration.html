@@ -1,0 +1,7 @@
+<h1>Add Users to a Team</h1>
+
+
+<form ng-submit="addUserToTeam()" ng-controller="UserListCtrl">
+<p>Select User: <select ng-model="availableUsers" ng-options="x for x in availableUsers"></select></p>
+<p><input type="submit" id="addUserButton" value="Add User to Team"/></p>
+</form>
