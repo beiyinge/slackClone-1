@@ -2,11 +2,13 @@
   <head>
     <meta charset="utf-8">
     <title>Slack Mock Project</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="slack.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular-route.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-cookies.js"></script>
+
     <script>
 
     var slackApp = angular.module('slackApp', ['ngRoute', 'ngCookies']);
@@ -22,11 +24,21 @@
             controller: 'ChannelCtrl'
 
           }).
-          when('/administration.html', {
-            templateUrl: 'adminitration.html',
-            controller: 'AdministrationCtrl'
+
+          when('/Teams.html', {
+            templateUrl: 'Teams.html',
+            controller: 'TeamCtrl'
 
           }).
+   //        when('/login.html', {
+   //          templateUrl: 'login.html',
+   //          controller: 'LoginCtrl'
+   //        }).
+   //        when('/cart/:cart', {
+			// templateUrl: 'cart.html',
+   //          controller: 'CartCtrl'
+   //        }).
+
           otherwise({
             redirectTo: '/'
           });
@@ -44,6 +56,7 @@
             if (event.keyCode===13){                                       
                  $scope.bNew=true
                 document.getElementById("txtChannel").value = "";
+                $scope.channels.push({"channel":$scope.newChannel});
            
                $scope.SaveChannel2DB({"userId":$scope.userId, "channelName":$scope.newChannel});         
             }
@@ -62,6 +75,83 @@
 
         };
     });
+
+
+
+
+
+
+
+ slackApp.controller('TeamCtrl', function  ($scope, $http,$routeParams, $cookieStore, $window){
+          $scope.userId = $cookieStore.get('userId'); 
+           $http.get('/team/team' ).success(function(data) {
+              $scope.teams = data;
+              console.log(data);
+           });
+
+            // $http.get('/channel/channel' ).success(function(data) {
+            //   $scope.channels = data;
+            //   console.log(data);      
+            // });
+
+       
+        $scope.IsEnter=function(event){
+            if (event.keyCode===13){                                       
+               //  $scope.bNew=true
+                document.getElementById("txtTeam").value = "";
+                $scope.teams.push({"teamId": "", "teamName":$scope.newTeam});
+           
+               $scope.SaveTeam2DB({"teamName":$scope.newTeam});         
+            }
+         };
+
+        //  $scope.showChannels=function (teamClicked){
+        //       $scope.bTeamClicked=true;
+          
+                       
+        //       $scope.teamName=teamClicked;
+        //       $scope.$apply
+        //  };
+
+
+        $scope.SaveTeam2DB=function(teamData){
+          console.log(teamData);
+           $http.post('/team/newTeam', teamData).success(function (data,status, headers, config) {
+          //       $scope.PostDataResponse = data;
+                console.log ("success saving team:"+ data);
+            })
+            .error(function (data, status, headers, config) {
+              console.log("failed to save team");
+            });
+
+        };
+
+
+        // $scope.SaveChannels=function(){
+
+        //    for (var x in $scope.channels){
+        //      if ($scope.channels[x].bSave){
+        //        $scope.channelTeams.push({"teamName":$scope.teamName, "channelId":$scope.channels[x].id});
+        //      }
+        //    } 
+
+        //    var data={"myData":$scope.channelTeams}; 
+        //    $http.post('/team/channel', data).success(function (data,status, headers, config) {
+        //   //       $scope.PostDataResponse = data;
+        //         console.log ("success saving channels to teams");
+        //     })
+        //     .error(function (data, status, headers, config) {
+        //       console.log("failed to save channels to team");
+        //     });
+          
+        // }
+    });
+
+
+
+
+
+
 
 
       slackApp.controller('HomeCtrl', function ($scope, $http, $cookieStore, $window){

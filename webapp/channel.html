@@ -1,22 +1,37 @@
-<div style="display:inline-block;vertical-align:top">
+
  <div style="display:inline-block;vertical-align:top; width:250px">   
     <ul>
-        <li ng-repeat="channel in channels track by $index"><input type="radio" name="radChannel" ng-model="" ng-true-value="true"" >{{channel.id}} {{channel.name}}</li>
+        <li ng-repeat="channel in channels track by $index"> {{channel.name}}</li>
     </ul>
 </div>
-
-
-    <div style="display:inline-block;vertical-align:top"> 
+<div style="display:inline-block;vertical-align:top"> 
         
        <p>Enter a new Channel
         
-            <input type="text" id="txtChannel" ng-model="newChannel" ng-keyup="IsEnter($event)">
+            <input type="text" id="txtChannel" ng-model="newChannel" ></input>
         </p>
-    </div>
-    <!--<div style="display:inline-block;vertical-align:top" ng-show="bNew">
-         <select multiple>
-            <option ng-repeat value={{user.userid}} >{{user.name}}</option>
-         </select>
-    </div> -->
 
+        <div ng-show = "bNewData">
+            Enter a description
+        
+            <input type="text" id="txtChannel" ng-model="desc" ></input>
+        
+       <p> 
+           <select name="teams">
+            <option ng-repeat="team in teams " value="{{team.id}">{{team.name}}</option>
+          </select>
+        </p>
+        <p>
+             <input type="radio" name="type" ng-change="Changed('public)" >Public Channel</input>
+            <input type="radio" name="type" ng-change="Changed('private')">Private Channel</input>
+        </p>
+        <p>
+            <button type="button" name="btnSave" ng-click="Save2DB()">
+        <p>
+    </div>
 </div>
+
+    
+  
+
+
