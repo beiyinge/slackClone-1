@@ -12,10 +12,14 @@
 
         slackApp.controller('AdministrationCtrl', function ($scope, $http) {
 
-            $scope.availableUsers = ['bob','sally','peter'];
+            $http.get('/allusers').success(function(data) {
+              $scope.availableUsers = data;
+            });
+
+            //$scope.availableUsers = ['bob','sally','peter'];
 
             $scope.addUserToTeam = function() {
-                alert('we are here.....'+$scope.userToAdd);
+                alert('Selected Name:'+$scope.userToAdd);
             };
         });
 

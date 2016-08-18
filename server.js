@@ -96,6 +96,22 @@ app.get('/team/team', function (req, res) {
 	
 });
 
+app.get('/allusers', function (req, res) {
+	console.log("got to team select");
+	
+	dbFile.getAllUserNames(db).then ((val)=> {
+		console.log(val);
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get user names");
+	//	db.close();
+	});
+
+	
+});
+
 app.get('/channel/channel', function (req, res) {
 	console.log("got to team select");
 	
