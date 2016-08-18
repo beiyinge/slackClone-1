@@ -23,6 +23,8 @@ app.get('/channel/user/:id', function (req, res) {
 	});
 });
 
+
+
 app.get('/message/channel/:id', function (req, res) {
 	var userId = req.param('id');
 	getMsgForChannel(userId, function(err, messages) {
@@ -70,6 +72,39 @@ app.get('/user/user/:id', function (req, res) {
 	
 });
 
+app.get('/team/team', function (req, res) {
+	console.log("got to team select");
+	
+	dbFile.getTeams(db).then ((val)=> {
+		console.log(val);
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get team  names");
+	//	db.close();
+	});
+
+	
+});
+
+app.get('/channel/channel', function (req, res) {
+	console.log("got to team select");
+	
+	dbFile.getChannels(db).then ((val)=> {
+		console.log(val);
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get channel  names");
+	//	db.close();
+	});
+
+	
+});
+
+
 
 app.post('/message/message', function (req, res){
 	console.log ("arrived at server");
@@ -87,6 +122,25 @@ app.post('/message/message', function (req, res){
 		console.log ("promise rejected");
 	});
 });
+
+
+
+app.post('/team/newTeam', function (req, res){
+	console.log ("arrived at server to save new team");
+
+	var teamName=req.body.teamName;
+	console.log (teamName);
+
+	dbFile.InsertTeamData(teamName, db).then ((val)=>{
+		console.log ("insert team promise OK");
+		res.send(val);
+	}).catch((err)=>{
+		res.send("");
+		console.log ("team insert rejected");
+	});
+});
+
+
 
 app.post('/channel/channel', function (req, res){
 	console.log ("arrived at server");

@@ -379,6 +379,75 @@ function getTeamsForUser (dbConn, user){
      });
  };
 
+ //--------------------------------------------------
+
+  exports.getTeams=getTeams;
+
+function getTeams (dbConn){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT TEAM.NAME, TEAM.TEAMID FROM TEAM ORDER BY TEAM.NAME";
+        
+     
+      var team = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		team.push({"teamId": row.TEAMID,  "teamName" : row.NAME});
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(team));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+//-------------------------------------
+
+
+exports.getChannels=getChannels;
+
+function getChannels (dbConn){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT NAME, ID FROM CHANNELS ORDER BY NAME";
+        
+     
+      var team = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		team.push({"id": row.ID,  "name" : row.NAME,"bSave": false});
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(team));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
  //------------------------------------------------------------
 
  exports.getMsgForChannel=getMsgForChannel;

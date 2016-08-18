@@ -1,0 +1,34 @@
+<div style="display:inline-block;vertical-align:top">
+ <div style="display:inline-block;vertical-align:top; width:250px">   
+    <ul>
+         <li ng-repeat="team in teams track by $index" >{{team.teamName}}</li>
+          <!--<li ng-repeat="team in teams track by $index" ><a href="" ng-click="showChannels(team.teamName)"> {{team.teamName}}</a></li>-->
+    </ul>
+</div>
+
+
+    <div style="display:inline-block;vertical-align:top"> 
+        
+       <p>Enter a new Team
+        
+            <input type="text" id="txtTeam" ng-model="newTeam" ng-keyup="IsEnter($event)">
+        </p>
+    </div>
+    
+
+</div>
+<!--<Br><BR>
+<div style="display:inline-block;vertical-align:top" ng-show="bTeamClicked">
+       Channels for : {{teamName}}
+
+
+        <ul>
+            <li ng-repeat="channel in channels track by $index" >
+                <input type="checkbox" name="chkChannels"  ng-true-value="true" ng-model="channel.bSave">
+                    {{channel.name}}
+                </input>
+            </li>
+        </ul>
+        <button type="button" name="Save Channels" ng-click="SaveChannels()"></button>
+        
+    </div>-->
