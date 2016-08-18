@@ -165,8 +165,12 @@ exports.InsertChannelData=InsertChannelData;
 
 function InsertChannelData(name, teamid, desc, type, dbConn){
 	return new Promise((resolve, reject)=>{
+
+		
     	var insertChannels= "INSERT INTO CHANNELS ( NAME, TEAMID, DESC, TYPE) " +
             "VALUES('" + name  + "', " + teamid + " , '" + desc + "', '" + type + "')";
+		
+		console.log (insertChannels);
     
     	dbConn.serialize(function() {
         	dbConn.run(
@@ -414,6 +418,39 @@ function getTeams (dbConn){
      });
  };
 //-------------------------------------
+
+exports.getAllUserNames = getAllUserNames;
+
+function getAllUserNames (dbConn){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT USERS.NAME FROM USERS ORDER BY USERS.NAME";
+        
+     
+      var users = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		users.push(row.NAME);
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(users);
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
 
 
 exports.getChannels=getChannels;

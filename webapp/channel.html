@@ -1,33 +1,53 @@
+Channels: <br>
+ <div style="display:inline-block;vertical-align:top; width:400px">  
 
- <div style="display:inline-block;vertical-align:top; width:250px">   
     <ul>
         <li ng-repeat="channel in channels track by $index"> {{channel.name}}</li>
     </ul>
 </div>
 <div style="display:inline-block;vertical-align:top"> 
-        
-       <p>Enter a new Channel
-        
-            <input type="text" id="txtChannel" ng-model="newChannel" ></input>
-        </p>
+    <form>
+        <table>
+        <tr>
+            <td>Enter a new Channel:</td>
+            
+                <td><input type="text" id="txtChannel" ng-model="newChannel" ng-keyUp="checkChannelData($event)" ></input></td>
 
-        <div ng-show = "bNewData">
-            Enter a description
-        
-            <input type="text" id="txtChannel" ng-model="desc" ></input>
-        
-       <p> 
-           <select name="teams">
-            <option ng-repeat="team in teams " value="{{team.id}">{{team.name}}</option>
-          </select>
-        </p>
-        <p>
-             <input type="radio" name="type" ng-change="Changed('public)" >Public Channel</input>
-            <input type="radio" name="type" ng-change="Changed('private')">Private Channel</input>
-        </p>
-        <p>
-            <button type="button" name="btnSave" ng-click="Save2DB()">
-        <p>
+            </tr>
+             <tr  ng-show="channelErr"><td style="color:red"> You must enter a channel.</td></tr>
+
+        <tr>
+            <td> Enter a description:</td>
+            
+            <td> <input type="text" id="txtDesc" ng-model="desc" ng-keyUp="checkDescData($event)" ></input></td>
+            </tr>
+            <tr  ng-show="descErr"><td style="color:red"> You must enter a description.</td></tr>
+
+            
+        <tr> 
+            <td></td>
+            <td>
+                <select id ="lstTeams" name="teams" ng-selected= "checkTeamData($event)" >
+                    <option value=0 ng-model="selTeam" >Select a team </option>
+                    <option ng-repeat="team in teams" ng-model="selTeam" value={{team.teamId}}>{{team.teamName}}</option>
+                </select>
+            </td>
+            </tr>
+            <tr  ng-show="teamErr"><td style="color:red"> You must enter a team.</td></tr>
+
+            <tr>
+                <td> <input type="radio" name="type"  id="radPublic"  ng-checked="checkRadData()">Public Channel</input></td>
+            <td> <input type="radio" name="type" id="radPrivate"  ng-checked="checkRadData()" >Team Channel</input></td>
+            </tr>
+            <tr  ng-show="radErr"><td style="color:red"> You must select 'Public' or 'Private'.</td></tr>
+
+            <tr>
+                <td>
+                <button type="button" name="btnSave" ng-click="SaveChannel2DB()">Save</button>
+                </td>
+            </tr>
+        </table>
+    </form>
     </div>
 </div>
 

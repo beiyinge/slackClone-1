@@ -98,6 +98,22 @@ app.get('/team/team', function (req, res) {
 	
 });
 
+app.get('/allusers', function (req, res) {
+	console.log("got to team select");
+	
+	dbFile.getAllUserNames(db).then ((val)=> {
+		console.log(val);
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get user names");
+	//	db.close();
+	});
+
+	
+});
+
 app.get('/channel/channel', function (req, res) {
 	console.log("got to team select");
 	
@@ -181,6 +197,27 @@ app.post('/channel/uploadFile', function(req, res){
   form.parse(req);
 
   res.send("success");
+});
+
+app.post('/team/channel', function (req, res){
+	console.log ("arrived at server to save new channel");
+
+	var channelName=req.body.channelName;
+	var desc=req.body.desc;
+	var teamId=parseInt(req.body.teamId);
+	var type=req.body.type;
+
+	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
+
+	
+
+	dbFile.InsertChannelData(channelName,  teamId, desc, type, db).then ((val)=>{
+		console.log ("insert new channel promise OK");
+		res.send(val);
+	}).catch((err)=>{
+		res.send("");
+		console.log ("new channel rejected");
+	});
 });
 
 app.post('/channel/channel', function (req, res){
