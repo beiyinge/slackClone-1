@@ -2,6 +2,8 @@
   <head>
     <meta charset="utf-8">
     <title>Slack Mock Project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="slack.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-cookies.js"></script>
     <script>
@@ -32,50 +34,73 @@
 
         $scope.signUpErr = "";
 
-        //var signupData = {username:$scope.username, password:$scope.password, email:$scope.email};
-        //console.log(signupData);
-        $http({
-            method: 'POST',
-            url: '/user/signup',
-            data: {'username':$scope.username, 'password':$scope.password, 'email':$scope.email}
-            //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(function successCallback(response) {
-          $scope.signUpSucceed = "Sign up successed!";
-          $cookieStore.put(response.data[0]);
-          $cookieStore.put('userId', response.data[0].userId);
-          $cookieStore.put('userName', $scope.username);
-          //$window.location.href = '/login.html';
-        }, function errorCallback(response) {
-          $scope.signUpErr = "Error: username already existed!";
-          // called asynchronously if an error occurs
-          // or server returns response with an error status.
-        });
+        $http.get('/user/checkuser?username=' + $scope.username).success(function(data) {
+            console.log(data);
+            if(Object.keys(data).length != 0) {
+          		$scope.signUpErr = "Error: username already existed!";
+            }
+            else {
+              $http({
+                  method: 'POST',
+                  url: '/user/signup',
+                  data: {'username':$scope.username, 'password':$scope.password, 'email':$scope.email}
+                  //headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+              }).then(function successCallback(response) {
+                $scope.signUpErr = "";
+                $scope.signUpSucceed = "Sign up successed!";
+                $cookieStore.put(response.data[0]);
+                $cookieStore.put('userId', response.data[0].userId);
+                $cookieStore.put('userName', $scope.username);
+                //$window.location.href = '/login.html';
+              }, function errorCallback(response) {
+                $scope.signUpErr = "Error: username already existed!";
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+              });
+            }
+          });
+            // .failed(function(data) {
+            //   console.log("failed");
+  
+    //   }
+    // });
       }
-    });
-
+});
 
 </script>
 
   </head>
 
   <body>
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <ul class="nav navbar-nav">
+    <li><a href="slack.html">Home</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li class="active"><a href="#">Sign Up</a></li>
+    </ul>
+  </div>
+</nav>
 
-<div><a href="slack.html">Home</a> | <a href="#/login.html">Login</a></div>
+<div class="panel panel-default" style="width:600;margin:auto">
+  <div class="panel-heading">
+    <h3 class="panel-title">Sign Up to SSA Slack</h3>
+  </div>
+  <div class="panel-body">
+    <form ng-submit="submit()" ng-controller="SignUpCtrl">
+      <h4 ng-show="signUpErr" style="color:red">{{signUpErr}}</h4>
+      <h4 ng-show="signUpSucceed" style="color:green">{{signUpSucceed}}</h4>
+      <table class = "table table-borderless">
+      <tr><td>Username:</td><td><input type="text" ng-model="username" id="username"></td></tr>
+      <tr><td>Password:</td><td><input type="password" ng-model="password" id="password"></td></tr>
+      <tr><td>Confirm Password:</td><td><input type="password" ng-model="re_password" id="password"></td></tr>
+      <tr><td>Email:</td><td><input type="email" ng-model="email" id="email"></td></tr>
+      <tr><td></td><td><input type="submit" id="submit" value="Submit"></td></tr>
+      </table>
+      </form>
+  </div>
+</div>
 
-<h1>SSA Slack</h1>
-
-<h3>Sign Up</h3>
-<form ng-submit="submit()" ng-controller="SignUpCtrl">
-<h4 ng-show="signUpErr" style="color:red">{{signUpErr}}</h4>
-<h4 ng-show="signUpSucceed" style="color:green">{{signUpSucceed}}</h4>
-<table>
-<tr><td>Username: </td><td><input type="text" ng-model="username" id="username"></td></tr>
-<tr><td>Password: </td><td><input type="password" ng-model="password" id="password"></td></tr>
-<tr><td>Confirm Password: </td><td><input type="password" ng-model="re_password" id="password"></td></tr>
-<tr><td>Email: </td><td><input type="email" ng-model="email" id="email"></td></tr>
-<tr><td></td><td><input type="submit" id="submit" value="Submit"></td></tr>
-</table>
-</form>
-
+<div ng-include="'footer.html'"></div>
   </body>
 </html>
