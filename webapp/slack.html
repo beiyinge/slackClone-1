@@ -22,14 +22,11 @@
             controller: 'ChannelCtrl'
 
           }).
-   //        when('/login.html', {
-   //          templateUrl: 'login.html',
-   //          controller: 'LoginCtrl'
-   //        }).
-   //        when('/cart/:cart', {
-			// templateUrl: 'cart.html',
-   //          controller: 'CartCtrl'
-   //        }).
+          when('/administration.html', {
+            templateUrl: 'adminitration.html',
+            controller: 'AdministrationCtrl'
+
+          }).
           otherwise({
             redirectTo: '/'
           });
@@ -134,6 +131,10 @@
             
             }
          };
+    });
+
+    slackApp.controller('AdministrationCtrl', function ($scope, $http, $cookieStore, $window) {
+
     });
 
 
