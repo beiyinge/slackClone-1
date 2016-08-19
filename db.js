@@ -68,13 +68,13 @@ function createDB (filename){
             db.run(createTeamUsersTableSql);
             db.run(createChannelsTableSql);
             db.run(createMessageTableSql);
-            db.close();
+            
         
         });
     }
 }
 
-createDB(filename);
+
 //--------------------------------
 exports.InsertTeamData=InsertTeamData;
 function InsertTeamData( name, dbConn){
@@ -486,6 +486,8 @@ function getChannels (dbConn){
      });
  };
  //------------------------------------------------------------
+
+ 
 
  exports.getMsgForChannel=getMsgForChannel;
 

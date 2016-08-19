@@ -16,11 +16,15 @@ var dbFile=require ('./db.js');
 
 //var dbHandler=require ('db.js');
 var filename = 'testSlack.db';
+
+dbFile.createDB(filename);
 var db = new sqlite3.Database(filename);
 
 app.get('/channel/user/:id', function (req, res) {
 	var userId = parseInt(req.param('id'));
+	
 	getChannelsForUser(userId, function(err, channels) {
+		console.log ("channels****" + channels);
 		res.send(channels);
 	});
 });
