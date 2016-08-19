@@ -154,15 +154,12 @@ function InsertTeamUsers(userid, teamid, dbConn){
 					insertTeamUsers,
 					
 					function (err) {
-						if (err){
-							console.log("sql insert teamusers err: " + err);
-							reject(err);
+						if (err) {
+
+							reject(err);						
+						} else {
 							
-						
-						}else{
-							console.log ("sql insert teamusers success");
-							resolve();//
-						
+							resolve();						
 						}
 					}
 				);
@@ -364,8 +361,7 @@ function getTeamsForUser (dbConn, user){
      var sql= "SELECT TEAM.NAME FROM TEAM " + 
             "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
             "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
-            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";
-        
+            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";        
      
       var team = [];
 	   
@@ -514,33 +510,32 @@ function getChannelsForPrivate(id, dbConn){
 exports.getAllUserNames = getAllUserNames;
 
 function getAllUserNames (dbConn){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT USERS.NAME FROM USERS ORDER BY USERS.NAME";
-        
-     
-      var users = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		users.push(row.NAME);
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(users);
-                        
-	            	}
-	           }
-	        );
-	    });
+	return new Promise((resolve,reject)=>{
+
+		var sql= "SELECT USERID, NAME FROM USERS ORDER BY NAME";        
+		
+		var users = [];
+		
+		dbConn.serialize(function() {
+			dbConn.each(
+				sql, 
+				function(err, row) {
+					if (err){
+						reject (err);
+					}else{  
+						users.push({"id": row.USERID,  "name" : row.NAME});						
+					}
+				},
+				function (err, nRows) {
+					if (err){
+						reject(err);
+					}else{
+						resolve(JSON.stringify(users));
+						
+					}
+				}
+			);
+		});
      });
  };
 
