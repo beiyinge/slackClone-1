@@ -383,6 +383,42 @@ function getTeamsForUser (dbConn, user){
      });
  };
 
+ exports.getAvailableTeamsForUser=getAvailableTeamsForUser;
+
+ function getAvailableTeamsForUser (dbConn, userName){
+     return new Promise((resolve,reject)=>{
+     var sql= "SELECT TEAM.NAME FROM TEAM " + 
+            "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
+            "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
+            "WHERE USERS.NAME != " + userName + " ORDER BY TEAM.NAME";
+        
+     
+      var team = [];
+	   
+	    dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		team.push(row.NAME);
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(team);
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+ };
+
  //--------------------------------------------------
 
   exports.getTeams=getTeams;
