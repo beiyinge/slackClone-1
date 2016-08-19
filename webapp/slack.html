@@ -316,6 +316,9 @@
 
       slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore', '$window', 
       function ($scope, fileUpload, $http, $cookieStore, $window){
+
+        
+
         //$scope.channels = [];
         $scope.userId = $cookieStore.get('userId');
           console.log($scope.userId);
@@ -332,9 +335,15 @@
                  //    console.log ("got user name");
                     $scope.userName=data[0].userName;
                  console.log("name--" + $scope.userName);
+                // $scope.setTimeout();
               });
 
           }
+
+         setInterval(function (){
+           $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name); 
+           console.log ("message refresh");   
+         }, 3000);
      
           $scope.uploadFile = function(){
                var file = $scope.myFile;
