@@ -10,9 +10,9 @@
 	Channels
 </div>
 <ul class="list-group">
-	<li ng-repeat="channel in channels" class="list-group-item">
-		<a href="" ng-click="getChannelMessage(channel.id, channel.name)" style="color:#ab9ba9">
-			{{channel.name}}</a>
+	<li ng-repeat="chl in channels" class="list-group-item" ng-class="{chactive:chl.id==channel}">
+		<a href="" ng-click="getChannelMessage(chl.id, chl.name)" class="channel" ng-class="{chactive:chl.id==channel}">
+			{{chl.name}}</a>
 	</li>
 </ul>
 </div>
