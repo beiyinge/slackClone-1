@@ -83,8 +83,9 @@ app.get('/user/user/:id', function (req, res) {
 });
 
 app.get('/currentTeams/:userId', function (req, res) {
-	var userIdp = req.param('userId').substr(1);	
-	var userId = parseInt(userIdp);	
+	//var userIdp = req.param('userId').substr(1);	
+	//var userId = parseInt(userIdp);	
+	var userId = parseInt(req.param('userId'));
 
 	dbFile.getTeamsForUser(db, userId).then ((val)=> {
 		console.log ("teams : " + val);

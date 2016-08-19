@@ -482,7 +482,7 @@ function getAllUserNames (dbConn){
 					if (err){
 						reject(err);
 					}else{
-						resolve(users);
+						resolve(JSON.stringify(users));
 						
 					}
 				}
