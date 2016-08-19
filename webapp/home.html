@@ -9,7 +9,6 @@
 <div style="color:#fff;font-weight:bold;">
 	Channels
 </div>
-<div>
 <ul class="list-group">
 	<li ng-repeat="chl in channels" class="list-group-item" ng-class="{chactive:chl.id==channel}">
 		<a href="" ng-click="getChannelMessage(chl.id, chl.name)" class="channel" ng-class="{chactive:chl.id==channel}">
@@ -17,27 +16,6 @@
 	</li>
 </ul>
 </div>
-<!---->
--------------------------------
-<div style="color:#fff;font-weight:bold;">
-Private Chat
-</div>
-<div>
-	<select id ="lstUsers" name="users" ng-selected= "getUserData($event)" >
-			<option value=0 ng-model="selUser" >Select a user </option>
-			<option ng-repeat="user in allUsers" ng-model="selUser" value={{user.userId}}>{{user.userName}}</option>
-	</select>
-</div>
-<div>
-<ul class="list-group">
-	<li ng-repeat="privchannel in privateChannels" class="list-group-item">
-		<a href="" ng-click="getChannelMessage(privchannel.channelId, privchannel.channelName)" style="color:#ab9ba9">
-			{{privchannel.channelName}}</a>
-	</li>
-</ul>
-	
-</div>
-<!---->
 </td>
 <td>
 
@@ -49,7 +27,7 @@ Private Chat
 <div style="float:right">
   <form class="navbar-form" role="search">
     <div class="input-group add-on">
-      <input ng-model="search.$" class="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text">
+      <input class="form-control" placeholder="Search" name="srch-term" id="srch-term" type="text">
       <div class="input-group-btn">
         <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
       </div>
@@ -60,7 +38,7 @@ Private Chat
   </div>
 </div>
 
-<div ng-repeat="message in messages | filter:search" style="margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;">
+<div ng-repeat="message in messages" style="margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;">
 	<div style="font-weight:bold">{{message.userName}}</div>
 	<div style="color:#aaa">{{message.date}}</div>
 	<div style="margin-top:5px;">{{message.msg}}</div>
@@ -73,16 +51,8 @@ Private Chat
 </div>
 
 <div style="margin:10px;">
-	<div ng-show="showUploadFileMsg">{{uploadFileMsg}}</div>
-	<div style="display:inline-block">Upload File: <input type = "file" file-model = "myFile"/></div>
-	<div style="display:inline-block"><button ng-click = "uploadFile()">Upload</button></div>
-</div>
-
-<div ng-show="uploadedFiles.length > 0" style="margin:10px;">
-	Download Files: 
-	<ul>
-		<li ng-repeat="file in uploadedFiles"><a href="uploads/{{file}}">{{file}}</a></li>
-	</ul>
+	<input type = "file" file-model = "myFile"/>
+	<button ng-click = "uploadFile()">Upload</button>
 </div>
 
 </td></tr>

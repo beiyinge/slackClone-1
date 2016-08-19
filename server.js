@@ -85,11 +85,24 @@ app.get('/user/user/:id', function (req, res) {
 	
 });
 
+app.get('/currentTeams/:userId', function (req, res) {
+	//var userIdp = req.param('userId').substr(1);	
+	//var userId = parseInt(userIdp);	
+	var userId = parseInt(req.param('userId'));
+
+	dbFile.getTeamsForUser(db, userId).then ((val)=> {
+		
+		res.send (val);
+		
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get teams");	
+	});	
+});
+
 app.get('/team/team', function (req, res) {
-	console.log("got to team select");
 	
 	dbFile.getTeams(db).then ((val)=> {
-		
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
@@ -139,10 +152,8 @@ app.get ('/channel/privateChannel/:id', function (req, res){
 
 
 app.get('/allusers', function (req, res) {
-	console.log("got to team select");
 	
 	dbFile.getAllUserNames(db).then ((val)=> {
-		
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
@@ -258,6 +269,21 @@ app.post('/team/channel', function (req, res){
 		res.send("");
 		console.log ("new channel rejected");
 	});
+});
+
+app.post('/team/user/', function (req, res){
+
+	var teamId=parseInt(req.body.teamId);
+	var userId=parseInt(req.body.userId);
+
+	dbFile.InsertTeamUsers(userId, teamId, db).then ((val)=>{
+		console.log ("added userid " + userId + " to teamid " + teamId);
+		res.send(val);
+	}).catch((err)=>{
+		res.send("");
+		console.log ("insert into team members failed....");
+	});
+	
 });
 
 app.post('/channel/channel', function (req, res){
