@@ -2,6 +2,8 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
 
     $scope.availableTeams = [];
     $scope.allTeams = [];
+    $scope.selectedUserId = -1;
+    $scope.selectedTeamId = -1;
 
     $http.get('/allusers')
     .then(function(response) {
@@ -14,6 +16,8 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
     
     $scope.selectUserToAdd = function(selectedUser) {
 
+        $scope.selectedUserId = selectedUser.id;
+
         $http.get('/currentTeams/'+selectedUser.id)
         .then(function(response) {
 
@@ -22,41 +26,21 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
                return team.team;
            });
 
-           alert(currentTeamNames);
-
            $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
                if (currentTeamNames.indexOf(team.teamName) === -1) {
-                   alert('return true - not found');
                    return true;
                }
-               alert('return false - found');
                return false;
            });
-
-           var availableTeamNames = $scope.availableTeams.map(function (team) {
-               return team.teamName;
-           });
-
-           alert(availableTeamNames);
-
-        //    for ( var ii=0; ii<$scope.allTeams.length; ii++ ) {
-
-        //        if( $scope.currentTeams.indexOf($scope.allTeams[ii]) === -1 ) {
-        //            $scope.availableTeams.push($scope.allTeams[ii]);
-        //        }
-        //    }
         });
     };
 
-    $scope.selectTeamToAdd = function() {
-        alert('Selected Team:'+$scope.teamToAdd.teamName);
+    $scope.selectTeamToAdd = function(selectedTeam) {
+        $scope.selectedTeamId = selectedTeam.teamId;
     };
 
     $scope.addUserToTeam = function() {
-        alert('Adding user to team...unfinished');
-
-       //$http.get('').success(function(data) {
-          //
-       //});
+        //alert('Adding user:'+$scope.selectedUserId);
+        //alert('Adding user:'+$scope.selectedTeamId);       
     };
 });
