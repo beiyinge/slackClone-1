@@ -101,7 +101,7 @@ app.get('/team/team', function (req, res) {
 	console.log("got to team select");
 	
 	dbFile.getTeams(db).then ((val)=> {
-		console.log(val);
+		console.log('output:'+val);
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
