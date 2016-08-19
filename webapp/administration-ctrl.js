@@ -16,12 +16,11 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
         alert('Selected Team:'+$scope.teamToAdd.teamName);
     };
 
-
     $scope.addUserToTeam = function() {
-        alert('Selected Name:'+$scope.userToAdd);
+        alert('Adding user to team...unfinished');
 
-       //$http.get('/team/team/').success(function(data) {
-          //$scope.availableTeams = data;
+       //$http.get('').success(function(data) {
+          //
        //});
     };
 });
