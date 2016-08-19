@@ -24,6 +24,13 @@
                     
                     <input type="text" id="txtTeam" ng-model="newTeam" ng-keyup="IsEnter($event)">
                 </p>
+                <p ng-show = teamErr style="color:red;">
+                        You must enter a team name
+                </P>
+
+                <p>
+                    <button type ="button" name="btnSave" ng-click="dataSubmitted()">Save</button>
+                </p>
             </div>
         </td>
     </tr>
