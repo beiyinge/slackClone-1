@@ -63,18 +63,28 @@ function createDB (filename){
                     " FOREIGN KEY (USERID) REFERENCES USER(USERID))" ; 
 
 
+					
+                var createChatSql = "CREATE TABLE IF NOT EXISTS CHAT (ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL, "+
+				 	"CHANNELID     INTEGER, "  +
+                    "USER1         INTEGER , " +
+				     "USER2         INTEGER , " +
+                    "FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID), " +
+                    "FOREIGN KEY (USER1) REFERENCES USER(USERID), " +
+					 "FOREIGN KEY (USER2) REFERENCES USER(USERID))" ;
+
             db.run(createUserTableSql);
             db.run(createTeamTableSql);
             db.run(createTeamUsersTableSql);
             db.run(createChannelsTableSql);
             db.run(createMessageTableSql);
-            db.close();
+			db.run(creatChatSql);
+            
         
         });
     }
 }
 
-createDB(filename);
+
 //--------------------------------
 exports.InsertTeamData=InsertTeamData;
 function InsertTeamData( name, dbConn){
@@ -414,6 +424,88 @@ function getTeams (dbConn){
      });
  };
 //-------------------------------------
+exports.getAllUsersInTeam=getAllUsersInTeam;
+
+function getAllUsersInTeam(id,dbConn){
+	return new Promise((resolve,reject)=>{
+     var sql= "SELECT USERS.USERID, USERS.NAME FROM USERS " + 
+		"INNER JOIN TEAMUSERS on USERS.USERID=TEAMUSERS.USERID " +   
+		 "WHERE TEAMID IN (SELECT TEAMID FROM TEAMUSERS WHERE USERID=" + id + ") " +
+		 " AND USERS.USERID <> " + id;
+
+
+		console.log (sql);
+        
+     
+      var users = [];
+	   
+	    dbConn.serialize(function() {
+			console.log ("in outer function");
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+					console.log ("in inner function ");
+	            	if (err){
+	            		reject (err);
+						console.log ("reject1 :  " + err);
+	            	}else{  
+						console.log ("got row " + row.USERID + " " + row.NAME);
+	            		users.push({"userId": row.USERID,  "userName" : row.NAME});
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+						console.log ("reject 2: " + err);
+	            	}else{
+						console.log ("JSON: " + JSON.stringify(users));
+	                	resolve(JSON.stringify(users));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+
+};
+//----------------------------------
+exports.getChannelsForPrivate=getChannelsForPrivate;
+
+function getChannelsForPrivate(id, dbConn){
+	 return new Promise((resolve,reject)=>{
+
+	 	var sql = "SELECT DISTINCT CHANNELS.ID, CHANNELS.NAME FROM CHANNELS " + 
+		 "INNER JOIN CHAT on CHAT.CHANNELID = CHANNELS.ID " +
+		 "WHERE TYPE = 'P' AND (USER1 = " + id + " OR USER2 = " + id + ") ORDER BY NAME"; 
+    
+		var channels=[];
+		dbConn.serialize(function() {
+	        dbConn.each(
+	            sql, 
+	            function(err, row) {
+	            	if (err){
+	            		reject (err);
+	            	}else{  
+	            		channels.push({"channelId":row.ID, "channelName": row.NAME});
+	                	
+	                }
+	            },
+	            function (err, nRows) {
+	            	if (err){
+	            		reject(err);
+	            	}else{
+	                	resolve(JSON.stringify(channels));
+                        
+	            	}
+	           }
+	        );
+	    });
+     });
+
+	 
+}
+
 
 exports.getAllUserNames = getAllUserNames;
 
@@ -481,6 +573,8 @@ function getChannels (dbConn){
      });
  };
  //------------------------------------------------------------
+
+ 
 
  exports.getMsgForChannel=getMsgForChannel;
 
