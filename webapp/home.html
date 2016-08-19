@@ -9,6 +9,7 @@
 <div style="color:#fff;font-weight:bold;">
 	Channels
 </div>
+<div>
 <ul class="list-group">
 	<li ng-repeat="channel in channels" class="list-group-item">
 		<a href="" ng-click="getChannelMessage(channel.id, channel.name)" style="color:#ab9ba9">
@@ -16,6 +17,27 @@
 	</li>
 </ul>
 </div>
+<!---->
+-------------------------------
+<div style="color:#fff;font-weight:bold;">
+Private Chat
+</div>
+<div>
+	<select id ="lstUsers" name="users" ng-selected= "getUserData($event)" >
+			<option value=0 ng-model="selUser" >Select a user </option>
+			<option ng-repeat="user in allUsers" ng-model="selUser" value={{user.userId}}>{{user.userName}}</option>
+	</select>
+</div>
+<div>
+<ul class="list-group">
+	<li ng-repeat="privchannel in privateChannels" class="list-group-item">
+		<a href="" ng-click="getChannelMessage(privchannel.channelId, privchannel.channelName)" style="color:#ab9ba9">
+			{{privchannel.channelName}}</a>
+	</li>
+</ul>
+	
+</div>
+<!---->
 </td>
 <td>
 

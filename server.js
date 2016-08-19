@@ -24,7 +24,7 @@ app.get('/channel/user/:id', function (req, res) {
 	var userId = parseInt(req.param('id'));
 	
 	getChannelsForUser(userId, function(err, channels) {
-		console.log ("channels****" + channels);
+	
 		res.send(channels);
 	});
 });
@@ -49,7 +49,7 @@ app.get('/user/checkuser', function (req, res) {
 app.get('/user/login', function (req, res) {
 	var username = req.param('username');
 	var password = req.param('password');
-	console.log(username + " " + password);
+	
 	getUserIdByUsernamePassword(username, password, function(err, data) {
 		//console.log(err);
 	 	res.send(data);
@@ -60,7 +60,7 @@ app.post('/user/signup', function (req, res) {
 	var username = req.body.username;
 	var password = req.body.password;
 	var email = req.body.email;
-	console.log(username + " " + password + " " + email);
+	
 	//res.end("yes");
 	signupUser(username, password, email, function(err) {
 		getUserIdByUsername(username, function(err, data){
@@ -71,10 +71,9 @@ app.post('/user/signup', function (req, res) {
 
 app.get('/user/user/:id', function (req, res) {
 	var userId = parseInt(req.param('id'));
-	console.log ("user id : " + userId);
-
+	
 	dbFile.getUserNameFromID(db, userId).then ((val)=> {
-		console.log ("user name : " + val);
+		
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
@@ -90,7 +89,7 @@ app.get('/team/team', function (req, res) {
 	console.log("got to team select");
 	
 	dbFile.getTeams(db).then ((val)=> {
-		console.log(val);
+		
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
@@ -102,11 +101,48 @@ app.get('/team/team', function (req, res) {
 	
 });
 
+
+app.get('/user/allUsers/:id', function (req, res) {
+	
+	var userId = parseInt(req.param('id'));
+
+	
+	dbFile.getAllUsersInTeam(userId,db).then ((val)=> {
+		console.log(" got all users on my team " + val);
+		
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get team user names: "+ err) ;
+	//	db.close();
+	});
+
+	
+});
+
+app.get ('/channel/privateChannel/:id', function (req, res){
+	var userId = parseInt(req.param('id'));
+
+	
+	dbFile.getChannelsForPrivate(userId,db).then ((val)=> {
+		console.log(" got all private chats " + val);
+		
+		res.send (val);
+		//db.close();
+	}).catch((err)=>{
+		res.send("");
+		console.log ("Unable to get private chats: "+ err) ;
+	//	db.close();
+	});
+});
+
+
 app.get('/allusers', function (req, res) {
 	console.log("got to team select");
 	
 	dbFile.getAllUserNames(db).then ((val)=> {
-		console.log(val);
+		
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
@@ -122,7 +158,7 @@ app.get('/channel/channel', function (req, res) {
 	console.log("got to team select");
 	
 	dbFile.getChannels(db).then ((val)=> {
-		console.log(val);
+		
 		res.send (val);
 		//db.close();
 	}).catch((err)=>{
@@ -142,7 +178,7 @@ app.post('/message/message', function (req, res){
 	var userId=parseInt(req.body.userId);
 	var channelId=parseInt(req.body.channelId);
 	var msg=req.body.msg;
-	console.log (msg);
+	
 
 	dbFile.InsertMsgData(msg,channelId,userId, db).then ((val)=>{
 		console.log ("insert message promise OK");
@@ -159,7 +195,7 @@ app.post('/team/newTeam', function (req, res){
 	console.log ("arrived at server to save new team");
 
 	var teamName=req.body.teamName;
-	console.log (teamName);
+	
 
 	dbFile.InsertTeamData(teamName, db).then ((val)=>{
 		console.log ("insert team promise OK");
@@ -256,7 +292,7 @@ var server = app.listen(3000, function () {
 function getChannelsForUser (userid, callBack){
  	var query = "SELECT DISTINCT CHANNELS.NAME, CHANNELS.ID FROM CHANNELS  " +
         "INNER JOIN TEAMUSERS ON TEAMUSERS.TEAMID = CHANNELS.TEAMID " +
-        "WHERE USERID = " + userid + " ORDER BY NAME";
+        "WHERE USERID = " + userid + " AND TYPE <>'P' ORDER BY NAME";
     
 	var channels = [];
 
@@ -287,7 +323,7 @@ function getChannelsForUser (userid, callBack){
 	        db.each(
 	            sql, 
 	            function(err, row) { 
-	            	console.log(row);
+	            	//console.log(row);
             		msg.push({"userName":row.NAME, "date":row.TIMESTAMP, "msg":row.MSG});
 	            },
 	            function (err) {
@@ -308,7 +344,7 @@ function getUserIdByUsernamePassword (username, password, callBack){
         db.each(
             sql, 
             function(err, row) { 
-            	console.log(row);
+            	
         		userid.push({'userId':row.USERID});
             },
             function (err) {
@@ -329,7 +365,7 @@ function getUserIdByUsername (username, callBack){
         db.each(
             sql, 
             function(err, row) { 
-            	console.log(row);
+            	
         		userid.push({'userId':row.USERID});
             },
             function (err) {

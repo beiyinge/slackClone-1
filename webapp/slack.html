@@ -344,7 +344,22 @@
                 // $scope.setTimeout();
               });
 
+              $http.get ('/user/allUsers/' + $scope.userId).success(function(data){
+                  $scope.allUsers=data;
+                  console.log (data);
+              });
+            
+            $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){
+                  $scope.privateChannels=data;
+                  console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);
+                
+              });
+             
+
+
           }
+
+         
 
          setInterval(function (){
            $scope.getChannelMessage($scope.channel, $scope.channelName); 
@@ -369,6 +384,10 @@
                   console.log(file.name);
                 });
                }
+            };
+
+            $scope.getUserData=function(event){
+              console.log("put code here");
             };
 
         $scope.getChannelMessage = function(channelId, channelName) {
