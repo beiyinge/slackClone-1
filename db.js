@@ -355,6 +355,8 @@ function getTeamsForUser (dbConn, user){
             "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
             "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
             "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";
+
+			console.log(sql);
         
      
       var team = [];
@@ -364,6 +366,7 @@ function getTeamsForUser (dbConn, user){
 	            sql, 
 	            function(err, row) {
 	            	if (err){
+						console.log('potential error');
 	            		reject (err);
 	            	}else{  
 	            		team.push({"team" : row.NAME});
@@ -374,6 +377,7 @@ function getTeamsForUser (dbConn, user){
 	            	if (err){
 	            		reject(err);
 	            	}else{
+						console.log(nRows);
 	                	resolve(JSON.stringify(team));
                         
 	            	}

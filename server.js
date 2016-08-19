@@ -82,21 +82,18 @@ app.get('/user/user/:id', function (req, res) {
 	
 });
 
-app.get('/availableTeams/:userName', function (req, res) {
-	var userName = req.param('userName');
-	console.log ("user name : " + userName);
+app.get('/currentTeams/:userId', function (req, res) {
+	var userIdp = req.param('userId').substr(1);	
+	var userId = parseInt(userIdp);	
 
-	dbFile.getAvailableTeamsForUser(db, userName).then ((val)=> {
-		console.log ("team name : " + val);
+	dbFile.getTeamsForUser(db, userId).then ((val)=> {
+		console.log ("teams : " + val);
 		res.send (val);
-		//db.close();
+		
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get user name");
-	//	db.close();
-	});
-
-	
+		console.log ("Unable to get teams");	
+	});	
 });
 
 app.get('/team/team', function (req, res) {

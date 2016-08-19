@@ -5,9 +5,8 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
     });
     
     $scope.selectUserToAdd = function() {
-        alert('Selected User:'+$scope.userToAdd);
 
-        $http.get('/team/team/').success(function(data) {
+        $http.get('/currentTeams/:'+$scope.userToAdd.id).success(function(data) {
            $scope.availableTeams = data;
         });
     };
