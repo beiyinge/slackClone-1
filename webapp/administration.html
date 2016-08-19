@@ -27,7 +27,7 @@
   <div class="panel-body">
     <form ng-submit="addUserToTeam()" ng-controller="AdministrationCtrl">
         <p>Select User: 
-          <select ng-model="userToAdd" ng-options="x for x in availableUsers" 
+          <select ng-model="userToAdd" ng-options="x.name for x in availableUsers" 
               ng-change="selectUserToAdd(userToAdd)"></select>
         </p>
 

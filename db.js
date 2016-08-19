@@ -458,33 +458,32 @@ function getTeams (dbConn){
 exports.getAllUserNames = getAllUserNames;
 
 function getAllUserNames (dbConn){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT USERS.NAME FROM USERS ORDER BY USERS.NAME";
-        
-     
-      var users = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		users.push(row.NAME);
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(users);
-                        
-	            	}
-	           }
-	        );
-	    });
+	return new Promise((resolve,reject)=>{
+
+		var sql= "SELECT USERID, NAME FROM USERS ORDER BY NAME";        
+		
+		var users = [];
+		
+		dbConn.serialize(function() {
+			dbConn.each(
+				sql, 
+				function(err, row) {
+					if (err){
+						reject (err);
+					}else{  
+						users.push({"id": row.USERID,  "name" : row.NAME});						
+					}
+				},
+				function (err, nRows) {
+					if (err){
+						reject(err);
+					}else{
+						resolve(users);
+						
+					}
+				}
+			);
+		});
      });
  };
 
