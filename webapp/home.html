@@ -51,8 +51,16 @@
 </div>
 
 <div style="margin:10px;">
-	<input type = "file" file-model = "myFile"/>
-	<button ng-click = "uploadFile()">Upload</button>
+	<div ng-show="showUploadFileMsg">{{uploadFileMsg}}</div>
+	<div style="display:inline-block">Upload File: <input type = "file" file-model = "myFile"/></div>
+	<div style="display:inline-block"><button ng-click = "uploadFile()">Upload</button></div>
+</div>
+
+<div ng-show="uploadedFiles.length > 0" style="margin:10px;">
+	Download Files: 
+	<ul>
+		<li ng-repeat="file in uploadedFiles"><a href="uploads/{{file}}">{{file}}</a></li>
+	</ul>
 </div>
 
 </td></tr>

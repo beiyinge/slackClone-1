@@ -269,16 +269,22 @@
          }]);
       
     slackApp.service('fileUpload', ['$http', function ($http) {
-            this.uploadFileToUrl = function(file, uploadUrl){
+            this.uploadFileToUrl = function(file, uploadUrl, callback){
                var fd = new FormData();
                fd.append('file', file);
             
                $http.post(uploadUrl, fd, {
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
-               }).then(function successCallback(response) {
-                 console.log("File uploaded success!");
-               });
+                  }).then(callback);
+              //  }).then(function successCallback(response) {
+              //    console.log("File uploaded success!");
+                //  $scope.uploadFileMsg="File uploaded success!";
+                //  $scope.showUploadFileMsg = true;
+                //   $timeout(function(){
+                //     $scope.showUploadFileMsg = false;
+                //   }, 10000);
+               //});
             }
          }]);
 
@@ -304,6 +310,8 @@
 
           }
      
+          $scope.uploadedFiles = [];
+
           $scope.uploadFile = function(){
                var file = $scope.myFile;
                
@@ -311,7 +319,15 @@
                console.dir(file);
                
                var uploadUrl = "/channel/uploadFile";
-               fileUpload.uploadFileToUrl(file, uploadUrl);
+               if($scope.uploadedFiles.indexOf(file.name) >= 0) {
+                 alert("File was already uploaded!");
+               }
+               else {
+                fileUpload.uploadFileToUrl(file, uploadUrl, function(response) {
+                  $scope.uploadedFiles.push(file.name);
+                  console.log(file.name);
+                });
+               }
             };
 
         $scope.getChannelMessage = function(channelId, channelName) {
@@ -322,9 +338,6 @@
             $scope.messages = data;
             console.log($scope.messages);
           });
-
-
-         
         };
 
         $scope.Save2DB=function(messageData){
