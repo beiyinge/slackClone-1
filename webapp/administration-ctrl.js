@@ -55,9 +55,9 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
             var teamUsersDbRow = {"teamId": $scope.selectedTeamId, "userId": $scope.selectedUserId};
 
             $http.post('/team/user/', teamUsersDbRow).then(function(response) {
-                
-            });
 
+                location.reload(true);                
+            });
         }   
     };
 });
