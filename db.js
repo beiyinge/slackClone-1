@@ -144,15 +144,12 @@ function InsertTeamUsers(userid, teamid, dbConn){
 					insertTeamUsers,
 					
 					function (err) {
-						if (err){
-							console.log("sql insert teamusers err: " + err);
-							reject(err);
+						if (err) {
+
+							reject(err);						
+						} else {
 							
-						
-						}else{
-							console.log ("sql insert teamusers success");
-							resolve();//
-						
+							resolve();						
 						}
 					}
 				);
@@ -354,10 +351,7 @@ function getTeamsForUser (dbConn, user){
      var sql= "SELECT TEAM.NAME FROM TEAM " + 
             "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
             "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
-            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";
-
-			console.log(sql);
-        
+            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";        
      
       var team = [];
 	   
@@ -366,7 +360,6 @@ function getTeamsForUser (dbConn, user){
 	            sql, 
 	            function(err, row) {
 	            	if (err){
-						console.log('potential error');
 	            		reject (err);
 	            	}else{  
 	            		team.push({"team" : row.NAME});
@@ -377,44 +370,7 @@ function getTeamsForUser (dbConn, user){
 	            	if (err){
 	            		reject(err);
 	            	}else{
-						console.log(nRows);
 	                	resolve(JSON.stringify(team));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
-
- exports.getAvailableTeamsForUser=getAvailableTeamsForUser;
-
- function getAvailableTeamsForUser (dbConn, userName){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT TEAM.NAME FROM TEAM " + 
-            "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
-            "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
-            "WHERE USERS.NAME != " + userName + " ORDER BY TEAM.NAME";
-        
-     
-      var team = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		team.push(row.NAME);
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(team);
                         
 	            	}
 	           }
