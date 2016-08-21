@@ -5,37 +5,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="slack.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular-route.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-cookies.js"></script>
-    <script>
-
-    var slackApp = angular.module('slackApp', ['ngCookies']);
+    <script src="js/app.js"></script>
+    <script src="js/login-ctrl.js"></script>
     
-  	slackApp.controller('LoginCtrl', function ($scope, $http, $cookieStore, $window){
-  		$cookieStore.remove('userId');
-  		$cookieStore.remove('userName');
-
-		$scope.submit = function() {
-        if ($scope.username && $scope.password) {
-        	console.log($scope.username + " " + $scope.password);
-			$http.get('/user/login?username=' + $scope.username + '&password=' + $scope.password).success(function(data) {
-          		if(data.length >= 1) {
-          			$scope.userId = data[0].userId;
-              		console.log($scope.userId);
-              		$cookieStore.put('userId', $scope.userId);
-              		$cookieStore.put('userName', $scope.username);
-              		$window.location.href = '/slack.html';
-  				}
-  				else {
-  					$scope.loginErr = "Wrong Username or Password!";
-  					console.log($scope.loginErr);
-  				}
-            });
-        }
-      };
-    });
-
-
-</script>
 
   </head>
 
