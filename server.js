@@ -12,9 +12,7 @@ app.use(bodyParser.json());
 
 var dbFile=require ('./db.js');
 
-//app.use(bodyParser.urlencoded({ extended: false }));
 
-//var dbHandler=require ('db.js');
 var filename = 'testSlack.db';
 
 dbFile.createDB(filename);
@@ -41,7 +39,7 @@ app.get('/message/channel/:id', function (req, res) {
 app.get('/user/checkuser', function (req, res) {
 	var username = req.param('username');
 	getUserIdByUsername(username, function(err, data) {
-		//console.log(err);
+	
 	 	res.send(data);
 	});
 });
@@ -51,7 +49,7 @@ app.get('/user/login', function (req, res) {
 	var password = req.param('password');
 	
 	getUserIdByUsernamePassword(username, password, function(err, data) {
-		//console.log(err);
+		
 	 	res.send(data);
 	});
 });
@@ -61,7 +59,7 @@ app.post('/user/signup', function (req, res) {
 	var password = req.body.password;
 	var email = req.body.email;
 	
-	//res.end("yes");
+	
 	signupUser(username, password, email, function(err) {
 		getUserIdByUsername(username, function(err, data){
 			res.send(data);
@@ -75,19 +73,17 @@ app.get('/user/user/:id', function (req, res) {
 	dbFile.getUserNameFromID(db, userId).then ((val)=> {
 		
 		res.send (val);
-		//db.close();
+	
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get user name");
-	//	db.close();
+		
 	});
 
 	
 });
 
 app.get('/currentTeams/:userId', function (req, res) {
-	//var userIdp = req.param('userId').substr(1);	
-	//var userId = parseInt(userIdp);	
+
 	var userId = parseInt(req.param('userId'));
 
 	dbFile.getTeamsForUser(db, userId).then ((val)=> {
@@ -96,7 +92,7 @@ app.get('/currentTeams/:userId', function (req, res) {
 		
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get teams");	
+		
 	});	
 });
 
@@ -104,11 +100,10 @@ app.get('/team/team', function (req, res) {
 	
 	dbFile.getTeams(db).then ((val)=> {
 		res.send (val);
-		//db.close();
+		
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get team  names");
-	//	db.close();
+	
 	});
 
 	
@@ -121,14 +116,12 @@ app.get('/user/allUsers/:id', function (req, res) {
 
 	
 	dbFile.getAllUsersInTeam(userId,db).then ((val)=> {
-		console.log(" got all users on my team " + val);
-		
+	
 		res.send (val);
-		//db.close();
+		
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get team user names: "+ err) ;
-	//	db.close();
+
 	});
 
 	
@@ -139,14 +132,12 @@ app.get ('/channel/privateChannel/:id', function (req, res){
 
 	
 	dbFile.getChannelsForPrivate(userId,db).then ((val)=> {
-		console.log(" got all private chats " + val);
 		
 		res.send (val);
-		//db.close();
+		
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get private chats: "+ err) ;
-	//	db.close();
+	
 	});
 });
 
@@ -155,27 +146,23 @@ app.get('/allusers', function (req, res) {
 	
 	dbFile.getAllUserNames(db).then ((val)=> {
 		res.send (val);
-		//db.close();
+		
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get user names");
-	//	db.close();
+
 	});
 
 	
 });
 
 app.get('/channel/channel', function (req, res) {
-	console.log("got to team select");
 	
 	dbFile.getChannels(db).then ((val)=> {
 		
 		res.send (val);
-		//db.close();
 	}).catch((err)=>{
 		res.send("");
-		console.log ("Unable to get channel  names");
-	//	db.close();
+	
 	});
 
 	
@@ -184,41 +171,34 @@ app.get('/channel/channel', function (req, res) {
 
 
 app.post('/message/message', function (req, res){
-	console.log ("arrived at server");
-
+	
 	var userId=parseInt(req.body.userId);
 	var channelId=parseInt(req.body.channelId);
 	var msg=req.body.msg;
 	
 
 	dbFile.InsertMsgData(msg,channelId,userId, db).then ((val)=>{
-		console.log ("insert message promise OK");
 		res.send(val);
 	}).catch((err)=>{
 		res.send("");
-		console.log ("promise rejected");
 	});
 });
 
 
 
 app.post('/team/newTeam', function (req, res){
-	console.log ("arrived at server to save new team");
-
 	var teamName=req.body.teamName;
 	
-
 	dbFile.InsertTeamData(teamName, db).then ((val)=>{
-		console.log ("insert team promise OK");
 		res.send(val);
 	}).catch((err)=>{
 		res.send("");
-		console.log ("team insert rejected");
+		
 	});
 });
 
 app.post('/channel/uploadFile', function(req, res){
-	console.log("Get file");
+
 // create an incoming form object
   var form = new formidable.IncomingForm();
 
@@ -251,48 +231,37 @@ app.post('/channel/uploadFile', function(req, res){
 });
 
 app.post('/team/channel', function (req, res){
-	console.log ("arrived at server to save new channel");
 
 	var channelName=req.body.channelName;
 	var desc=req.body.desc;
 	var teamId=parseInt(req.body.teamId);
 	var type=req.body.type;
 
-//	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
-
-	
 
 	dbFile.InsertChannelData(channelName,  teamId, desc, type, db).then ((val)=>{
-		console.log ("insert new channel promise OK");
 		res.send(val);
 	}).catch((err)=>{
 		res.send("");
-		console.log ("new channel rejected");
+	
 	});
 });
 
 
 
 app.post('/team/privateChannel', function (req, res){
-	console.log ("arrived at server to save new channel");
-
-	var userId=req.body.userId;
-	var privChatUserId=req.body.privChatUserId;
+	var userId=parseInt(req.body.userId);
+	var privChatUserId=parseInt(req.body.privChatUserId);
 	var userName=req.body.userName;
 	var privChatUserName=req.body.privChatUserName;
 
 
-//	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
-
-	
-
-	// dbFile.InsertPrivChannelData(userId, userName , privChatUserId, privChatUserName, db).then ((val)=>{
-	// 	console.log ("insert new private channel promise OK");
-	// //	res.send(val);
-	// }).catch((err)=>{
-	// 	res.send("");
-	// 	console.log ("new private channel rejected");
-	// });
+	dbFile.InsertPrivChannelData(userId, userName , privChatUserId, privChatUserName, db).then ((val)=>{
+		
+		res.send(val);
+	}).catch((err)=>{
+		res.send("");
+		
+	});
 });
 
 
@@ -302,30 +271,16 @@ app.post('/team/user/', function (req, res){
 	var userId=parseInt(req.body.userId);
 
 	dbFile.InsertTeamUsers(userId, teamId, db).then ((val)=>{
-		console.log ("added userid " + userId + " to teamid " + teamId);
+	
 		res.send(val);
 	}).catch((err)=>{
 		res.send("");
-		console.log ("insert into team members failed....");
+		
 	});
 	
 });
 
-app.post('/channel/channel', function (req, res){
-	console.log ("arrived at server");
 
-	var userId=parseInt(req.body.userId);
-	var channelName=parseInt(req.body.channelName);
-	
-
-	// dbFile.InsertChannelData(msg,channelId,userId, db).then ((val)=>{
-	// 	console.log ("insert message promise OK");
-	// 	res.send(val);
-	// }).catch((err)=>{
-	// 	res.send("");
-	// 	console.log ("promise rejected");
-	// });
-});
 
 app.use(express.static(__dirname + '/webapp'));
 
@@ -336,9 +291,7 @@ var server = app.listen(3000, function () {
 
 });
 
-// getChannelsForUser(1, function(err, data){
-// 	console.log(data);
-// });
+
 
 function getChannelsForUser (userid, callBack){
  	var query = "SELECT DISTINCT CHANNELS.NAME, CHANNELS.ID FROM CHANNELS  " +

@@ -7,20 +7,11 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
 
     $http.get('/team/team').success(function (data) {
         $scope.teams = data;
-        console.log(data);
+      
     });
 
 
-    // $scope.IsEnter=function(event){
-    //     if (event.keyCode===13){                                       
-    //          $scope.bNew=true
-    //         document.getElementById("txtChannel").value = "";
-    //         $scope.channels.push({"channel":$scope.newChannel});
-
-    //        $scope.SaveChannel2DB({"userId":$scope.userId, "channelName":$scope.newChannel});         
-    //     }
-    //  };
-
+    
     $scope.newChannel = "";
     $scope.desc = "";
     $scope.selTeam = "Select a team";
@@ -41,13 +32,11 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
 
             var newChannelData = ({ "channelName": $scope.newChannel, "desc": $scope.desc, "teamId": $scope.selTeam, "type": $scope.type });
 
-            //   console.log(messageData);
             $http.post('/team/channel', newChannelData).success(function (data, status, headers, config) {
-                //         $scope.PostDataResponse = data;
-                console.log("success saving channel:" + data);
+               
             })
                 .error(function (data, status, headers, config) {
-                    console.log("failed to save channel");
+                  
                 });
 
 
@@ -76,9 +65,9 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             $scope.channelErr = true;
             $scope.$apply;
             bErr = true;
-            console.log("channel empty");
+         
         } else {
-            console.log("has channel: " + $scope.newChannel);
+           
             $scope.channelErr = false;
         }
 
@@ -86,18 +75,18 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             $scope.descErr = true;
             $scope.$apply;
             bErr = true;
-            // console.log ("channel empty");
+           
         } else {
-            console.log("has desc: " + $scope.desc);
+            
             $scope.descErr = false;
         }
 
-        console.log("Team name: " + $scope.selTeam + " value: " + document.getElementById('lstTeams').value);
+       
 
 
 
         if (document.getElementById('lstTeams').value === "0") {
-            console.log("in val=0");
+            
             $scope.teamErr = true;
             $scope.$apply;
             bErr = true;
@@ -133,7 +122,7 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
     };
 
     $scope.checkTeamData = function () {
-        console.log("selection made");
+       
         if ($scope.selTeam !== "Select a team") {
             $scope.teamErr = false;
             $scope.$apply;

@@ -98,14 +98,10 @@ function InsertTeamData( name, dbConn){
 					
 					function (err) {
 						if (err){
-							console.log("sql insert team err: " + err);
 							reject(err);
-							
 						
 						}else{
-							console.log ("sql insert team success");
-							resolve();//
-						
+							resolve();//						
 						}
 					}
 				);
@@ -125,12 +121,9 @@ function InsertUserData(name, pswd, email, dbConn){
 					
 					function (err) {
 						if (err){
-							console.log("sql insert channel err: " + err);
 							reject(err);
-							
 						
 						}else{
-							console.log ("sql insert channel success");
 							resolve();//
 						
 						}
@@ -177,20 +170,17 @@ function InsertChannelData(name, teamid, desc, type, dbConn){
     	var insertChannels= "INSERT INTO CHANNELS ( NAME, TEAMID, DESC, TYPE) " +
             "VALUES('" + name  + "', " + teamid + " , '" + desc + "', '" + type + "')";
 		
-		console.log (insertChannels);
-    
     	dbConn.serialize(function() {
         	dbConn.run(
 					insertChannels,
 					
 					function (err) {
 						if (err){
-							console.log("sql insert channel err: " + err);
-							reject(err);
-							
 						
+							reject(err);
+													
 						}else{
-							console.log ("sql insert channel success");
+						
 							resolve();//
 						
 						}
@@ -218,12 +208,9 @@ function InsertMsgData(msg, channelId, userId, dbConn){
 					
 					function (err) {
 						if (err){
-							console.log("sql insert msg err: " + err);
 							reject(err);
-							
-						
+					
 						}else{
-							console.log ("sql insert msg success");
 							resolve();//
 						
 						}
@@ -343,7 +330,7 @@ function getChannelsForUser (dbConn, user){
 	            		reject(err);
 	            	}else{
 	                	
-                        console.log("actual-" + JSON.stringify(channels));
+                      
 	                	resolve(JSON.stringify(channels));
                         
 	            	}
@@ -447,7 +434,7 @@ function getAllUsersInTeam(id,dbConn){
 					
 	            	if (err){
 	            		reject (err);
-						console.log ("reject1 :  " + err);
+						
 	            	}else{  
 						
 	            		users.push({"userId": row.USERID,  "userName" : row.NAME});
@@ -457,9 +444,9 @@ function getAllUsersInTeam(id,dbConn){
 	            function (err, nRows) {
 	            	if (err){
 	            		reject(err);
-						console.log ("reject 2: " + err);
+						
 	            	}else{
-						//console.log ("JSON: " + JSON.stringify(users));
+						
 	                	resolve(JSON.stringify(users));
                         
 	            	}
@@ -603,7 +590,7 @@ function getChannels (dbConn){
 	            		reject(err);
 	            	}else{
 	                	
-                        console.log("actual-" + JSON.stringify(channels));
+                     
 	                	resolve(JSON.stringify(channels));
                         
 	            	}
@@ -825,13 +812,16 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
 
 		var nameArr=[userName,privChatUserName];
 		nameArr.sort();
-		var channelName=nameArr[0] + "//" + nameArr[1];
+		var channelName=nameArr[0] + "-" + nameArr[1];
 
 		var insertPrivChat= "INSERT INTO CHANNELS ( NAME, DESC, TEAMID, TYPE)  " +
 			"VALUES ('" + channelName + "', 'private chat' , " + 
-			"(SELECT TEAMID FROM TEAM WHERE TEAMID = (SELECT TEAMID FROM TEAMUSERS WHERE USERID = " +	userID +
-				") AND TEAMID= (SELET TEAMID FROM TEAMUSERS WHERE USERID = " + privChatUserId + ")), 'P')";
-		console.log(insertPrivChat);
+			"(SELECT TEAMID FROM TEAM WHERE TEAMID = ((SELECT TEAMID FROM TEAMUSERS WHERE USERID = " +	userId +
+				") AND TEAMID= (SELECT TEAMID FROM TEAMUSERS WHERE USERID = " + privChatUserId + "))), 'P')" ;
+			// 	" \n " +
+			// "INSERT INTO CHAT (CHANNELID, USER1, USER2) " +
+		 	// "VALUES ((SELECT CHANNELID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";
+		
 		
 		
 
@@ -843,34 +833,27 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
 					
 					function (err) {
 						if (err){
-							console.log("sql priv Chat err: " + err);
-
-
+						
 							reject(err);
-							
-						
-						}else{
-							console.log ("sql insert priv chat success");
-							return new Promise((resolve,reject)=>{
-								var insertChat="INSERT INTO CHAT (CHANNELID, USER1, USER2) " +
-									"VALUES (SELECT CHANNELID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";
-						        
-								console.log (insertChat);
 
-								//new promise/insert
-								dbConn.run(
-									insertChat, 
+						}else{
+
+							var insertChat =	"INSERT INTO CHAT (CHANNELID, USER1, USER2) " +
+								"VALUES ((SELECT ID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";
+							
+							dbConn.run(
+								insertChat, 
 					
-									function (err) {
-										if (err){
-											console.log("sql chat err: " + err);
-											reject(err);										
-										}else{
-											resolve();//
-										}
-									});
-							});
-						
+								function (err) {
+									if (err){
+										
+										reject(err);
+										
+									
+									}else{	
+										resolve();
+									}
+								});
 						}
 					}
 				);

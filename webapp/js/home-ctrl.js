@@ -2,7 +2,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
     function ($scope, fileUpload, $http, $cookieStore, $window) {
         //$scope.channels = [];
         $scope.userId = $cookieStore.get('userId');
-        console.log($scope.userId);
+      
         if (!$scope.userId) {
             $window.location.href = '/login.html';
         }
@@ -13,83 +13,67 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             });
 
             $http.get('/user/user/' + $scope.userId).success(function (data) {
-                //    console.log ("got user name");
                 $scope.userName = data[0].userName;
-                console.log("name--" + $scope.userName);
             });
 
 
              $http.get ('/user/allUsers/' + $scope.userId).success(function(data){  
                 $scope.allUsers=data;  
-                 console.log ("AllUsers=" + $scope.allUsers);  
-              });  
+             });  
              
+            $scope.privateChannels=[];
             $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
                  $scope.privateChannels=data;  
-                  console.log ("Private channels :" + data);  
-                 
             });  
 
 
         }
 
 
-        // setInterval(function (){  
-        //    $scope.getChannelMessage($scope.channel, $scope.channelName);   
-        //   console.log ("message refresh");     
-        // }, 3000);  
+        setInterval(function (){  
+           $scope.getChannelMessage($scope.channel, $scope.channelName);   
+        }, 3000);  
 
 
         $scope.uploadFile = function () {
             var file = $scope.myFile;
 
-            console.log('file is ');
-            console.dir(file);
-
             var uploadUrl = "/channel/uploadFile";
             fileUpload.uploadFileToUrl(file, uploadUrl);
         };
 
-        //$scope.selUserId=0;
+       
         $scope.selUser="";
         $scope.getUserData=function (event) {
             if ($scope.selectedUser !== null) {
                 var user = JSON.parse($scope.selectedUser);
-                console.log ("in getUSerData function", $scope.selectedUser, user.userName, user.userId);
+             
+                var newChannelData={"userId":$scope.userId, "userName" : $scope.userName ,"privChatUserId" : user.userId, "privChatUserName" : user.userName};
+
+                 $http.post('/team/privateChannel', newChannelData).success(function (data, status, headers, config) {
+                 })
+                .error(function (data, status, headers, config) {
+                     
+                });
+
+                 var tempArr=[user.userName,$scope.userName];
+                 tempArr.sort;   
+              
+
+                 $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                    $scope.privateChannels=data;  
+                   });
+                 $scope.$apply
             }
-            
-
-            // if ($scope.selUserId !== null) {
-           //      console.log ("selected user: "  + $scope.selUserId + " " + $scope.selUser);
-            //     var newChannelData={"userId":$scope.userId, "userName" : $scope.userName ,"privChatUserId" : $scope.selUserId, "privChatUserName" : $scope.selUser};
-
-            //     $http.post('/team/privateChannel', newChannelData).success(function (data, status, headers, config) {
-            //         //         $scope.PostDataResponse = data;
-            //         console.log("success saving  private chat channel:" + data);
-            //     })
-            //         .error(function (data, status, headers, config) {
-            //             console.log("failed to save channel");
-            //         });
-
-
-            //      $scope.privateChannels.push({ "id": "", "name": $scope.selUser });
-
-            //     // $scope.emptyFields();
-         //    }
-
         };
 
-        // };
-
-
+     
 
         $scope.getChannelMessage = function (channelId, channelName) {
-            console.log(channelName);
-            $scope.channel = channelId;
+             $scope.channel = channelId;
             $scope.channelName = channelName;
             $http.get('/message/channel/' + channelId).success(function (data) {
                 $scope.messages = data;
-                console.log($scope.messages);
             });
 
 
@@ -100,17 +84,15 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
             $http.post('/message/message', messageData).success(function (data, status, headers, config) {
                 $scope.PostDataResponse = data;
-                console.log("success:" + data);
-            })
+             })
                 .error(function (data, status, headers, config) {
-                    console.log("failed to save");
+                 
                 });
 
         };
 
         $scope.IsEnter = function (event) {
-            // console.log (" a keypress");
-
+        
             if (event.keyCode === 13) {
 
                 var currentdate = new Date();
@@ -118,8 +100,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                     + "/" + currentdate.getFullYear() + " "
                     + currentdate.getHours() + ":"
                     + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-                console.log($scope.msg);
-
+            
                 $scope.messages.push({ "userName": $scope.userName, "date": datetime, "msg": $scope.msg });
 
                 document.getElementById("txtMsg").value = "";
