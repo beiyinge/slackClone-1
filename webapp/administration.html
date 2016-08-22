@@ -1,20 +1,6 @@
-<html ng-app="slackApp">
-  <head>
-    <meta charset="utf-8">
-    <title>Slack Mock Project</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="slack.css">
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.1/angular-route.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.1/angular-cookies.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/administration-ctrl.js"></script>
-  </head>
-<body>
-
 <div class="panel panel-default" style="width:600;margin:auto">
   <div class="panel-heading">
-    <h3 class="panel-title">Administration Page for SSA Slack: Add User to Team</h3>
+    <h3 class="panel-title">Add User to Team</h3>
   </div>
   <div class="panel-body">
     <form ng-submit="addUserToTeam()" ng-controller="AdministrationCtrl">
@@ -32,7 +18,3 @@
     </form>
   </div>
 </div>
-
-<div ng-include="'footer.html'"></div>
-</body>
-</html>
