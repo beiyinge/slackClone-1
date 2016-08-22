@@ -18,7 +18,27 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                 console.log("name--" + $scope.userName);
             });
 
+
+             $http.get ('/user/allUsers/' + $scope.userId).success(function(data){  
+                $scope.allUsers=data;  
+                 console.log (data);  
+              });  
+             
+            $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                 $scope.privateChannels=data;  
+                  console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);  
+                 
+            });  
+
+
         }
+
+
+        setInterval(function (){  
+           $scope.getChannelMessage($scope.channel, $scope.channelName);   
+          console.log ("message refresh");     
+        }, 3000);  
+
 
         $scope.uploadFile = function () {
             var file = $scope.myFile;

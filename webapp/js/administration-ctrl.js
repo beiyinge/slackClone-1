@@ -18,6 +18,8 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
     
     $scope.selectUserToAdd = function(selectedUser) {
 
+        $scope.addUserToTeamError = false;
+
         $scope.selectedUserId = selectedUser.id; // ID of selected user....
 
         // Get all teams of which the selected user is already a member.
@@ -58,6 +60,9 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
 
                 location.reload(true);                
             });
-        }   
+            
+        } else {
+            $scope.addUserToTeamError = true;
+        }  
     };
 });

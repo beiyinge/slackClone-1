@@ -2,20 +2,40 @@
 <tr><td style="width:220px;vertical-align:top;background-color:#4d394b;">
 <div style="margin:10px;">
 
-<div style="color:#fff;font-weight:bold;width:100%;text-align:center;margin-bottom:10px;">
-	{{userName}}
-</div>
+    <div style="color:#fff;font-weight:bold;width:100%;text-align:center;margin-bottom:10px;">
+      {{userName}}
+    </div>
 
-<div style="color:#fff;font-weight:bold;">
-	Channels
-</div>
-<ul class="list-group">
-	<li ng-repeat="chl in channels" class="list-group-item" ng-class="{chactive:chl.id==channel}">
-		<a href="" ng-click="getChannelMessage(chl.id, chl.name)" class="channel" ng-class="{chactive:chl.id==channel}">
-			{{chl.name}}</a>
-	</li>
-</ul>
-</div>
+    <div style="color:#fff;font-weight:bold;">
+      Channels
+    </div>
+    <div>
+      <ul class="list-group">
+        <li ng-repeat="chl in channels" class="list-group-item" ng-class="{chactive:chl.id==channel}">
+          <a href="" ng-click="getChannelMessage(chl.id, chl.name)" class="channel" ng-class="{chactive:chl.id==channel}">
+            {{chl.name}}</a>
+        </li>
+      </ul>
+    </div>
+  --------------------------------  
+    <div style="color:#fff;font-weight:bold;">  
+        Private Chat  
+    </div>  
+    <div>  
+        <select id ="lstUsers" name="users" ng-selected= "getUserData($event)" >  
+        		<option value=0 ng-model="selUser" >Select a user </option>  
+        		<option ng-repeat="user in allUsers" ng-model="selUser" value={{user.userId}}>{{user.userName}}</option>    
+        </select>  
+    </div>  
+    <div>  
+        <ul class="list-group">  
+            <li ng-repeat="privchannel in privateChannels" class="list-group-item">  
+              	<a href="" ng-click="getChannelMessage(privchannel.channelId, privchannel.channelName)" style="color:#ab9ba9">  
+                {{privchannel.channelName}}</a>  
+            </li>  
+        </ul>  
+    </div>  
+
 </td>
 <td>
 
