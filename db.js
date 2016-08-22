@@ -77,7 +77,7 @@ function createDB (filename){
             db.run(createTeamUsersTableSql);
             db.run(createChannelsTableSql);
             db.run(createMessageTableSql);
-			db.run(createChatSql);
+			db.run(creatChatSql);
             
         
         });
