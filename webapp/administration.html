@@ -1,39 +1,39 @@
 <table class="table table-borderless" style="margin-bottom:50px;">
-  <tr style="height:100%;">
-    <td style="width:220px;vertical-align:top;background-color:#4d394b;">
-      <div style="  color:#fff;font-weight:bold;">
+    <tr style="height:100%;">
+        <td style="width:220px;vertical-align:top;background-color:#4d394b;">
+            <div style="  color:#fff;font-weight:bold;">
 
-        All Teams:
-      </div>
-      <div style="display:inline-block;vertical-align:top; color:#fff;">
+                All Teams:
+            </div>
+            <div style="display:inline-block;vertical-align:top; color:#fff;">
 
-        <ul>
-          <li class="list-group-item" ng-repeat="team in allTeams track by $index" style="color:#ab9ba9"> {{team.teamName}}</li>
-        </ul>
-      </div>
-    </td>
-    <td>
-      <div style="display:inline-block;vertical-align:top">
-        <div class="panel panel-default" style="width:600;margin:auto">
-          <div class="panel-heading">
-            <h3 class="panel-title">Add User to Team</h3>
-          </div>
-          <div class="panel-body">
-            <form ng-submit="addUserToTeam()" ng-controller="AdministrationCtrl">
-              <p>Select User:
-                <select ng-model="userToAdd" ng-options="x.name for x in availableUsers" ng-change="selectUserToAdd(userToAdd)"></select>
-              </p>
+                <ul>
+                    <li class="list-group-item" ng-repeat="team in allTeams track by $index" style="color:#ab9ba9"> {{team.teamName}}</li>
+                </ul>
+            </div>
+        </td>
+        <td>
+            <div style="display:inline-block;vertical-align:top">
+                <div class="panel panel-default" style="width:600;margin:auto">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add User to Team</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form ng-submit="addUserToTeam()" ng-controller="AdministrationCtrl">
+                            <p>Select User:
+                                <select ng-model="userToAdd" ng-options="x.name for x in availableUsers" ng-change="selectUserToAdd(userToAdd)"></select>
+                            </p>
 
-              <p>Select Team:
-                <select ng-model="teamToAdd" ng-options="z.teamName for z in availableTeams" ng-change="selectTeamToAdd(teamToAdd)"></select>
-              </p>
+                            <p>Select Team:
+                                <select ng-model="teamToAdd" ng-options="z.teamName for z in availableTeams" ng-change="selectTeamToAdd(teamToAdd)"></select>
+                            </p>
 
-              <p><input type="submit" id="addUserButton" value="Add User to Team" /></p>
-            </form>
-          </div>
-        </div>
-      </div>
+                            <p><input type="submit" id="addUserButton" value="Add User to Team" /></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
-    </td>
-  </tr>
+        </td>
+    </tr>
 </table>
