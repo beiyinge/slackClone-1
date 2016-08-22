@@ -27,27 +27,31 @@ slackApp.controller('TeamCtrl', function ($scope, $http, $routeParams, $cookieSt
     $scope.dataSubmitted=function(){  
         console.log ("in dataSumitted"); 
         if (!$scope.doEdits()){  
-        document.getElementById("txtTeam").value = "";  
-        $scope.teams.push({"teamId": "", "teamName":$scope.newTeam});  
+            console.log ("Ok to save team data and redirect to channels");
+            document.getElementById("txtTeam").value = "";  
+            $scope.teams.push({"teamId": "", "teamName":$scope.newTeam});  
 
-        $scope.SaveTeam2DB({"teamName":$scope.newTeam});  
-        $scope.teamErr=false;  
-    
-        //redirect them to channel page now  
-            window.location = "#/channel.html";  
+            $scope.SaveTeam2DB({"teamName":$scope.newTeam});  
+            $scope.teamErr=false;  
+        
+            //redirect them to channel page now  
+                window.location = "#/channel.html";  
         }    
     };  
     
-    $scope.doEdits=function (){  
+    $scope.doEdits=function (){ 
+        console.log ("new team = " + $scope.newTeam); 
         var bErr=false;  
         if ($scope.newTeam===""){  
+            console.log ("empty team");
             $scope.teamErr=true;  
             $scope.$apply;  
             bErr=true;  
         }else{  
             $scope.teamErr=false;  
+        }
             return bErr;  
-        };  
+       
     };
 
     $scope.SaveTeam2DB = function (teamData) {
