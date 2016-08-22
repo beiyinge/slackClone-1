@@ -372,16 +372,30 @@
             };
 
         $scope.getChannelMessage = function(channelId, channelName) {
-          console.log(channelName);
-          $scope.channel=channelId;
-          $scope.channelName=channelName;
-          $http.get('/message/channel/' + channelId).success(function(data) {
-            $scope.messages = data;
-            console.log($scope.messages);
-          });
+            console.log(channelName);
+            $scope.channel=channelId;
+            $scope.channelName=channelName;
+            $http.get('/message/channel/' + channelId).success(function(data) {
+              $scope.messages = data;
+              console.log($scope.messages);
+            });
+        };
 
+        $scope.getUserData=function (event){
+            var chatUserId=document.getElementById('lstUsers').value
+            var data=({"userId": $scope.userId, "chatUserId":chatUserId});
 
-         
+// $http.post('/message/message', messageData).success(function (data,status, headers, config) {
+//                 $scope.PostDataResponse = data;
+//                 console.log ("success:"+ data);
+//             })
+//             .error(function (data, status, headers, config) {
+//               console.log("failed to save");
+//             });
+            //get selected id and submit with user id
+            //on server/db create new channel
+            //on server/db create new chat
+            //refresh screen
         };
 
         $scope.Save2DB=function(messageData){
@@ -399,23 +413,23 @@
          $scope.IsEnter=function(event){
           // console.log (" a keypress");
         
-             if (event.keyCode===13){
-              
-              var currentdate = new Date();
-             var datetime = currentdate.getDay() + "/"+currentdate.getMonth() 
-              + "/" + currentdate.getFullYear() + " " 
-              + currentdate.getHours() + ":" 
-                + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-                console.log ($scope.msg);
-                          
-               $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
+              if (event.keyCode===13){
+                
+                var currentdate = new Date();
+              var datetime = currentdate.getDay() + "/"+currentdate.getMonth() 
+                + "/" + currentdate.getFullYear() + " " 
+                + currentdate.getHours() + ":" 
+                  + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+                  console.log ($scope.msg);
+                            
+                $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
 
-              document.getElementById("txtMsg").value = "";
+                document.getElementById("txtMsg").value = "";
 
+                
+                $scope.Save2DB({"userId":$scope.userId, "channelId":$scope.channel, "msg":$scope.msg});         
               
-               $scope.Save2DB({"userId":$scope.userId, "channelId":$scope.channel, "msg":$scope.msg});         
-            
-            }
+              }
          };
     }]);
 
