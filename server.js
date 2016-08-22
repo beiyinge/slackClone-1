@@ -258,7 +258,7 @@ app.post('/team/channel', function (req, res){
 	var teamId=parseInt(req.body.teamId);
 	var type=req.body.type;
 
-	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
+//	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
 
 	
 
@@ -270,6 +270,31 @@ app.post('/team/channel', function (req, res){
 		console.log ("new channel rejected");
 	});
 });
+
+
+
+app.post('/team/privateChannel', function (req, res){
+	console.log ("arrived at server to save new channel");
+
+	var userId=req.body.userId;
+	var privChatUserId=req.body.privChatUserId;
+	var userName=req.body.userName;
+	var privChatUserName=req.body.privChatUserName;
+
+
+//	console.log ("channel name: " + channelName + ", desc: " + desc + ", teamId:" + teamId + ", type: "  + type);
+
+	
+
+	// dbFile.InsertPrivChannelData(userId, userName , privChatUserId, privChatUserName, db).then ((val)=>{
+	// 	console.log ("insert new private channel promise OK");
+	// //	res.send(val);
+	// }).catch((err)=>{
+	// 	res.send("");
+	// 	console.log ("new private channel rejected");
+	// });
+});
+
 
 app.post('/team/user/', function (req, res){
 

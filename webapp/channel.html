@@ -35,7 +35,7 @@
                         <tr> 
                             <td></td>
                             <td>
-                                <select id ="lstTeams" name="teams" ng-selected= "checkTeamData($event)" >
+                                <select id ="lstTeams" name="teams" ng-selected="checkTeamData($event)" >
                                     <option value=0 ng-model="selTeam" >Select a team </option>
                                     <option ng-repeat="team in teams" ng-model="selTeam" value={{team.teamId}}>{{team.teamName}}</option>
                                 </select>

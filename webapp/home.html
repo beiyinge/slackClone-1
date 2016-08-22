@@ -22,10 +22,13 @@
         Private Chat  
     </div>  
     <div>  
-        <select id ="lstUsers" name="users" ng-selected= "getUserData($event)" >  
-        		<option value=0 ng-model="selUser" >Select a user </option>  
-        		<option ng-repeat="user in allUsers" ng-model="selUser" value={{user.userId}}>{{user.userName}}</option>    
-        </select>  
+      
+          <!--<select id ="lstUsers" name="users" ng-selected="getUserData($event)" >  -->
+            <select id ="lstUsers" name="users" ng-model="selectedUser" ng-change="getUserData($event)" >
+              <option value="null" selected>Select a user </option>  
+              <option ng-repeat="user in allUsers" value="{{user}}">{{user.userName}}</option>    
+          </select>  
+     
     </div>  
     <div>  
         <ul class="list-group">  
