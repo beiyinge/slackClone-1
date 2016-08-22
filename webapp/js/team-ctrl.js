@@ -11,18 +11,44 @@ slackApp.controller('TeamCtrl', function ($scope, $http, $routeParams, $cookieSt
     // });
 
 
+    $scope.newTeam=""; 
     $scope.IsEnter = function (event) {
         if (event.keyCode === 13) {
             //  $scope.bNew=true
-            document.getElementById("txtTeam").value = "";
-            $scope.teams.push({ "teamId": "", "teamName": $scope.newTeam });
+        //     document.getElementById("txtTeam").value = "";
+        //     $scope.teams.push({ "teamId": "", "teamName": $scope.newTeam });
 
-            $scope.SaveTeam2DB({ "teamName": $scope.newTeam });
+        //     $scope.SaveTeam2DB({ "teamName": $scope.newTeam });
+                $scope.dataSubmitted(); 
         }
     };
 
 
+    $scope.dataSubmitted=function(){  
+        console.log ("in dataSumitted"); 
+        if (!$scope.doEdits()){  
+        document.getElementById("txtTeam").value = "";  
+        $scope.teams.push({"teamId": "", "teamName":$scope.newTeam});  
 
+        $scope.SaveTeam2DB({"teamName":$scope.newTeam});  
+        $scope.teamErr=false;  
+    
+        //redirect them to channel page now  
+            window.location = "#/channel.html";  
+        }    
+    };  
+    
+    $scope.doEdits=function (){  
+        var bErr=false;  
+        if ($scope.newTeam===""){  
+            $scope.teamErr=true;  
+            $scope.$apply;  
+            bErr=true;  
+        }else{  
+            $scope.teamErr=false;  
+            return bErr;  
+        };  
+    };
 
     $scope.SaveTeam2DB = function (teamData) {
         console.log(teamData);
