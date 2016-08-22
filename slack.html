@@ -1,0 +1,453 @@
+<html ng-app="slackApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Slack Mock Project</title>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-route.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-cookies.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="slack.css">
+
+    <script>
+
+    var slackApp = angular.module('slackApp', ['ngRoute', 'ngCookies']);
+    
+    slackApp.config(function($routeProvider) {
+        $routeProvider.
+          when('/', {
+            templateUrl: 'home.html',
+            controller: 'HomeCtrl'
+          }).
+          when('/channel.html', {
+            templateUrl: 'channel.html',
+            controller: 'ChannelCtrl'
+
+          }).
+          when('/administration.html', {
+            templateUrl: 'administration.html',
+            controller: 'AdministrationCtrl'
+
+          }).
+          when('/Teams.html', {
+            templateUrl: 'Teams.html',
+            controller: 'TeamCtrl'
+
+          }).
+   //        when('/login.html', {
+   //          templateUrl: 'login.html',
+   //          controller: 'LoginCtrl'
+   //        }).
+   //        when('/cart/:cart', {
+			// templateUrl: 'cart.html',
+   //          controller: 'CartCtrl'
+   //        }).
+
+          otherwise({
+            redirectTo: '/'
+          });
+      });
+
+      //var channels = [];
+      slackApp.controller('ChannelCtrl', function  ($scope, $http, $cookieStore, $window){
+          $scope.userId = $cookieStore.get('userId'); 
+          $scope.userName = $cookieStore.get('userName'); 
+           $http.get('/channel/user/' + $scope.userId).success(function(data) {
+              $scope.channels = data;
+           });
+
+            $http.get('/team/team' ).success(function(data) {
+              $scope.teams = data;
+              console.log(data);
+           });
+
+       
+        // $scope.IsEnter=function(event){
+        //     if (event.keyCode===13){                                       
+        //          $scope.bNew=true
+        //         document.getElementById("txtChannel").value = "";
+        //         $scope.channels.push({"channel":$scope.newChannel});
+           
+        //        $scope.SaveChannel2DB({"userId":$scope.userId, "channelName":$scope.newChannel});         
+        //     }
+        //  };
+
+        $scope.newChannel="";
+        $scope.desc="";
+        $scope.selTeam="Select a team";
+
+
+        $scope.SaveChannel2DB=function(){
+            
+            if (!$scope.editChecks()){
+
+              if (document.getElementById('radPublic').checked===true){
+                $scope.type="A";
+              
+              }else{
+                $scope.type="T";
+              }
+
+              $scope.selTeam=document.getElementById('lstTeams').value;
+
+              var newChannelData=({"channelName":$scope.newChannel, "desc": $scope.desc, "teamId": $scope.selTeam, "type":$scope.type});
+
+              //   console.log(messageData);
+              $http.post('/team/channel', newChannelData).success(function (data,status, headers, config) {
+          //         $scope.PostDataResponse = data;
+                  console.log ("success saving channel:"+ data);
+              })
+                .error(function (data, status, headers, config) {
+                  console.log("failed to save channel");
+                });
+
+
+                $scope.channels.push ({"id":"", "name":$scope.newChannel});
+
+                $scope.emptyFields();
+
+          }
+        };
+         
+
+        $scope.emptyFields=function(){
+            document.getElementById("txtChannel").value = "";
+            document.getElementById("txtDesc").value = "";
+            document.getElementById("lstTeams").value = 0;
+            document.getElementById("radPublic").value =false;
+            document.getElementById("radPrivate").checked = false;
+
+        };
+
+        $scope.editChecks=function (){
+              var bErr=false;
+                         
+
+              if ($scope.newChannel===""){
+                $scope.channelErr=true;
+                $scope.$apply;
+                bErr=true;
+                console.log ("channel empty");
+              }else{
+                console.log ("has channel: " + $scope.newChannel);
+                $scope.channelErr=false;
+              }
+
+              if ($scope.desc===""){
+                $scope.descErr=true;
+                $scope.$apply;
+                bErr=true;
+               // console.log ("channel empty");
+              }else{
+                console.log ("has desc: " + $scope.desc);
+                $scope.descErr=false;
+              }
+
+              console.log ("Team name: " + $scope.selTeam + " value: " + document.getElementById('lstTeams').value );
+
+              
+
+                if (document.getElementById('lstTeams').value==="0"){
+                  console.log ("in val=0");
+                  $scope.teamErr=true;
+                  $scope.$apply;
+                  bErr=true;
+              }else {
+                $scope.teamErr=false;
+              }
+
+              if ((document.getElementById('radPublic').checked!==true) && (document.getElementById('radPrivate').checked!==true)){
+                  $scope.radErr=true;
+                  $scope.$apply;
+                  bErr=true;
+              }else {
+                $scope.radErr=false;
+              }
+
+              return bErr;
+        }
+
+
+
+        $scope.checkChannelData=function(event){
+          if ($scope.newChannel!==""){
+             $scope.channelErr=false;
+             $scope.$apply;
+           }
+        };
+          
+          $scope.checkDescData=function(event){
+          if ($scope.desc!==""){
+             $scope.descErr=false;
+             $scope.$apply;
+           }
+        };
+
+        $scope.checkTeamData=function (){
+           console.log("selection made");
+            if ($scope.selTeam!=="Select a team"){
+              $scope.teamErr=false;
+              $scope.$apply;
+            }
+        }
+
+        $scope.checkRadData=function (){
+          if ((document.getElementById('radPublic').checked===true) || (document.getElementById('radPrivate').checked===true)){
+            $scope.radErr=false;
+            $scope.$apply;
+          }
+
+        };
+
+
+
+
+       
+    });
+   
+
+
+
+ slackApp.controller('TeamCtrl', function  ($scope, $http,$routeParams, $cookieStore, $window){
+          $scope.userId = $cookieStore.get('userId'); 
+           $http.get('/team/team' ).success(function(data) {
+              $scope.teams = data;
+              console.log(data);
+           });
+
+            // $http.get('/channel/channel' ).success(function(data) {
+            //   $scope.channels = data;
+            //   console.log(data);      
+            // });
+
+        $scope.newTeam="";
+
+        $scope.IsEnter=function(event){
+            if (event.keyCode===13){                                       
+               //  $scope.bNew=true
+               $scope.dataSubmitted();
+
+              //   document.getElementById("txtTeam").value = "";
+              //   $scope.teams.push({"teamId": "", "teamName":$scope.newTeam});
+           
+              //  $scope.SaveTeam2DB({"teamName":$scope.newTeam});         
+            }
+         };
+
+          $scope.dataSubmitted=function(){
+           console.log ("in dataSumitted");
+               if (!$scope.doEdits()){
+
+                
+                      document.getElementById("txtTeam").value = "";
+                      $scope.teams.push({"teamId": "", "teamName":$scope.newTeam});
+                
+                       $scope.SaveTeam2DB({"teamName":$scope.newTeam});
+                       $scope.teamErr=false;
+
+                       //redirect them to channel page now
+                       window.location = "#/channel.html";
+               }     
+         };
+
+         
+
+       $scope.doEdits=function (){
+              console.log("in do edits");
+              var bErr=false;
+                         
+
+              if ($scope.newTeam===""){
+                $scope.teamErr=true;
+                $scope.$apply;
+                bErr=true;
+                console.log ("team empty");
+              }else{
+                console.log ("has team: " + $scope.newTeam);
+                $scope.teamErr=false;
+              }
+              return bErr;
+       };
+
+      
+ 
+
+
+      
+
+
+        $scope.SaveTeam2DB=function(teamData){
+          console.log(teamData);
+           $http.post('/team/newTeam', teamData).success(function (data,status, headers, config) {
+          //       $scope.PostDataResponse = data;
+                console.log ("success saving team:"+ data);
+            })
+            .error(function (data, status, headers, config) {
+              console.log("failed to save team");
+            });
+
+        };
+
+
+      
+    });
+
+
+    slackApp.directive('fileModel', ['$parse', function ($parse) {   
+            return {
+               restrict: 'A',
+               link: function(scope, element, attrs) {
+                  var model = $parse(attrs.fileModel);
+                  var modelSetter = model.assign;
+                  
+                  element.bind('change', function(){
+                     scope.$apply(function(){
+                        modelSetter(scope, element[0].files[0]);
+                     });
+                  });
+               }
+            };
+         }]);
+      
+    slackApp.service('fileUpload', ['$http', function ($http) {
+            this.uploadFileToUrl = function(file, uploadUrl){
+               var fd = new FormData();
+               fd.append('file', file);
+            
+               $http.post(uploadUrl, fd, {
+                  transformRequest: angular.identity,
+                  headers: {'Content-Type': undefined}
+               }).then(function successCallback(response) {
+                 console.log("File uploaded success!");
+               });
+            }
+         }]);
+
+      slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore', '$window', 
+      function ($scope, fileUpload, $http, $cookieStore, $window){
+        //$scope.channels = [];
+        $scope.userId = $cookieStore.get('userId');
+          console.log($scope.userId);
+          if(!$scope.userId) {
+            $window.location.href = '/login.html';
+          }
+          else {
+            $http.get('/channel/user/' + $scope.userId).success(function(data) {
+              $scope.channels = data;
+              $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name);         
+            });
+
+              $http.get('/user/user/' + $scope.userId).success(function (data){
+                 //    console.log ("got user name");
+                    $scope.userName=data[0].userName;
+                 console.log("name--" + $scope.userName);
+              });
+
+              $http.get ('/user/allUsers/' + $scope.userId).success(function(data){
+                  $scope.allUsers=data;
+                  console.log (data);
+              });
+            
+            $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){
+                  $scope.privateChannels=data;
+                  console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);
+                
+              });
+          }
+
+           setInterval(function (){
+           $scope.getChannelMessage($scope.channel, $scope.channelName); 
+           console.log ("message refresh");   
+         }, 3000);
+     
+          $scope.uploadFile = function(){
+               var file = $scope.myFile;
+               
+               console.log('file is ' );
+               console.dir(file);
+               
+               var uploadUrl = "/channel/uploadFile";
+               fileUpload.uploadFileToUrl(file, uploadUrl);
+            };
+
+        $scope.getChannelMessage = function(channelId, channelName) {
+            console.log(channelName);
+            $scope.channel=channelId;
+            $scope.channelName=channelName;
+            $http.get('/message/channel/' + channelId).success(function(data) {
+              $scope.messages = data;
+              console.log($scope.messages);
+            });
+        };
+
+        $scope.getUserData=function (event){
+            var chatUserId=document.getElementById('lstUsers').value
+            var data=({"userId": $scope.userId, "chatUserId":chatUserId});
+
+// $http.post('/message/message', messageData).success(function (data,status, headers, config) {
+//                 $scope.PostDataResponse = data;
+//                 console.log ("success:"+ data);
+//             })
+//             .error(function (data, status, headers, config) {
+//               console.log("failed to save");
+//             });
+            //get selected id and submit with user id
+            //on server/db create new channel
+            //on server/db create new chat
+            //refresh screen
+        };
+
+        $scope.Save2DB=function(messageData){
+          
+          $http.post('/message/message', messageData).success(function (data,status, headers, config) {
+                $scope.PostDataResponse = data;
+                console.log ("success:"+ data);
+            })
+            .error(function (data, status, headers, config) {
+              console.log("failed to save");
+            });
+
+        };
+
+         $scope.IsEnter=function(event){
+          // console.log (" a keypress");
+        
+              if (event.keyCode===13){
+                
+                var currentdate = new Date();
+              var datetime = currentdate.getDay() + "/"+currentdate.getMonth() 
+                + "/" + currentdate.getFullYear() + " " 
+                + currentdate.getHours() + ":" 
+                  + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+                  console.log ($scope.msg);
+                            
+                $scope.messages.push({"userName":$scope.userName, "date":datetime, "msg":$scope.msg});
+
+                document.getElementById("txtMsg").value = "";
+
+                
+                $scope.Save2DB({"userId":$scope.userId, "channelId":$scope.channel, "msg":$scope.msg});         
+              
+              }
+         };
+    }]);
+
+   
+
+
+</script>
+
+  </head>
+
+  <body>
+
+    <div ng-include="'header.html'"></div>
+
+    <div ng-view></div>
+
+
+    <div ng-include="'footer.html'"></div>
+
+  </body>
+</html>
