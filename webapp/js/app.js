@@ -21,28 +21,10 @@ slackApp.config(function ($routeProvider) {
             controller: 'TeamCtrl'
 
         }).
-        //        when('/login.html', {
-        //          templateUrl: 'login.html',
-        //          controller: 'LoginCtrl'
-        //        }).
-        //        when('/cart/:cart', {
-        // templateUrl: 'cart.html',
-        //          controller: 'CartCtrl'
-        //        }).
-
         otherwise({
             redirectTo: '/'
         });
 });
-
-//var channels = [];
-
-
-
-
-
-
-
 
 slackApp.directive('fileModel', ['$parse', function ($parse) {
     return {
