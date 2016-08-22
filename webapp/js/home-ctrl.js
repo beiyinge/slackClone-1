@@ -27,7 +27,21 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             console.dir(file);
 
             var uploadUrl = "/channel/uploadFile";
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            fileUpload.uploadFileToUrl(file, uploadUrl, function(response) {
+                //messageData = {"userId": $scope.userId, "channelId": $scope.channel, "msg": "[file]"+file.name+"[/file]"} ;
+                messageData = {"userId": $scope.userId, "channelId": $scope.channel, 
+                "msg": "<a href=/uploads/" + file.name + ">"+file.name+"</a>"} ;
+                console.log(messageData);
+                $http.post('/message/message', messageData)
+                    .success(function (data, status, headers, config) {
+                        $scope.PostDataResponse = data;
+                        $scope.getChannelMessage($scope.channel, $scope.channelName);
+                        console.log("success:" + data);
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log("failed to save");
+                    });
+               });
         };
 
         $scope.getChannelMessage = function (channelId, channelName) {

@@ -38,7 +38,7 @@
   </div>
 </div>
 
-<div ng-repeat="message in messages" style="margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;">
+<div ng-repeat="message in messages" ng-bind-html="message.msg | linkyWithHtml:'_blank':{rel: 'nofollow'}" style="margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;">
 	<div style="font-weight:bold">{{message.userName}}</div>
 	<div style="color:#aaa">{{message.date}}</div>
 	<div style="margin-top:5px;">{{message.msg}}</div>
