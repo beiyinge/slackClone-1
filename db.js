@@ -96,12 +96,12 @@ function InsertTeamData(name, dbConn) {
 
                 function(err) {
                     if (err) {
-                        console.log("sql insert team err: " + err);
+                       
                         reject(err);
 
 
                     } else {
-                        console.log("sql insert team success");
+                       
                         resolve(); //
 
                     }
@@ -124,12 +124,12 @@ function InsertUserData(name, pswd, email, dbConn) {
 
                 function(err) {
                     if (err) {
-                        console.log("sql insert channel err: " + err);
+                       
                         reject(err);
 
 
                     } else {
-                        console.log("sql insert channel success");
+                       
                         resolve(); //
 
                     }
@@ -434,23 +434,19 @@ function getAllUsersInTeam(id, dbConn) {
             "WHERE TEAMID IN (SELECT TEAMID FROM TEAMUSERS WHERE USERID=" + id + ") " +
             " AND USERS.USERID <> " + id;
 
-
-        console.log(sql);
-
-
         var users = [];
 
         dbConn.serialize(function() {
-            console.log("in outer function");
+            
             dbConn.each(
                 sql,
                 function(err, row) {
-                    console.log("in inner function ");
+                  
                     if (err) {
                         reject(err);
-                        console.log("reject1 :  " + err);
+                        
                     } else {
-                        console.log("got row " + row.USERID + " " + row.NAME);
+                       
                         users.push({
                             "userId": row.USERID,
                             "userName": row.NAME
@@ -461,9 +457,9 @@ function getAllUsersInTeam(id, dbConn) {
                 function(err, nRows) {
                     if (err) {
                         reject(err);
-                        console.log("reject 2: " + err);
+                      
                     } else {
-                        console.log("JSON: " + JSON.stringify(users));
+                        
                         resolve(JSON.stringify(users));
 
                     }

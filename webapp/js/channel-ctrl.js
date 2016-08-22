@@ -20,6 +20,7 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
     $scope.SaveChannel2DB = function () {
 
         if (!$scope.editChecks()) {
+           
 
             if (document.getElementById('radPublic').checked === true) {
                 $scope.type = "A";
@@ -27,11 +28,12 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             } else {
                 $scope.type = "T";
             }
-
+ 
+                
             $scope.selTeam = document.getElementById('lstTeams').value;
 
             var newChannelData = ({ "channelName": $scope.newChannel, "desc": $scope.desc, "teamId": $scope.selTeam, "type": $scope.type });
-
+            
             $http.post('/team/channel', newChannelData).success(function (data, status, headers, config) {
                
             })
@@ -45,6 +47,8 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             $scope.emptyFields();
 
         }
+
+        
     };
 
 
@@ -57,6 +61,8 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
 
     };
 
+    $scope.selectedTeam=null; 
+    
     $scope.editChecks = function () {
         var bErr = false;
 
@@ -81,17 +87,15 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             $scope.descErr = false;
         }
 
-       
-
-
-
-        if (document.getElementById('lstTeams').value === "0") {
-            
+        
+        if ($scope.selectedTeam >1) {
+           $scope.teamErr = false;
+           
+        } else {
+           
             $scope.teamErr = true;
             $scope.$apply;
             bErr = true;
-        } else {
-            $scope.teamErr = false;
         }
 
         if ((document.getElementById('radPublic').checked !== true) && (document.getElementById('radPrivate').checked !== true)) {
@@ -121,9 +125,9 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
         }
     };
 
-    $scope.checkTeamData = function () {
+    $scope.checkTeamData = function (event) {
        
-        if ($scope.selTeam !== "Select a team") {
+        if ($scope.selectedTeam !== null) {
             $scope.teamErr = false;
             $scope.$apply;
         }
