@@ -19,11 +19,17 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
              $http.get ('/user/allUsers/' + $scope.userId).success(function(data){  
                 $scope.allUsers=data;  
+
              });  
+
+                 console.log (data);  
+              });  
+
              
             $scope.privateChannels=[];
             $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
                  $scope.privateChannels=data;  
+
             });  
 
 
@@ -32,6 +38,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
         setInterval(function (){  
            $scope.getChannelMessage($scope.channel, $scope.channelName);   
+
         }, 3000);  
 
 
@@ -39,8 +46,23 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             var file = $scope.myFile;
 
             var uploadUrl = "/channel/uploadFile";
-            fileUpload.uploadFileToUrl(file, uploadUrl);
+            fileUpload.uploadFileToUrl(file, uploadUrl, function(response) {
+                //messageData = {"userId": $scope.userId, "channelId": $scope.channel, "msg": "[file]"+file.name+"[/file]"} ;
+                messageData = {"userId": $scope.userId, "channelId": $scope.channel, 
+                "msg": "<a href=/uploads/" + file.name + ">"+file.name+"</a>"} ;
+                console.log(messageData);
+                $http.post('/message/message', messageData)
+                    .success(function (data, status, headers, config) {
+                        $scope.PostDataResponse = data;
+                        $scope.getChannelMessage($scope.channel, $scope.channelName);
+                        console.log("success:" + data);
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log("failed to save");
+                    });
+               });
         };
+
 
        
         $scope.selUser="";
@@ -68,6 +90,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
         };
 
      
+
 
         $scope.getChannelMessage = function (channelId, channelName) {
              $scope.channel = channelId;

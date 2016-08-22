@@ -1,8 +1,5 @@
-
-
-
 var express = require('express');
-var app=express();
+var app = express();
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
 var userid;
@@ -10,9 +7,9 @@ var userid;
 var filename;
 var filename = 'testSlack.db';
 
-exports.createDB=createDB;
+exports.createDB = createDB;
 
-function createDB (filename){
+function createDB(filename) {
     var dbexists = false;
     try {
         fs.accessSync(filename);
@@ -28,139 +25,150 @@ function createDB (filename){
 
         db.serialize(function() {
             var createUserTableSql = "CREATE TABLE IF NOT EXISTS USERS " +
-                        "(USERID         INTEGER     PRIMARY KEY   AUTOINCREMENT  NOT NULL," +
-                        " NAME           CHAR(50)                    NOT NULL, " + 
-                        " PASSWORD       CHAR(50)                    NOT NULL, " +
-                        " EMAIL          CHAR(50)                    NOT NULL )"; 
+                "(USERID         INTEGER     PRIMARY KEY   AUTOINCREMENT  NOT NULL," +
+                " NAME           CHAR(50)                    NOT NULL, " +
+                " PASSWORD       CHAR(50)                    NOT NULL, " +
+                " EMAIL          CHAR(50)                    NOT NULL )";
 
             var createTeamTableSql = "CREATE TABLE IF NOT EXISTS TEAM " +
-                        "(TEAMID        INTEGER     PRIMARY KEY AUTOINCREMENT    NOT NULL," +
-                        " NAME         CHAR(50)   NOT NULL)"; 
+                "(TEAMID        INTEGER     PRIMARY KEY AUTOINCREMENT    NOT NULL," +
+                " NAME         CHAR(50)   NOT NULL)";
 
             var createTeamUsersTableSql = "CREATE TABLE IF NOT EXISTS TEAMUSERS " +
-                        "(ID         INTEGER     PRIMARY KEY    AUTOINCREMENT NOT NULL," +
-                        " TEAMID         INTEGER, " +
-                        " USERID         INTEGER , " +
-                        " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID)," +
-                        " FOREIGN KEY (USERID) REFERENCES USER(USERID))" ; 
+                "(ID         INTEGER     PRIMARY KEY    AUTOINCREMENT NOT NULL," +
+                " TEAMID         INTEGER, " +
+                " USERID         INTEGER , " +
+                " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID)," +
+                " FOREIGN KEY (USERID) REFERENCES USER(USERID))";
 
 
             var createChannelsTableSql = "CREATE TABLE IF NOT EXISTS CHANNELS " +
-                        "(ID         INTEGER     PRIMARY KEY   AUTOINCREMENT  NOT NULL," +
-                        "NAME        CHAR(50)   NOT NULL," +
-                        "DESC         CHAR(250) ,    " +
-                        " TEAMID         INTEGER, " +
-                        " TYPE          CHAR(1) , " +
-                        " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID))" ; 
+                "(ID         INTEGER     PRIMARY KEY   AUTOINCREMENT  NOT NULL," +
+                "NAME        CHAR(50)   NOT NULL," +
+                "DESC         CHAR(250) ,    " +
+                " TEAMID         INTEGER, " +
+                " TYPE          CHAR(1) , " +
+                " FOREIGN KEY (TEAMID) REFERENCES TEAM(TEAMID))";
 
-                var createMessageTableSql = "CREATE TABLE IF NOT EXISTS MESSAGE " +
-                    "(ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
-                    " MSG           TEXT , " +
-                    " CHANNELID     INTEGER,"+
-                    " USERID         INTEGER , " +
-                    " TIMESTAMP        DATETIME DEFAULT CURRENT_TIMESTAMP,"+
-                    " FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID)," +
-                    " FOREIGN KEY (USERID) REFERENCES USER(USERID))" ; 
+            var createMessageTableSql = "CREATE TABLE IF NOT EXISTS MESSAGE " +
+                "(ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
+                " MSG           TEXT , " +
+                " CHANNELID     INTEGER," +
+                " USERID         INTEGER , " +
+                " TIMESTAMP        DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                " FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID)," +
+                " FOREIGN KEY (USERID) REFERENCES USER(USERID))";
 
 
-					
-                var createChatSql = "CREATE TABLE IF NOT EXISTS CHAT (ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL, "+
-				 	"CHANNELID     INTEGER, "  +
-                    "USER1         INTEGER , " +
-				     "USER2         INTEGER , " +
-                    "FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID), " +
-                    "FOREIGN KEY (USER1) REFERENCES USER(USERID), " +
-					 "FOREIGN KEY (USER2) REFERENCES USER(USERID))" ;
+
+            var createChatSql = "CREATE TABLE IF NOT EXISTS CHAT (ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL, " +
+                "CHANNELID     INTEGER, " +
+                "USER1         INTEGER , " +
+                "USER2         INTEGER , " +
+                "FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID), " +
+                "FOREIGN KEY (USER1) REFERENCES USER(USERID), " +
+                "FOREIGN KEY (USER2) REFERENCES USER(USERID))";
 
             db.run(createUserTableSql);
             db.run(createTeamTableSql);
             db.run(createTeamUsersTableSql);
             db.run(createChannelsTableSql);
             db.run(createMessageTableSql);
-			db.run(creatChatSql);
-            
-        
+            db.run(creatChatSql);
+
+
         });
     }
 }
 
 
 //--------------------------------
-exports.InsertTeamData=InsertTeamData;
-function InsertTeamData( name, dbConn){
-	return new Promise((resolve, reject)=>{	
+exports.InsertTeamData = InsertTeamData;
 
-      	var insertTeam="INSERT INTO TEAM (NAME) VALUES ('" + name + "')"
-    			  
-		dbConn.serialize(function() {
-        	dbConn.run(
-					insertTeam,
-					
-					function (err) {
-						if (err){
-							reject(err);
-						
-						}else{
-							resolve();//						
-						}
-					}
-				);
-		});	
-	});
+function InsertTeamData(name, dbConn) {
+    return new Promise((resolve, reject) => {
+
+        var insertTeam = "INSERT INTO TEAM (NAME) VALUES ('" + name + "')"
+
+        dbConn.serialize(function() {
+            dbConn.run(
+                insertTeam,
+
+                function(err) {
+                    if (err) {
+                        console.log("sql insert team err: " + err);
+                        reject(err);
+
+
+                    } else {
+                        console.log("sql insert team success");
+                        resolve(); //
+
+                    }
+                }
+            );
+        });
+    });
 };
 
 //-----------------------------------------------
-exports.InsertUserData=InsertUserData;
-function InsertUserData(name, pswd, email, dbConn){
-	return new Promise((resolve, reject)=>{	
-    	var insertUsers = "INSERT INTO USERS ( NAME, PASSWORD, EMAIL) " +
-             "VALUES ('" + name + "', '" + pswd + "', '" + email + "')";
-   		dbConn.serialize(function() {
-        	dbConn.run(
-					insertUsers,
-					
-					function (err) {
-						if (err){
-							reject(err);
-						
-						}else{
-							resolve();//
-						
-						}
-					}
-				);
-		});	
-	});
+exports.InsertUserData = InsertUserData;
+
+function InsertUserData(name, pswd, email, dbConn) {
+    return new Promise((resolve, reject) => {
+        var insertUsers = "INSERT INTO USERS ( NAME, PASSWORD, EMAIL) " +
+            "VALUES ('" + name + "', '" + pswd + "', '" + email + "')";
+        dbConn.serialize(function() {
+            dbConn.run(
+                insertUsers,
+
+                function(err) {
+                    if (err) {
+                        console.log("sql insert channel err: " + err);
+                        reject(err);
+
+
+                    } else {
+                        console.log("sql insert channel success");
+                        resolve(); //
+
+                    }
+                }
+            );
+        });
+    });
+
 
 }
 
 //-------------------------------------
 
-exports.InsertTeamUsers=InsertTeamUsers;
+exports.InsertTeamUsers = InsertTeamUsers;
 
-function InsertTeamUsers(userid, teamid, dbConn){
-	return new Promise((resolve, reject)=>{
-    var insertTeamUsers = "INSERT INTO TEAMUSERS ( USERID,TEAMID) " +
-             "VALUES (" + userid + ", " + teamid + ")";
-    dbConn.serialize(function() {
-        	dbConn.run(
-					insertTeamUsers,
-					
-					function (err) {
-						if (err) {
+function InsertTeamUsers(userid, teamid, dbConn) {
+    return new Promise((resolve, reject) => {
+        var insertTeamUsers = "INSERT INTO TEAMUSERS ( USERID,TEAMID) " +
+            "VALUES (" + userid + ", " + teamid + ")";
+        dbConn.serialize(function() {
+            dbConn.run(
+                insertTeamUsers,
 
-							reject(err);						
-						} else {
-							
-							resolve();						
-						}
-					}
-				);
-		});	
-	});
+                function(err) {
+                    if (err) {
+
+                        reject(err);
+                    } else {
+
+                        resolve();
+                    }
+                }
+            );
+        });
+    });
 }
 
 //--------------------------------------------
+
 exports.InsertChannelData=InsertChannelData;
 
 function InsertChannelData(name, teamid, desc, type, dbConn){
@@ -188,6 +196,7 @@ function InsertChannelData(name, teamid, desc, type, dbConn){
 				);
 		});	
 	});
+
 }
 
 //-------------------------------
@@ -348,153 +357,164 @@ function getTeamsForUser (dbConn, user){
      var sql= "SELECT TEAM.NAME FROM TEAM " + 
             "INNER JOIN TEAMUSERS ON TEAM.TEAMID=TEAMUSERS.TEAMID " +
             "INNER JOIN USERS ON USERS.USERID=TEAMUSERS.USERID " +
-            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";        
-     
-      var team = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		team.push({"team" : row.NAME});
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(team));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+            "WHERE USERS.USERID = " + user + " ORDER BY TEAM.NAME";
 
- //--------------------------------------------------
+        var team = [];
 
-  exports.getTeams=getTeams;
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        team.push({
+                            "team": row.NAME
+                        });
 
-function getTeams (dbConn){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT TEAM.NAME, TEAM.TEAMID FROM TEAM ORDER BY TEAM.NAME";
-        
-     
-      var team = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		team.push({"teamId": row.TEAMID,  "teamName" : row.NAME});
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(team));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(team));
+
+                    }
+                }
+            );
+        });
+    });
+};
+
+//--------------------------------------------------
+
+exports.getTeams = getTeams;
+
+function getTeams(dbConn) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT TEAM.NAME, TEAM.TEAMID FROM TEAM ORDER BY TEAM.NAME";
+
+
+        var team = [];
+
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        team.push({
+                            "teamId": row.TEAMID,
+                            "teamName": row.NAME
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(team));
+
+                    }
+                }
+            );
+        });
+    });
+};
 //-------------------------------------
-exports.getAllUsersInTeam=getAllUsersInTeam;
+exports.getAllUsersInTeam = getAllUsersInTeam;
 
-function getAllUsersInTeam(id,dbConn){
-	return new Promise((resolve,reject)=>{
-     var sql= "SELECT USERS.USERID, USERS.NAME FROM USERS " + 
-		"INNER JOIN TEAMUSERS on USERS.USERID=TEAMUSERS.USERID " +   
-		 "WHERE TEAMID IN (SELECT TEAMID FROM TEAMUSERS WHERE USERID=" + id + ") " +
-		 " AND USERS.USERID <> " + id;
+function getAllUsersInTeam(id, dbConn) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT USERS.USERID, USERS.NAME FROM USERS " +
+            "INNER JOIN TEAMUSERS on USERS.USERID=TEAMUSERS.USERID " +
+            "WHERE TEAMID IN (SELECT TEAMID FROM TEAMUSERS WHERE USERID=" + id + ") " +
+            " AND USERS.USERID <> " + id;
 
 
-	
-        
-     
-      var users = [];
-	   
-	    dbConn.serialize(function() {
-		
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-					
-	            	if (err){
-	            		reject (err);
-						
-	            	}else{  
-						
-	            		users.push({"userId": row.USERID,  "userName" : row.NAME});
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-						
-	            	}else{
-						
-	                	resolve(JSON.stringify(users));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
+        console.log(sql);
 
+
+        var users = [];
+
+        dbConn.serialize(function() {
+            console.log("in outer function");
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    console.log("in inner function ");
+                    if (err) {
+                        reject(err);
+                        console.log("reject1 :  " + err);
+                    } else {
+                        console.log("got row " + row.USERID + " " + row.NAME);
+                        users.push({
+                            "userId": row.USERID,
+                            "userName": row.NAME
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                        console.log("reject 2: " + err);
+                    } else {
+                        console.log("JSON: " + JSON.stringify(users));
+                        resolve(JSON.stringify(users));
+
+                    }
+                }
+            );
+        });
+    });
 };
 //----------------------------------
-exports.getChannelsForPrivate=getChannelsForPrivate;
+exports.getChannelsForPrivate = getChannelsForPrivate;
 
-function getChannelsForPrivate(id, dbConn){
-	 return new Promise((resolve,reject)=>{
+function getChannelsForPrivate(id, dbConn) {
+    return new Promise((resolve, reject) => {
 
-	 	var sql = "SELECT DISTINCT CHANNELS.ID, CHANNELS.NAME FROM CHANNELS " + 
-		 "INNER JOIN CHAT on CHAT.CHANNELID = CHANNELS.ID " +
-		 "WHERE TYPE = 'P' AND (USER1 = " + id + " OR USER2 = " + id + ") ORDER BY NAME"; 
-    
-		var channels=[];
-		dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		channels.push({"channelId":row.ID, "channelName": row.NAME});
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(channels));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
+        var sql = "SELECT DISTINCT CHANNELS.ID, CHANNELS.NAME FROM CHANNELS " +
+            "INNER JOIN CHAT on CHAT.CHANNELID = CHANNELS.ID " +
+            "WHERE TYPE = 'P' AND (USER1 = " + id + " OR USER2 = " + id + ") ORDER BY NAME";
 
-	 
+        var channels = [];
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        channels.push({
+                            "channelId": row.ID,
+                            "channelName": row.NAME
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(channels));
+
+                    }
+                }
+            );
+        });
+    });
+
+
 }
 
 
 exports.getAllUserNames = getAllUserNames;
+
 
 function getAllUserNames (dbConn){
 	return new Promise((resolve,reject)=>{
@@ -608,255 +628,213 @@ function getMsgForChannel (dbConn, channel){
      var sql= "SELECT USERS.NAME, MSG, TIMESTAMP FROM MESSAGE " + 
             "INNER JOIN USERS ON MESSAGE.USERID=USERS.USERID " +
             "WHERE MESSAGE.CHANNELID = " + channel + " ORDER BY MESSAGE.TIMESTAMP, USERS.NAME";
-        
-     
-      var msg = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		msg.push({"userName" : row.NAME, "date": row.TIMESTAMP, "msg": row.MSG} );
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(msg));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+
+
+        var msg = [];
+
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        msg.push({
+                            "userName": row.NAME,
+                            "date": row.TIMESTAMP,
+                            "msg": row.MSG
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(msg));
+
+                    }
+                }
+            );
+        });
+    });
+};
 //------------------------------------------------------------
 
-exports.getTeamNameFromId=getTeamNameFromId;
+exports.getTeamNameFromId = getTeamNameFromId;
 
-function getTeamNameFromId(dbConn, teamId){
-	 return new Promise((resolve,reject)=>{
-     var sql= "SELECT NAME FROM TEAM WHERE TEAMID =  " + teamId;
+function getTeamNameFromId(dbConn, teamId) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT NAME FROM TEAM WHERE TEAMID =  " + teamId;
 
-	
-     
-      var team = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		team.push({"teamName" : row.NAME} );
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(team));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
 
- //--------------------------------------------------
- exports.getTeamIdFromName=getTeamIdFromName;
 
- function getTeamIdFromName(dbConn, teamName){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT TEAM.TEAMID FROM TEAM WHERE NAME ='" + teamName + "'";
-     
-      var team = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		team.push({"teamId" : row.TEAMID} );
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(team));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+        var team = [];
+
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        team.push({
+                            "teamName": row.NAME
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(team));
+
+                    }
+                }
+            );
+        });
+    });
+};
+
+//--------------------------------------------------
+exports.getTeamIdFromName = getTeamIdFromName;
+
+function getTeamIdFromName(dbConn, teamName) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT TEAM.TEAMID FROM TEAM WHERE NAME ='" + teamName + "'";
+
+        var team = [];
+
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        team.push({
+                            "teamId": row.TEAMID
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(team));
+
+                    }
+                }
+            );
+        });
+    });
+};
 
 ////-------------------------------------------------
-exports.getChannelIdFromName=getChannelIdFromName;
+exports.getChannelIdFromName = getChannelIdFromName;
 
- function getChannelIdFromName(dbConn, channelName){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT ID FROM CHANNELS WHERE NAME ='" + channelName + "'";
-     
-      var channel = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		channel.push({"channelName" : row.ID} );
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(channel));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+function getChannelIdFromName(dbConn, channelName) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT ID FROM CHANNELS WHERE NAME ='" + channelName + "'";
 
- //----------------------------------------------------------------------------
- exports.getUserIdFromName=getUserIdFromName;
+        var channel = [];
 
- function getUserIdFromName(dbConn, userName){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT USERID FROM USERS WHERE NAME ='" + userName + "'";
-     
-      var user = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		user.push({"userId" : row.USERID} );
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(user));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        channel.push({
+                            "channelName": row.ID
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(channel));
+
+                    }
+                }
+            );
+        });
+    });
+};
+
+//----------------------------------------------------------------------------
+exports.getUserIdFromName = getUserIdFromName;
+
+function getUserIdFromName(dbConn, userName) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT USERID FROM USERS WHERE NAME ='" + userName + "'";
+
+        var user = [];
+
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        user.push({
+                            "userId": row.USERID
+                        });
+
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(user));
+
+                    }
+                }
+            );
+        });
+    });
+};
 //------------------------------------------------------------------------
 
-exports.getUserNameFromID=getUserNameFromID;
 
- function getUserNameFromID(dbConn, userID){
-     return new Promise((resolve,reject)=>{
-     var sql= "SELECT NAME FROM USERS WHERE USERID = " + userID;
-     
-      var user = [];
-	   
-	    dbConn.serialize(function() {
-	        dbConn.each(
-	            sql, 
-	            function(err, row) {
-	            	if (err){
-	            		reject (err);
-	            	}else{  
-	            		user.push({"userName" : row.NAME} );
-	                	
-	                }
-	            },
-	            function (err, nRows) {
-	            	if (err){
-	            		reject(err);
-	            	}else{
-	                	resolve(JSON.stringify(user));
-                        
-	            	}
-	           }
-	        );
-	    });
-     });
- };
+exports.getUserNameFromID = getUserNameFromID;
 
- //--------------------------------------------------------
+function getUserNameFromID(dbConn, userID) {
+    return new Promise((resolve, reject) => {
+        var sql = "SELECT NAME FROM USERS WHERE USERID = " + userID;
 
-exports.InsertPrivChannelData=InsertPrivChannelData;
+        var user = [];
 
-function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserName, dbConn){
-	return new Promise((resolve,reject)=>{
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        user.push({
+                            "userName": row.NAME
+                        });
 
-		var nameArr=[userName,privChatUserName];
-		nameArr.sort();
-		var channelName=nameArr[0] + "-" + nameArr[1];
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(JSON.stringify(user));
 
-		var insertPrivChat= "INSERT INTO CHANNELS ( NAME, DESC, TEAMID, TYPE)  " +
-			"VALUES ('" + channelName + "', 'private chat' , " + 
-			"(SELECT TEAMID FROM TEAM WHERE TEAMID = ((SELECT TEAMID FROM TEAMUSERS WHERE USERID = " +	userId +
-				") AND TEAMID= (SELECT TEAMID FROM TEAMUSERS WHERE USERID = " + privChatUserId + "))), 'P')" ;
-			// 	" \n " +
-			// "INSERT INTO CHAT (CHANNELID, USER1, USER2) " +
-		 	// "VALUES ((SELECT CHANNELID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";
-		
-		
-		
+                    }
+                }
+            );
+        });
+    });
+};
 
-			
-			dbConn.serialize(function() {
-            
-				dbConn.run(
-					insertPrivChat, 
-					
-					function (err) {
-						if (err){
-						
-							reject(err);
-
-						}else{
-
-							var insertChat =	"INSERT INTO CHAT (CHANNELID, USER1, USER2) " +
-								"VALUES ((SELECT ID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";
-							
-							dbConn.run(
-								insertChat, 
-					
-								function (err) {
-									if (err){
-										
-										reject(err);
-										
-									
-									}else{	
-										resolve();
-									}
-								});
-						}
-					}
-				);
-		});
-     });
- };

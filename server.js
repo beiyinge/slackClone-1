@@ -238,6 +238,7 @@ app.post('/team/channel', function (req, res){
 	var type=req.body.type;
 
 
+
 	dbFile.InsertChannelData(channelName,  teamId, desc, type, db).then ((val)=>{
 		res.send(val);
 	}).catch((err)=>{
@@ -245,6 +246,7 @@ app.post('/team/channel', function (req, res){
 	
 	});
 });
+
 
 
 
@@ -263,6 +265,7 @@ app.post('/team/privateChannel', function (req, res){
 		
 	});
 });
+
 
 
 app.post('/team/user/', function (req, res){

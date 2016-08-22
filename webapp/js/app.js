@@ -1,4 +1,4 @@
-var slackApp = angular.module('slackApp', ['ngRoute', 'ngCookies']);
+var slackApp = angular.module('slackApp', ['ngSanitize', 'ngRoute', 'ngCookies']);
 
 slackApp.config(function ($routeProvider) {
     $routeProvider.
@@ -26,6 +26,23 @@ slackApp.config(function ($routeProvider) {
         });
 });
 
+
+slackApp.filter("trust", ['$sce', function($sce) {
+  return function(htmlCode){
+    return $sce.trustAsHtml(htmlCode);
+  }
+}]);
+
+
+slackApp.filter('linkyWithHtml', function($filter) {
+  return function(value) {
+    var linked = $filter('linky')(value);
+    var replaced = linked.replace(/\&gt;/g, '>').replace(/\&lt;/g, '<');
+    return replaced;
+  };
+});
+
+
 slackApp.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
@@ -43,15 +60,16 @@ slackApp.directive('fileModel', ['$parse', function ($parse) {
 }]);
 
 slackApp.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function (file, uploadUrl) {
+    this.uploadFileToUrl = function (file, uploadUrl, callback) {
         var fd = new FormData();
         fd.append('file', file);
 
         $http.post(uploadUrl, fd, {
             transformRequest: angular.identity,
             headers: { 'Content-Type': undefined }
-        }).then(function successCallback(response) {
-            console.log("File uploaded success!");
-        });
+        }).then(callback);
+        // }).then(function successCallback(response) {
+        //     console.log("File uploaded success!");
+        // });
     }
 }]);
