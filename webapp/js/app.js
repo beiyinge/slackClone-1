@@ -12,8 +12,6 @@ slackApp.config(function($routeProvider) {
 
     for ( var ii = 0; ii < headerTabs.length; ii++ ) {
 
-        // $routeProvider.when(headerTabs[ii].path, { templateUrl: headerTabs[ii].templateUrl, controller:  headerTabs[ii].controller });
-        // A. Yuk
         $routeProvider.when(headerTabs[ii].path, { templateUrl: headerTabs[ii].templateUrl, controller:  headerTabs[ii].controller });
     }
     
