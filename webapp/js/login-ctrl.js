@@ -1,7 +1,7 @@
 slackApp.controller('LoginCtrl', function ($scope, $http, $cookieStore, $window) {
   		$cookieStore.remove('userId');
   		$cookieStore.remove('userName');
-
+var nc=5;
 	$scope.submit = function () {
         if ($scope.username && $scope.password) {
 			console.log($scope.username + " " + $scope.password);
@@ -14,7 +14,9 @@ slackApp.controller('LoginCtrl', function ($scope, $http, $cookieStore, $window)
 					$window.location.href = '/slack.html';
 				}
 				else {
-					$scope.loginErr = "Wrong Username or Password!";
+					nc--;
+					if(nc<1) {$window.location.href = '/signup.html';}
+					$scope.loginErr = "Wrong Username or Password! Remaining Counts : "+nc;
 					console.log($scope.loginErr);
 				}
             });
