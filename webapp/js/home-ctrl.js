@@ -114,12 +114,15 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
         $scope.IsEnter = function (event) {
         
             if (event.keyCode === 13) {
+               
 
                 var currentdate = new Date();
                 var datetime = currentdate.getDay() + "/" + currentdate.getMonth()
                     + "/" + currentdate.getFullYear() + " "
                     + currentdate.getHours() + ":"
                     + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+     
             
                 $scope.messages.push({ "userName": $scope.userName, "date": datetime, "msg": $scope.msg });
 

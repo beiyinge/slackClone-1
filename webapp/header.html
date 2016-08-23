@@ -1,13 +1,11 @@
-<!--<a href="#/">Home</a> | <a a href="#/Teams.html">Teams</a> | <a a href="#/channel.html">Channels</a> | <a href="#/Message">Message</a> | <a href="login.html">Logout</a>-->
-
 <nav class="navbar navbar-default navbar-static-top">
   <div class="container">
     <ul class="nav navbar-nav">
-    <li class="active"><a href="#/">Home</a></li>
-    <li><a a href="#/Teams.html">Team</a></li>
-    <li><a a href="#/channel.html">Channel</a></li>
-    <li><a href="#/Message">Message</a></li>
-    <li><a href="#/administration.html">Administration</a></li>
+    <li ng-class="{active: activetab=='/'}"><a href="#/">Home</a></li>
+    <li ng-class="{active: activetab=='/Teams.html'}"><a a href="#/Teams.html">Team</a></li>
+    <li ng-class="{active: activetab=='/channel.html'}"><a a href="#/channel.html">Channel</a></li>
+    <li ng-class="{active: activetab=='/Message'}"><a href="#/Message">Message</a></li>
+    <li ng-class="{active: activetab=='/administration.html'}"><a href="#/administration.html">Administration</a></li>
     <li><a href="login.html">Logout</a></li>
     </ul>
   </div>
