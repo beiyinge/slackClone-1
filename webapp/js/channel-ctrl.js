@@ -87,8 +87,8 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             $scope.descErr = false;
         }
 
-        
-        if ($scope.selectedTeam >1) {
+        console.log ($scope.selectedTeam);
+        if ($scope.selectedTeam >= 1) {
            $scope.teamErr = false;
            
         } else {

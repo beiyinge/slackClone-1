@@ -34,7 +34,7 @@
     </div>  
     <div>  
         <ul class="list-group">  
-            <li ng-repeat="privchannel in privateChannels" class="list-group-item">  
+            <li id="privateChat" ng-repeat="privchannel in privateChannels" class="list-group-item">  
               	<a href="" ng-click="getChannelMessage(privchannel.channelId, privchannel.channelName)" style="color:#ab9ba9">  
                 {{privchannel.channelName}}</a>  
             </li>  

@@ -82,6 +82,27 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                  $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
                     $scope.privateChannels=data;  
                    });
+                   
+                
+                // var tempId;
+                // var tempName;
+                //  console.log($scope.privateChannels.length);
+
+                // for (var x in $scope.privateChannels){
+                //     console.log ($scope.privateChannels[x]);
+                //     if ($scope.privateChannels[x].channelName.includes(user.userName) && $scope.privateChannels[x].channelName.includes($scope.userName)){
+                //         tempId=$scope.privateChannels[x].channelId;
+                //         tempName=$scope.privateChannels[x].channelName;
+                //         console.log ("id " + tempId + " name " + tempName);
+                //     }
+                // }
+
+                // if (tempName){
+                //       getChannelMessage( tempId, tempName);
+                // }
+        
+
+
                  $scope.$apply
             }
         };
@@ -90,14 +111,12 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
 
         $scope.getChannelMessage = function (channelId, channelName) {
+           
              $scope.channel = channelId;
             $scope.channelName = channelName;
             $http.get('/message/channel/' + channelId).success(function (data) {
                 $scope.messages = data;
             });
-
-
-
         };
 
         $scope.Save2DB = function (messageData) {
