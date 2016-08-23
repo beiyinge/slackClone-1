@@ -1,29 +1,25 @@
 var slackApp = angular.module('slackApp', ['ngSanitize', 'ngRoute', 'ngCookies']);
 
+var headerTabs = [];
+
+headerTabs.push({ path: '/', templateUrl: 'home.html', controller: 'HomeCtrl' });
+headerTabs.push({ path: '/channel.html', templateUrl: 'channel.html', controller: 'ChannelCtrl' });
+headerTabs.push({ path: '/Teams.html', templateUrl: 'Teams.html', controller: 'TeamCtrl' });
+headerTabs.push({ path: '/administration.html', templateUrl: 'administration.html', controller: 'AdministrationCtrl' });
+
 slackApp.config(function($routeProvider) {
-    $routeProvider.
-    when('/', {
-        templateUrl: 'home.html',
-        controller: 'HomeCtrl'
-    }).
-    when('/channel.html', {
-        templateUrl: 'channel.html',
-        controller: 'ChannelCtrl'
+    
+    for ( var ii = 0; ii < headerTabs.length; ii++ ) {
 
-    }).
-    when('/administration.html', {
-        templateUrl: 'administration.html',
-        controller: 'AdministrationCtrl'
+        $routeProvider.when(
+            headerTabs[ii].path, 
+            { templateUrl: headerTabs[ii].templateUrl, 
+              controller:  headerTabs[ii].controller 
+            });
+    }
+    
+    $routeProvider.otherwise( {redirectTo: '/' });
 
-    }).
-    when('/Teams.html', {
-        templateUrl: 'Teams.html',
-        controller: 'TeamCtrl'
-
-    }).
-    otherwise({
-        redirectTo: '/' 
-    });
 }).run(['$rootScope', '$location', function($rootScope, $location) {
     // Make selected tab Active.
     var path = function() {
