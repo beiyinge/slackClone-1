@@ -13,7 +13,9 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             $http.get('/channel/user/' + $scope.userId).success(function (data) {
                 $scope.channels = data;
                 console.log($scope.userId);
-                $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name);
+                if ( $scope.channels.length > 0 ) {
+                    $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name);
+                }
             });
 
             $http.get('/user/user/' + $scope.userId).success(function (data) {
