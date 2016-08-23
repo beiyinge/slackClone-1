@@ -28,8 +28,6 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                  $scope.privateChannels=data;  
                   //console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);  
             });  
-
-
         }
 
 
