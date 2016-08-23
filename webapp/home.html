@@ -33,12 +33,14 @@
 
     </div>  
     <div>  
+      <p>
         <ul class="list-group">  
-            <li id="privateChat" ng-repeat="privchannel in privateChannels" class="list-group-item">  
+            <li id="privateChat" ng-repeat="privchannel in privateChannels" class="list-group-item" ng-class="{chactive:privchannel.channelId==channel}">  
               	<a href="" ng-click="getChannelMessage(privchannel.channelId, privchannel.channelName)" style="color:#ab9ba9">  
                 {{privchannel.channelName}}</a>  
             </li>  
-        </ul>  
+        </ul> 
+        </p>
     </div>  
 
 </td>
