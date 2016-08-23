@@ -834,3 +834,51 @@ function getUserNameFromID(dbConn, userID) {
     });
 };
 
+
+
+
+exports.InsertPrivChannelData=InsertPrivChannelData; 
+   
+function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserName, dbConn){ 
+  	return new Promise((resolve,reject)=>{ 
+      
+        var nameArr=[userName,privChatUserName];  
+        nameArr.sort();  
+    
+        var channelName=nameArr[0] + "-" + nameArr[1];  
+        
+        var insertPrivChat= "INSERT INTO CHANNELS ( NAME, DESC, TEAMID, TYPE)  " +  
+            "VALUES ('" + channelName + "', 'private chat' , " +   
+                "(SELECT TEAMID FROM TEAM WHERE TEAMID = ((SELECT TEAMID FROM TEAMUSERS WHERE USERID = " +	userId +  
+                ") AND TEAMID= (SELECT TEAMID FROM TEAMUSERS WHERE USERID = " + privChatUserId + "))), 'P')" ;  
+        
+            
+        dbConn.serialize(function() { 
+            dbConn.run( 
+                insertPrivChat,  
+                function (err) {  
+                    if (err){  
+                        console.log("sql priv Chat err: " + err);  
+                        reject(err);        
+                    }else{  
+                        var insertChat =	"INSERT INTO CHAT (CHANNELID, USER1, USER2) " +  
+                            "VALUES ((SELECT ID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";  
+        
+                        dbConn.run(  
+                            insertChat, 						
+                            function (err) {  
+                                if (err){  
+                                    console.log("sql chat err: " + err);  
+                                    reject(err);										  
+                                }else{  
+                                    resolve(); 
+                                }  
+                            }
+                        );
+                    }
+                }
+            );
+        });
+    });  
+};   
+    
