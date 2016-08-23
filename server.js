@@ -19,8 +19,8 @@ dbFile.createDB(filename);
 var db = new sqlite3.Database(filename);
 
 app.get('/channel/user/:id', function (req, res) {
-	var userId = parseInt(req.param('id'));
-	
+//	var userId = parseInt(req.param('id')); A.Yuk
+	var userId = parseInt(req.params.id);	
 	getChannelsForUser(userId, function(err, channels) {
 	
 		res.send(channels);
@@ -30,14 +30,17 @@ app.get('/channel/user/:id', function (req, res) {
 
 
 app.get('/message/channel/:id', function (req, res) {
-	var userId = req.param('id');
-	getMsgForChannel(userId, function(err, messages) {
+//	var userId = req.param('id'); // A Yuk revision for deprecated 
+ 	var userId = req.params.id; 
+ 	getMsgForChannel(userId, function(err, messages) {
 		res.send(messages);
 	});
 });
 
 app.get('/user/checkuser', function (req, res) {
-	var username = req.param('username');
+//	var username = req.param('username');
+	
+	var username = req.query.username;
 	getUserIdByUsername(username, function(err, data) {
 	
 	 	res.send(data);
@@ -45,9 +48,11 @@ app.get('/user/checkuser', function (req, res) {
 });
 
 app.get('/user/login', function (req, res) {
-	var username = req.param('username');
-	var password = req.param('password');
-	
+
+	//var username = req.param('username'); // A Yuk revision for deprecated 
+	//var password = req.param('password'); // A Yuk revision for deprecated 
+  	var username = req.query.username;
+ 	var password = req.query.password;
 	getUserIdByUsernamePassword(username, password, function(err, data) {
 		
 	 	res.send(data);
@@ -68,8 +73,8 @@ app.post('/user/signup', function (req, res) {
 });
 
 app.get('/user/user/:id', function (req, res) {
-	var userId = parseInt(req.param('id'));
-	
+//	var userId = parseInt(req.param('id')); A. Yuk
+	var userId = parseInt(req.params.id);	
 	dbFile.getUserNameFromID(db, userId).then ((val)=> {
 		
 		res.send (val);
@@ -84,7 +89,8 @@ app.get('/user/user/:id', function (req, res) {
 
 app.get('/currentTeams/:userId', function (req, res) {
 
-	var userId = parseInt(req.param('userId'));
+//	var userId = parseInt(req.param('userId'));
+	var userId = parseInt(req.params.userId);
 
 	dbFile.getTeamsForUser(db, userId).then ((val)=> {
 		
@@ -102,7 +108,8 @@ app.get('/team/team', function (req, res) {
 		res.send (val);
 		
 	}).catch((err)=>{
-		res.send("");
+		 
+		res.send(err+"       :::: /team/team/  error .......");
 	
 	});
 
@@ -112,8 +119,8 @@ app.get('/team/team', function (req, res) {
 
 app.get('/user/allUsers/:id', function (req, res) {
 	
-	var userId = parseInt(req.param('id'));
-
+//	var userId = parseInt(req.param('id')); A.Yuk
+	var userId = parseInt(req.params.id);
 	
 	dbFile.getAllUsersInTeam(userId,db).then ((val)=> {
 	
@@ -128,8 +135,8 @@ app.get('/user/allUsers/:id', function (req, res) {
 });
 
 app.get ('/channel/privateChannel/:id', function (req, res){
-	var userId = parseInt(req.param('id'));
-
+	//var userId = parseInt(req.param('id'));
+	var userId = parseInt(req.params.id);
 	
 	dbFile.getChannelsForPrivate(userId,db).then ((val)=> {
 		
