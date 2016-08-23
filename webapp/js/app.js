@@ -1,14 +1,15 @@
 var slackApp = angular.module('slackApp', ['ngSanitize', 'ngRoute', 'ngCookies']);
 
-var headerTabs = [];
-
-headerTabs.push({ path: '/', templateUrl: 'home.html', controller: 'HomeCtrl' });
-headerTabs.push({ path: '/channel.html', templateUrl: 'channel.html', controller: 'ChannelCtrl' });
-headerTabs.push({ path: '/Teams.html', templateUrl: 'Teams.html', controller: 'TeamCtrl' });
-headerTabs.push({ path: '/administration.html', templateUrl: 'administration.html', controller: 'AdministrationCtrl' });
 
 slackApp.config(function($routeProvider) {
-    
+
+    var headerTabs = [];
+
+    headerTabs.push({ name: 'Home', path: '/', templateUrl: 'home.html', controller: 'HomeCtrl' });
+    headerTabs.push({ name: 'Channel', path: '/channel.html', templateUrl: 'channel.html', controller: 'ChannelCtrl' });
+    headerTabs.push({ name: 'Team', path: '/Teams.html', templateUrl: 'Teams.html', controller: 'TeamCtrl' });
+    headerTabs.push({ name: 'Administration', path: '/administration.html', templateUrl: 'administration.html', controller: 'AdministrationCtrl' });
+
     for ( var ii = 0; ii < headerTabs.length; ii++ ) {
 
         $routeProvider.when(
