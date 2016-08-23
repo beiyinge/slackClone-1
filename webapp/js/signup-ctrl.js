@@ -21,6 +21,9 @@ slackApp.controller('SignUpCtrl', function ($scope, $http, $cookieStore, $window
         }
 
         $scope.signUpErr = "";
+        // A. Yuk
+        $scope.loginErr = "";
+	
 
         $http.get('/user/checkuser?username=' + $scope.username).success(function (data) {
             console.log(data);
@@ -39,6 +42,8 @@ slackApp.controller('SignUpCtrl', function ($scope, $http, $cookieStore, $window
                     $cookieStore.put(response.data[0]);
                     $cookieStore.put('userId', response.data[0].userId);
                     $cookieStore.put('userName', $scope.username);
+// A Yuk
+                    	$window.location.href = '/slack.html';
                     //$window.location.href = '/login.html';
                 }, function errorCallback(response) {
                     $scope.signUpErr = "Error: username already existed!";

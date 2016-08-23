@@ -1,14 +1,18 @@
 slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore', '$window',
     function ($scope, fileUpload, $http, $cookieStore, $window) {
-        //$scope.channels = [];
+        $scope.channels = [];
         $scope.userId = $cookieStore.get('userId');
       
         if (!$scope.userId) {
             $window.location.href = '/login.html';
         }
         else {
+            
+    console.log('/channel/user/' + $scope.userId);
+
             $http.get('/channel/user/' + $scope.userId).success(function (data) {
                 $scope.channels = data;
+                console.log($scope.userId);
                 $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name);
             });
 
@@ -26,7 +30,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             $scope.privateChannels=[];
             $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
                  $scope.privateChannels=data;  
-                  //console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);  
+            console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);  
             });  
         }
 
