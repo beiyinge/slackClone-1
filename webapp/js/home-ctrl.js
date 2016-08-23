@@ -30,7 +30,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             $scope.privateChannels=[];
             $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
                  $scope.privateChannels=data;  
-            console.log ("Private channels :" + data[0].channelId + " - " + data[0].channelName);  
+              
             });  
         }
 
