@@ -21,3 +21,6 @@ a.channel{color:#eee}
  -webkit-box-shadow:none; 
  border-color:#cccccc; 
 }
+
+.messageDiv {margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;background: #fff;}
+.messageDiv:hover {background: #f5f5f5;}

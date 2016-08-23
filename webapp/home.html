@@ -64,7 +64,7 @@
 </div>
 
 
-<div ng-repeat="message in messages | filter:search"  style="margin:10px;border-bottom:1px solid #eee;padding-bottom:10px;">
+<div ng-repeat="message in messages | filter:search" class="messageDiv">
 
 	<div style="font-weight:bold">{{message.userName}}</div>
 	<div style="color:#aaa">{{message.date}}</div>
@@ -78,8 +78,9 @@
 </div>
 
 <div style="margin:10px;">
-	<input type = "file" file-model = "myFile"/>
-	<button ng-click = "uploadFile()">Upload</button>
+	<div style="float:left"><input type = "file" file-model = "myFile"/></div>
+	<div style="float:left"><button ng-click = "uploadFile()" class="btn btn-default">Upload File</button></div>
+  <div style="clear:both></div>
 </div>
 
 </td></tr>
