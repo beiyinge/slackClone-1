@@ -71,7 +71,8 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
 
         if ($scope.newChannel === "") {
             $scope.channelErr = true;
-            $scope.$apply;
+            
+            
             bErr = true;
          
         } else {
@@ -81,7 +82,6 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
 
         if ($scope.desc === "") {
             $scope.descErr = true;
-            $scope.$apply;
             bErr = true;
            
         } else {
@@ -96,13 +96,11 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
         } else {
            
             $scope.teamErr = true;
-            $scope.$apply;
             bErr = true;
         }
 
         if ((document.getElementById('radPublic').checked !== true) && (document.getElementById('radPrivate').checked !== true)) {
             $scope.radErr = true;
-            $scope.$apply;
             bErr = true;
         } else {
             $scope.radErr = false;
@@ -116,14 +114,12 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
     $scope.checkChannelData = function (event) {
         if ($scope.newChannel !== "") {
             $scope.channelErr = false;
-            $scope.$apply;
         }
     };
 
     $scope.checkDescData = function (event) {
         if ($scope.desc !== "") {
             $scope.descErr = false;
-            $scope.$apply;
         }
     };
 
@@ -131,14 +127,12 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
        
         if ($scope.selectedTeam !== null) {
             $scope.teamErr = false;
-            $scope.$apply;
         }
     }
 
     $scope.checkRadData = function () {
         if ((document.getElementById('radPublic').checked === true) || (document.getElementById('radPrivate').checked === true)) {
             $scope.radErr = false;
-            $scope.$apply;
         }
 
     };

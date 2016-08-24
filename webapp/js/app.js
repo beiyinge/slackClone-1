@@ -76,3 +76,16 @@ slackApp.service('fileUpload', ['$http', function($http) {
         // });
     }
 }]);
+
+slackApp.service('adminRights', function() {
+
+    var hasAdminRights = false;
+
+    this.setAdminRights = function(value) {
+        hasAdminRights = value;
+    };
+    
+    this.getAdminRights = function() {
+        return hasAdminRights;
+    }; 
+});
