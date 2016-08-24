@@ -429,7 +429,7 @@ exports.getAllUsersInTeam = getAllUsersInTeam;
 
 function getAllUsersInTeam(id, dbConn) {
     return new Promise((resolve, reject) => {
-        var sql = "SELECT USERS.USERID, USERS.NAME FROM USERS " +
+        var sql = "SELECT DISTINCT USERS.USERID, USERS.NAME FROM USERS " +
             "INNER JOIN TEAMUSERS on USERS.USERID=TEAMUSERS.USERID " +
             "WHERE TEAMID IN (SELECT TEAMID FROM TEAMUSERS WHERE USERID=" + id + ") " +
             " AND USERS.USERID <> " + id;
