@@ -882,3 +882,61 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
     });  
 };   
     
+
+    //----------------------------------------------
+
+    exports.removePrivChat=removePrivChat;
+
+   function removePrivChat(channelId,dbConn){
+
+       	return new Promise((resolve,reject)=>{ 
+      
+                   
+            var removeChats= "DELETE FROM CHAT WHERE CHANNELID = " +  channelId;  
+          
+               
+                
+            dbConn.serialize(function() { 
+                dbConn.run( 
+                    removeChats,  
+                    function (err) {  
+                        if (err){  
+                             
+                            reject(err);        
+                        }else{  
+                             removeChats =	"DELETE FROM MESSAGE WHERE CHANNELID = " +  channelId; 
+                                
+            
+                            dbConn.run(  
+                                removeChats, 						
+                                function (err) {  
+                                    if (err){  
+                                      
+                                        reject(err);										  
+                                    }else{  
+
+                                        removeChats =	"DELETE FROM CHANNELS WHERE ID = " +  channelId; 
+                                          
+                                        dbConn.run( 
+                                            removeChats,  
+                                            function (err) {  
+                                                if (err){  
+                                                      
+                                                    reject(err);        
+                                                }else{  
+                                                     resolve(); 
+                                                   
+                                                }
+                                            }
+                                        ); 
+                                    }  
+                                }
+                            );
+                        }
+                    }
+                );
+            });
+        });  
+
+   };
+

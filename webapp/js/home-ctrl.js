@@ -38,7 +38,19 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
 
         setInterval(function (){  
-           $scope.getChannelMessage($scope.channel, $scope.channelName);   
+
+             $http.get('/channel/user/' + $scope.userId).success(function (data) {
+                $scope.channels = data;
+                console.log($scope.userId);
+                if ( $scope.channels.length > 0 ) {
+                    $scope.getChannelMessage($scope.channel, $scope.channelName);
+                }
+
+                 $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                    $scope.privateChannels=data;  
+                });
+            });
+         //  $scope.getChannelMessage($scope.channel, $scope.channelName);   
 
         }, 3000);  
 
@@ -88,25 +100,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                    });
                    
                 
-                // var tempId;
-                // var tempName;
-                //  console.log($scope.privateChannels.length);
-
-                // for (var x in $scope.privateChannels){
-                //     console.log ($scope.privateChannels[x]);
-                //     if ($scope.privateChannels[x].channelName.includes(user.userName) && $scope.privateChannels[x].channelName.includes($scope.userName)){
-                //         tempId=$scope.privateChannels[x].channelId;
-                //         tempName=$scope.privateChannels[x].channelName;
-                //         console.log ("id " + tempId + " name " + tempName);
-                //     }
-                // }
-
-                // if (tempName){
-                //       getChannelMessage( tempId, tempName);
-                // }
-        
-
-
+              
                  $scope.$apply
             }
         };
@@ -131,6 +125,27 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                 .error(function (data, status, headers, config) {
                  
                 });
+
+
+                
+
+        };
+
+
+        $scope.deleteChat=function ( privChannel){
+            $http.get('/channal/private/remove/' + privChannel.channelId).success(function (data, status, headers, config) {
+               
+             })
+                .error(function (data, status, headers, config) {
+                 
+            });
+
+            $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                    $scope.privateChannels=data;  
+            });
+
+
+            location.reload();  
 
         };
 
