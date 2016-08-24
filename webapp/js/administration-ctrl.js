@@ -60,7 +60,9 @@ slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', fu
 
             $http.post('/team/user/', teamUsersDbRow).then(function(response) {
 
-                location.reload(true);                
+                $scope.userToAdd = '';
+                
+                $scope.availableTeams = [];               
             });
             
         } else {
