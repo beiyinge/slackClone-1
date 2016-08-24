@@ -175,6 +175,22 @@ app.get('/channel/channel', function (req, res) {
 	
 });
 
+app.get('/channal/private/remove/:privId', function (req, res){
+	var channelId = parseInt(req.params.privId);
+	
+	dbFile.removePrivChat(channelId,db).then ((val)=> {
+		
+		res.send ("");
+		
+	}).catch((err)=>{
+		res.send("");
+	
+	});
+});
+
+
+
+
 
 
 app.post('/message/message', function (req, res){
