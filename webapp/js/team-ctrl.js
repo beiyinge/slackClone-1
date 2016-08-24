@@ -45,7 +45,6 @@ slackApp.controller('TeamCtrl', function ($scope, $http, $routeParams, $cookieSt
         if ($scope.newTeam===""){  
             console.log ("empty team");
             $scope.teamErr=true;  
-            $scope.$apply;  
             bErr=true;  
         }else{  
             $scope.teamErr=false;  

@@ -1,4 +1,6 @@
-slackApp.controller('AdministrationCtrl', function ($scope, $http) {
+slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', function ($scope, $http, adminRights) {
+
+    var hasAdminRights = adminRights.getAdminRights();
 
     $scope.availableTeams = [];
     $scope.allTeams = [];
@@ -65,4 +67,4 @@ slackApp.controller('AdministrationCtrl', function ($scope, $http) {
             $scope.addUserToTeamError = true;
         }  
     };
-});
+}]);

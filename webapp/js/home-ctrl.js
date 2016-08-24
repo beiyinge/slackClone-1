@@ -101,7 +101,6 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                    
                 
               
-                 $scope.$apply
             }
         };
 

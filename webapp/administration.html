@@ -19,7 +19,7 @@
                         <h3 class="panel-title">Add User to Team</h3>
                     </div>
                     <div class="panel-body">
-                        <form ng-submit="addUserToTeam()" ng-controller="AdministrationCtrl">
+                        <form ng-submit="addUserToTeam()">
                             <p>Select User:
                                 <select ng-model="userToAdd" ng-options="x.name for x in availableUsers" ng-change="selectUserToAdd(userToAdd)"></select>
                             </p>
