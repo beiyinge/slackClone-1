@@ -1,3 +1,4 @@
+<div ng-controller="helpSlideCtrl">
 <nav class="navbar navbar-default navbar-static-top">
   <div class="container">
     <ul class="nav navbar-nav">
@@ -7,14 +8,23 @@
     <li ng-class="{active: activetab=='/administration.html'}"><a href="#/administration.html">Administration</a></li>
     <li ng-class="{active: activetab=='/Message'}"><a href="#/Message">Message</a></li>
     <li><a href="login.html">Logout</a></li>
-    <li><a href="" data-toggle="tooltip" data-placement="bottom" 
-    title="1st, Login/Sign-up
-2nd, Create/select Team 
-3rd, Create/select Channel
-4th, Administration your team/channel
-Then, Type your messages">Help</a></li>
+    <li><a href="" ng-click="helpSlideToggle()">Help</a></li>
     </ul>
     
   </div>
 </nav>
 
+<pageslide ps-open="helpSlidechecked">
+  <div style="padding:20px">
+    <h2>Help</h2>
+    <ul style="font-size:16px;line-height:2.5;">
+    <li>1st, Login/Sign-up</li>
+    <li>2nd, Create/select Team</li>
+    <li>3rd, Create/select Channel</li>
+    <li>4th, Administration your team/channel</li>
+    <li>Then, Type your messages</li>
+    </ul>
+    <a ng-click="helpSlideToggle()" class="btn btn-primary" >Close</a>
+  </div>
+</pageslide>
+</div>

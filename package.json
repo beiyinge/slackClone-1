@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/chedgy/slackClone#readme",
   "dependencies": {
+    "angular-pageslide-directive": "^2.1.0",
     "body-parser": "^1.8.1",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
