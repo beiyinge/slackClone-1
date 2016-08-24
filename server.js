@@ -18,6 +18,10 @@ var filename = 'testSlack.db';
 dbFile.createDB(filename);
 var db = new sqlite3.Database(filename);
 
+app.get('/', function(req, res) {
+	res.redirect('slack.html');
+});
+
 app.get('/channel/user/:id', function (req, res) {
 //	var userId = parseInt(req.param('id')); A.Yuk
 	var userId = parseInt(req.params.id);	
