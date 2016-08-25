@@ -33,13 +33,13 @@ slackApp.controller('ChannelCtrl', function ($scope, $http, $cookieStore, $windo
             $scope.selTeam = document.getElementById('lstTeams').value;
 
             var newChannelData = ({ "channelName": $scope.newChannel, "desc": $scope.desc, "teamId": $scope.selTeam, "type": $scope.type });
-            console.log('newChannel Data  '+newChannelData);
+          
             $http.post('/team/channel', newChannelData).success(function (data, status, headers, config) {
-            console.log('Post success for newChannel Data  '+Data);
+          
                
             })
                 .error(function (data, status, headers, config) {
-            console.log('Post error for newChannel Data  '+Data);
+            
                   
                 });
 
