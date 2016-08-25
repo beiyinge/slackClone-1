@@ -29,27 +29,27 @@ slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', fu
         $http.get('/currentTeams/'+selectedUser.id)
         .then(function(response) {
 
-           $scope.currentTeams = response.data;
+            $scope.currentTeams = response.data;
 
-           var currentTeamNames = $scope.currentTeams.map(function (team) {
-               return team.team;
-           });
+            var currentTeamNames = $scope.currentTeams.map(function (team) {
+                return team.team;
+            });
 
-           // Get all teams of which the selected user is NOT already a member.
+            // Get all teams of which the selected user is NOT already a member.
 
-           $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
+            $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
 
-               if (currentTeamNames.indexOf(team.teamName) === -1) {
-                   return true;
-               }
-               return false;
-           });
+                if (currentTeamNames.indexOf(team.teamName) === -1) {
+                    return true;
+                }
+                return false;
+            });
         });
     };
 
     $scope.selectTeamToAdd = function(selectedTeam) {
-
-        $scope.selectedTeamId = selectedTeam.teamId; // ID of selected team
+        
+        $scope.selectedTeamId = selectedTeam.teamId; // ID of selected team        
     };
 
     $scope.addUserToTeam = function() { 
@@ -58,15 +58,16 @@ slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', fu
 
             var teamUsersDbRow = {"teamId": $scope.selectedTeamId, "userId": $scope.selectedUserId};
 
-            $http.post('/team/user/', teamUsersDbRow).then(function(response) {
+            $http.post('/team/user/', teamUsersDbRow).success(function(response) {
 
-                $scope.userToAdd = '';
-                
-                $scope.availableTeams = [];               
+                $scope.availableTeams = [];
+
+                $scope.userToAdd = {};
+                $scope.teamToAdd = {};               
             });
             
         } else {
             $scope.addUserToTeamError = true;
-        }  
+        }
     };
 }]);
