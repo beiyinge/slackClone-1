@@ -43,7 +43,7 @@ app.get("/avatar/:userName", function (req, res) {
 	getIntUserIdByUsername(req.params.userName, function(err, data) {
 	
 		var userId = data;
-	
+		//console.log(userId);
 		var file = __dirname + '/webapp/avatar/' + userId % 3 + '.jpg';
 		fs.exists(file, function(exists){
       		if (exists) {     
