@@ -3,6 +3,7 @@ var app=express();
 var bodyParser = require("body-parser");
 var sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
+var mime = require('mime');
 var bodyParser = require("body-parser");
 var formidable = require('formidable');
 var path = require('path');
@@ -31,7 +32,30 @@ app.get('/channel/user/:id', function (req, res) {
 	});
 });
 
+// app.get("/uploads/:filename", function (req, res) {
+// 	var file = __dirname + '/uploads/' + req.params.filename;
+// 	var mimetype = mime.lookup(file);
+// 	console.log(mimetype);
+//   	res.download(file); 
+// });
 
+app.get("/avatar/:userName", function (req, res) {
+	getIntUserIdByUsername(req.params.userName, function(err, data) {
+		//console.log(data);
+		var userId = data;
+		console.log(userId);
+		var file = __dirname + '/webapp/avatar/' + userId % 3 + '.jpg';
+		fs.exists(file, function(exists){
+      		if (exists) {     
+				// Content-type is very interesting part that guarantee that
+				// Web browser will handle response in an appropriate manner.
+        		fs.createReadStream(file).pipe(res);
+      		} else {
+        		fs.createReadStream(__dirname + '/webapp/avatar/0.jpg').pipe(res);
+      		}
+		});
+	});
+});
 
 app.get('/message/channel/:id', function (req, res) {
 //	var userId = req.param('id'); // A Yuk revision for deprecated 
@@ -321,10 +345,12 @@ app.post('/team/user/', function (req, res){
 	var userId=parseInt(req.body.userId);
 
 	dbFile.InsertTeamUsers(userId, teamId, db).then ((val)=>{
+
+		res.setHeader("Content-Type", "application/json");
 	
-		res.send(val);
+		res.send();
 	}).catch((err)=>{
-		res.send("");
+		res.send();
 		
 	});
 	
@@ -421,6 +447,27 @@ function getUserIdByUsername (username, callBack){
             function(err, row) { 
             	
         		userid.push({'userId':row.USERID});
+            },
+            function (err) {
+				callBack(err, userid);	
+           }
+        );
+    });
+};
+
+function getIntUserIdByUsername (username, callBack){
+
+ 	var sql = "SELECT USERID FROM USERS where " + 
+            "LOWER(NAME) = '" + username.toLowerCase() + "'";
+       	   
+   	var userid;
+
+    db.serialize(function() {
+        db.each(
+            sql, 
+            function(err, row) { 
+            	
+        		userid = row.USERID;
             },
             function (err) {
 				callBack(err, userid);	
