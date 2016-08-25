@@ -20,36 +20,41 @@ slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', fu
     
     $scope.selectUserToAdd = function(selectedUser) {
 
-        $scope.addUserToTeamError = false;
+        if (Object.keys(selectedUser).length !== 0) {
 
-        $scope.selectedUserId = selectedUser.id; // ID of selected user....
+            $scope.addUserToTeamError = false;
 
-        // Get all teams of which the selected user is already a member.
+            $scope.selectedUserId = selectedUser.id; // ID of selected user....
 
-        $http.get('/currentTeams/'+selectedUser.id)
-        .then(function(response) {
+            // Get all teams of which the selected user is already a member.
 
-           $scope.currentTeams = response.data;
+            $http.get('/currentTeams/'+selectedUser.id)
+            .then(function(response) {
 
-           var currentTeamNames = $scope.currentTeams.map(function (team) {
-               return team.team;
-           });
+                $scope.currentTeams = response.data;
 
-           // Get all teams of which the selected user is NOT already a member.
+                var currentTeamNames = $scope.currentTeams.map(function (team) {
+                    return team.team;
+                });
 
-           $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
+                // Get all teams of which the selected user is NOT already a member.
 
-               if (currentTeamNames.indexOf(team.teamName) === -1) {
-                   return true;
-               }
-               return false;
-           });
-        });
+                $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
+
+                    if (currentTeamNames.indexOf(team.teamName) === -1) {
+                        return true;
+                    }
+                    return false;
+                });
+            });
+        }
     };
 
     $scope.selectTeamToAdd = function(selectedTeam) {
 
-        $scope.selectedTeamId = selectedTeam.teamId; // ID of selected team
+        if (Object.keys(selectedTeam).length !== 0 ) {
+            $scope.selectedTeamId = selectedTeam.teamId; // ID of selected team
+        }
     };
 
     $scope.addUserToTeam = function() { 
@@ -58,15 +63,16 @@ slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', fu
 
             var teamUsersDbRow = {"teamId": $scope.selectedTeamId, "userId": $scope.selectedUserId};
 
-            $http.post('/team/user/', teamUsersDbRow).then(function(response) {
+            $http.post('/team/user/', teamUsersDbRow).success(function(response) {
 
-                $scope.userToAdd = '';
-                
-                $scope.availableTeams = [];               
+                $scope.availableTeams = [];
+
+                $scope.userToAdd = {};
+                $scope.teamToAdd = {};               
             });
             
         } else {
             $scope.addUserToTeamError = true;
-        }  
+        }
     };
 }]);
