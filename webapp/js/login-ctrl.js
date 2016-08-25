@@ -1,7 +1,7 @@
 slackApp.controller('LoginCtrl', function ($scope, $http, $cookieStore, $window) {
   		$cookieStore.remove('userId');
   		$cookieStore.remove('userName');
-var nc=5;
+	var nc=5;
 	$scope.submit = function () {
         if ($scope.username && $scope.password) {
 			console.log($scope.username + " " + $scope.password);
