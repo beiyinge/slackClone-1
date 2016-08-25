@@ -1,4 +1,4 @@
-var slackApp = angular.module('slackApp', ['ngSanitize', 'ngRoute', 'ngCookies']);
+var slackApp = angular.module('slackApp', ['ngSanitize', 'ngRoute', 'ngCookies', 'pageslide-directive']);
 
 
 slackApp.config(function($routeProvider) {
