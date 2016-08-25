@@ -44,11 +44,9 @@ app.get("/avatar/:userName", function (req, res) {
 	
 		var userId = data;
 		//console.log(userId);
-		var file = __dirname + '/webapp/avatar/' + userId % 3 + '.jpg';
+		var file = __dirname + '/webapp/avatar/' + userId % 4 + '.jpg';
 		fs.exists(file, function(exists){
       		if (exists) {     
-				// Content-type is very interesting part that guarantee that
-				// Web browser will handle response in an appropriate manner.
         		fs.createReadStream(file).pipe(res);
       		} else {
         		fs.createReadStream(__dirname + '/webapp/avatar/0.jpg').pipe(res);
