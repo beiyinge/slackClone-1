@@ -48,7 +48,7 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-   <div style="float:left"><b># {{channelName}}</b></div>
+   <div style="float:left;font-weight:bold;margin-top:10px;font-size:20px;">{{channelName}}</div>
 
 
 <div style="float:right">
@@ -67,10 +67,16 @@
 
 
 <div ng-repeat="message in messages | filter:search" class="messageDiv">
-
-	<div style="font-weight:bold">{{message.userName}}</div>
-	<div style="color:#aaa">{{message.date}}</div>
-	<div ng-bind-html="message.msg | linkyWithHtml:'_blank':{rel: 'nofollow'}" style="margin-top:5px;">{{message.msg}}</div>
+  <table><tr><td>
+    <img src="avatar/{{message.userName}}" style="width:50px;height:50px;margin-right:10px;">
+  </td>
+  <td>
+    <div>
+	    <span style="font-weight:bold;margin-right:20px;">{{message.userName}}</span>
+	    <span style="color:#aaa;font-size:12px">{{message.date}}</span>
+    </div>
+	  <div ng-bind-html="message.msg | linkyWithHtml:'_blank':{rel: 'nofollow'}" style="margin-top:5px;">{{message.msg}}</div>
+  </td></tr></table>
 </div>
 
 <div style="margin:10px;">
@@ -81,7 +87,7 @@
 
 <div style="margin:10px;">
 	<div style="float:left"><input type = "file" file-model = "myFile"/></div>
-	<div style="float:left"><button ng-click = "uploadFile()" class="btn btn-default">Upload File</button></div>
+	<div style="float:left"><button ng-click = "uploadFile()" class="btn btn-primary">Upload File</button></div>
   <div style="clear:both></div>
 </div>
 

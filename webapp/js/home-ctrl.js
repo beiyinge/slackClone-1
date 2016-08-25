@@ -37,22 +37,22 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
         }
 
 
-        setInterval(function (){  
+        // setInterval(function (){  
 
-             $http.get('/channel/user/' + $scope.userId).success(function (data) {
-                $scope.channels = data;
-                console.log($scope.userId);
-                if ( $scope.channels.length > 0 ) {
-                    $scope.getChannelMessage($scope.channel, $scope.channelName);
-                }
+        //      $http.get('/channel/user/' + $scope.userId).success(function (data) {
+        //         $scope.channels = data;
+        //         console.log($scope.userId);
+        //         if ( $scope.channels.length > 0 ) {
+        //             $scope.getChannelMessage($scope.channel, $scope.channelName);
+        //         }
 
-                 $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
-                    $scope.privateChannels=data;  
-                });
-            });
-         //  $scope.getChannelMessage($scope.channel, $scope.channelName);   
+        //          $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+        //             $scope.privateChannels=data;  
+        //         });
+        //     });
+        //  //  $scope.getChannelMessage($scope.channel, $scope.channelName);   
 
-        }, 3000);  
+        // }, 3000);  
 
 
         $scope.uploadFile = function () {
@@ -62,7 +62,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             fileUpload.uploadFileToUrl(file, uploadUrl, function(response) {
                 //messageData = {"userId": $scope.userId, "channelId": $scope.channel, "msg": "[file]"+file.name+"[/file]"} ;
                 messageData = {"userId": $scope.userId, "channelId": $scope.channel, 
-                "msg": "<a href=/uploads/" + file.name + ">"+file.name+"</a>"} ;
+                "msg": "<a href=/uploads/" + file.name + " target=\"_blank\">"+file.name+"</a>"} ;
                 console.log(messageData);
                 $http.post('/message/message', messageData)
                     .success(function (data, status, headers, config) {
