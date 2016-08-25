@@ -8,11 +8,11 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
         }
         else {
             
-    console.log('/channel/user/' + $scope.userId);
+    
 
             $http.get('/channel/user/' + $scope.userId).success(function (data) {
                 $scope.channels = data;
-                console.log($scope.userId);
+                
                 if ( $scope.channels.length > 0 ) {
                     $scope.getChannelMessage($scope.channels[0].id, $scope.channels[0].name);
                 }
@@ -37,22 +37,22 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
         }
 
 
-        // setInterval(function (){  
+        setInterval(function (){  
 
-        //      $http.get('/channel/user/' + $scope.userId).success(function (data) {
-        //         $scope.channels = data;
-        //         console.log($scope.userId);
-        //         if ( $scope.channels.length > 0 ) {
-        //             $scope.getChannelMessage($scope.channel, $scope.channelName);
-        //         }
+             $http.get('/channel/user/' + $scope.userId).success(function (data) {
+                $scope.channels = data;
 
-        //          $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
-        //             $scope.privateChannels=data;  
-        //         });
-        //     });
-        //  //  $scope.getChannelMessage($scope.channel, $scope.channelName);   
+                if ( $scope.channels.length > 0 ) {
+                    $scope.getChannelMessage($scope.channel, $scope.channelName);
+                }
 
-        // }, 3000);  
+                 $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                    $scope.privateChannels=data;  
+                });
+            });
+         //  $scope.getChannelMessage($scope.channel, $scope.channelName);   
+
+        }, 3000);  
 
 
         $scope.uploadFile = function () {
@@ -79,30 +79,55 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
        
         $scope.selUser="";
+        $scope.privateChannelNum=[];
+         $scope.privateChannelNum[0]="";
+        
         $scope.getUserData=function (event) {
             if ($scope.selectedUser !== null) {
                 var user = JSON.parse($scope.selectedUser);
-             
-                var newChannelData={"userId":$scope.userId, "userName" : $scope.userName ,"privChatUserId" : user.userId, "privChatUserName" : user.userName};
-
-                 $http.post('/team/privateChannel', newChannelData).success(function (data, status, headers, config) {
-                 })
-                .error(function (data, status, headers, config) {
-                     
-                });
-
-                 var tempArr=[user.userName,$scope.userName];
-                 tempArr.sort;   
+ 
+                var newChannelData=({"userId":$scope.userId, "userName" : $scope.userName ,"privChatUserId" : user.userId, "privChatUserName" : user.userName});
               
+                //check if channel exists
+                $http.get ('/channel/privChannel/exists/' + $scope.userId + "/" + user.userId ).success(function(data){
+                     
+                     $scope.privateChannelNum=data;
 
-                 $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
-                    $scope.privateChannels=data;  
-                   });
+                     if (data.length===0){
+                        $scope.privateChannelNum[0]="";
+                     }
+                     
+  
+                    if ($scope.privateChannelNum[0]===""){
+                           
+                            $http.post('/team/privateChannel', newChannelData).success(function (data, status, headers, config) {
+                                     $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                                            $scope.privateChannels=data; 
+                                            document.getElementById('lstUsers').value=0; 
+                                        
+                                   })
+                            });
+                          
+                    }else{
+                       
+                        var changes=({'channelId':$scope.privateChannelNum[0].channelId, 'bShow':1});
+                      
+                        $http.post('/channel/private/change' ,changes).success(function (data, status, headers, config) {
+                         
+                              $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
+                                    $scope.privateChannels=data;
+                                    document.getElementById('lstUsers').value=0;   
+                                
+                              })
+                        });
 
+                    }
                 
 
-            }
-        };
+            });
+        }
+    };
+
 
      
 
@@ -113,6 +138,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
             $scope.channelName = channelName;
             $http.get('/message/channel/' + channelId).success(function (data) {
                 $scope.messages = data;
+
             });
         };
 
@@ -122,7 +148,7 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
                 $scope.PostDataResponse = data;
              })
                 .error(function (data, status, headers, config) {
-                 
+                  
                 });
 
 
@@ -132,11 +158,13 @@ slackApp.controller('HomeCtrl', ['$scope', 'fileUpload', '$http', '$cookieStore'
 
 
         $scope.deleteChat=function ( privChannel){
-            $http.get('/channal/private/remove/' + privChannel.channelId).success(function (data, status, headers, config) {
+            var changes={'channelId':privChannel.channelId, 'bShow':0}
+
+            $http.post('/channel/private/change' ,changes ).success(function (data, status, headers, config) {
                
              })
                 .error(function (data, status, headers, config) {
-                 
+                   
             });
 
             $http.get ('/channel/privateChannel/' + $scope.userId).success(function(data){  
