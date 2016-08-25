@@ -20,41 +20,36 @@ slackApp.controller('AdministrationCtrl', [ '$scope', '$http', 'adminRights', fu
     
     $scope.selectUserToAdd = function(selectedUser) {
 
-        if (Object.keys(selectedUser).length !== 0) {
+        $scope.addUserToTeamError = false;
 
-            $scope.addUserToTeamError = false;
+        $scope.selectedUserId = selectedUser.id; // ID of selected user....
 
-            $scope.selectedUserId = selectedUser.id; // ID of selected user....
+        // Get all teams of which the selected user is already a member.
 
-            // Get all teams of which the selected user is already a member.
+        $http.get('/currentTeams/'+selectedUser.id)
+        .then(function(response) {
 
-            $http.get('/currentTeams/'+selectedUser.id)
-            .then(function(response) {
+            $scope.currentTeams = response.data;
 
-                $scope.currentTeams = response.data;
-
-                var currentTeamNames = $scope.currentTeams.map(function (team) {
-                    return team.team;
-                });
-
-                // Get all teams of which the selected user is NOT already a member.
-
-                $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
-
-                    if (currentTeamNames.indexOf(team.teamName) === -1) {
-                        return true;
-                    }
-                    return false;
-                });
+            var currentTeamNames = $scope.currentTeams.map(function (team) {
+                return team.team;
             });
-        }
+
+            // Get all teams of which the selected user is NOT already a member.
+
+            $scope.availableTeams = $scope.allTeams.filter(function(team, idx, arr) {
+
+                if (currentTeamNames.indexOf(team.teamName) === -1) {
+                    return true;
+                }
+                return false;
+            });
+        });
     };
 
     $scope.selectTeamToAdd = function(selectedTeam) {
-
-        if (Object.keys(selectedTeam).length !== 0 ) {
-            $scope.selectedTeamId = selectedTeam.teamId; // ID of selected team
-        }
+        
+        $scope.selectedTeamId = selectedTeam.teamId; // ID of selected team        
     };
 
     $scope.addUserToTeam = function() { 
