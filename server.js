@@ -325,10 +325,12 @@ app.post('/team/user/', function (req, res){
 	var userId=parseInt(req.body.userId);
 
 	dbFile.InsertTeamUsers(userId, teamId, db).then ((val)=>{
+
+		res.setHeader("Content-Type", "application/json");
 	
-		res.send(val);
+		res.send();
 	}).catch((err)=>{
-		res.send("");
+		res.send();
 		
 	});
 	
