@@ -41,9 +41,9 @@ app.get('/channel/user/:id', function (req, res) {
 
 app.get("/avatar/:userName", function (req, res) {
 	getIntUserIdByUsername(req.params.userName, function(err, data) {
-		//console.log(data);
+	
 		var userId = data;
-		console.log(userId);
+	
 		var file = __dirname + '/webapp/avatar/' + userId % 3 + '.jpg';
 		fs.exists(file, function(exists){
       		if (exists) {     
@@ -169,11 +169,11 @@ app.get ('/channel/privChannel/exists/:userId/:chatId', function (req, res){
 	var chatId=parseInt(req.params.chatId);
 		
 	dbFile.getExistingPrivateChannel(userId, chatId ,db).then ((val)=> {
-		console.log ("channel # exists " + val);
+		
 		res.send (val);
 		
 	}).catch((err)=>{
-		console.log ("no channel exists error: " + err);
+		
 		res.send("");
 	
 	});
