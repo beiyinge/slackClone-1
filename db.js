@@ -53,7 +53,7 @@ function createDB(filename) {
             var createMessageTableSql = "CREATE TABLE IF NOT EXISTS MESSAGE " +
                 "(ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
                 " MSG           TEXT , " +
-                " CHANNELID     INTEGER," +
+                " CHANNELID     INTEGER, " +
                 " USERID         INTEGER , " +
                 " TIMESTAMP        DATETIME DEFAULT CURRENT_TIMESTAMP," +
                 " FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID)," +
@@ -65,6 +65,7 @@ function createDB(filename) {
                 "CHANNELID     INTEGER, " +
                 "USER1         INTEGER , " +
                 "USER2         INTEGER , " +
+                "SHOW          INTEGER, " +
                 "FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID), " +
                 "FOREIGN KEY (USER1) REFERENCES USER(USERID), " +
                 "FOREIGN KEY (USER2) REFERENCES USER(USERID))";
@@ -476,7 +477,7 @@ function getChannelsForPrivate(id, dbConn) {
 
         var sql = "SELECT DISTINCT CHANNELS.ID, CHANNELS.NAME FROM CHANNELS " +
             "INNER JOIN CHAT on CHAT.CHANNELID = CHANNELS.ID " +
-            "WHERE TYPE = 'P' AND (USER1 = " + id + " OR USER2 = " + id + ") ORDER BY NAME";
+            "WHERE TYPE = 'P' AND (USER1 = " + id + " OR USER2 = " + id + ") AND SHOW =1 ORDER BY NAME";
 
         var channels = [];
         dbConn.serialize(function() {
@@ -861,8 +862,8 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
                         console.log("sql priv Chat err: " + err);  
                         reject(err);        
                     }else{  
-                        var insertChat =	"INSERT INTO CHAT (CHANNELID, USER1, USER2) " +  
-                            "VALUES ((SELECT ID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ")";  
+                        var insertChat =	"INSERT INTO CHAT (CHANNELID, USER1, USER2, SHOW) " +  
+                            "VALUES ((SELECT ID FROM CHANNELS WHERE NAME = '" + channelName + "'), " +  userId + "," +  privChatUserId + ", 1)";  
         
                         dbConn.run(  
                             insertChat, 						
@@ -885,14 +886,15 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
 
     //----------------------------------------------
 
-    exports.removePrivChat=removePrivChat;
+    exports.changePrivChat=changePrivChat;
 
-   function removePrivChat(channelId,dbConn){
+   function changePrivChat(channelId, bShow, dbConn){
 
        	return new Promise((resolve,reject)=>{ 
       
                    
-            var removeChats= "DELETE FROM CHAT WHERE CHANNELID = " +  channelId;  
+            //var removeChats= "DELETE FROM CHAT WHERE CHANNELID = " +  channelId;
+            var removeChats="UPDATE CHAT SET SHOW = " + bShow + "  WHERE CHANNELID = " + channelId;  
           
                
                 
@@ -904,34 +906,34 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
                              
                             reject(err);        
                         }else{  
-                             removeChats =	"DELETE FROM MESSAGE WHERE CHANNELID = " +  channelId; 
+                            //  removeChats =	"DELETE FROM MESSAGE WHERE CHANNELID = " +  channelId; 
                                 
             
-                            dbConn.run(  
-                                removeChats, 						
-                                function (err) {  
-                                    if (err){  
+                            // dbConn.run(  
+                            //     removeChats, 						
+                            //     function (err) {  
+                            //         if (err){  
                                       
-                                        reject(err);										  
-                                    }else{  
+                            //             reject(err);										  
+                            //         }else{  
 
-                                        removeChats =	"DELETE FROM CHANNELS WHERE ID = " +  channelId; 
+                            //             removeChats =	"DELETE FROM CHANNELS WHERE ID = " +  channelId; 
                                           
-                                        dbConn.run( 
-                                            removeChats,  
-                                            function (err) {  
-                                                if (err){  
+                            //             dbConn.run( 
+                            //                 removeChats,  
+                            //                 function (err) {  
+                            //                     if (err){  
                                                       
-                                                    reject(err);        
-                                                }else{  
-                                                     resolve(); 
+                            //                         reject(err);        
+                            //                     }else{  
+                                                     resolve("updated"); 
                                                    
-                                                }
-                                            }
-                                        ); 
-                                    }  
-                                }
-                            );
+                            //                     }
+                            //                 }
+                            //             ); 
+                            //         }  
+                            //     }
+                            // );
                         }
                     }
                 );
@@ -939,4 +941,48 @@ function InsertPrivChannelData(userId, userName , privChatUserId, privChatUserNa
         });  
 
    };
+
+//--------------------------------------------------
+exports.getExistingPrivateChannel=getExistingPrivateChannel;
+
+function getExistingPrivateChannel(userId, chatId ,dbConn){
+    
+    return new Promise((resolve,reject)=>{
+
+        var sql="SELECT DISTINCT CHANNELID FROM CHAT WHERE USER1 IN (" + userId + ", " + chatId + ") AND USER2 IN (" + userId + ", " + chatId + ")";
+        
+       
+        var channel =[];
+
+        dbConn.serialize(function() {
+            dbConn.each(
+                sql,
+                function(err, row) {
+                    if (err) {
+                      
+                        reject(err);
+                    } else {
+                        channel.push({
+                            "channelId": row.CHANNELID
+                        });
+                       
+                    }
+                },
+                function(err, nRows) {
+                    if (err) {
+                        
+                        reject(err);
+
+                    } else {
+                        
+                        resolve(JSON.stringify(channel));
+
+                    }
+                }
+            );
+        });
+    });
+};
+ 
+   
 

@@ -41,7 +41,7 @@ app.get('/channel/user/:id', function (req, res) {
 
 app.get("/avatar/:userName", function (req, res) {
 	getIntUserIdByUsername(req.params.userName, function(err, data) {
-		//console.log(data);
+	
 		var userId = data;
 		//console.log(userId);
 		var file = __dirname + '/webapp/avatar/' + userId % 3 + '.jpg';
@@ -162,6 +162,24 @@ app.get('/user/allUsers/:id', function (req, res) {
 	
 });
 
+
+app.get ('/channel/privChannel/exists/:userId/:chatId', function (req, res){
+	
+	var userId = parseInt(req.params.userId);
+	var chatId=parseInt(req.params.chatId);
+		
+	dbFile.getExistingPrivateChannel(userId, chatId ,db).then ((val)=> {
+		
+		res.send (val);
+		
+	}).catch((err)=>{
+		
+		res.send("");
+	
+	});
+});
+
+
 app.get ('/channel/privateChannel/:id', function (req, res){
 	//var userId = parseInt(req.param('id'));
 	var userId = parseInt(req.params.id);
@@ -203,14 +221,16 @@ app.get('/channel/channel', function (req, res) {
 	
 });
 
-app.get('/channal/private/remove/:privId', function (req, res){
-	var channelId = parseInt(req.params.privId);
-	
-	dbFile.removePrivChat(channelId,db).then ((val)=> {
+app.post('/channel/private/change', function (req, res){
+	var channelId = parseInt(req.body.channelId);
+	var bShow=parseInt(req.body.bShow)
 		
+	dbFile.changePrivChat(channelId,bShow,db).then ((val)=> {
+	
 		res.send ("");
 		
 	}).catch((err)=>{
+	
 		res.send("");
 	
 	});
@@ -360,7 +380,7 @@ function getChannelsForUser (userid, callBack){
         db.each(
             query, 
             function(err, row) {
-            	//console.log(row);
+            	
             	channels.push({id: row.ID, name: row.NAME}); 
             },
             function (err) {
@@ -383,7 +403,7 @@ function getChannelsForUser (userid, callBack){
 	        db.each(
 	            sql, 
 	            function(err, row) { 
-	            	//console.log(row);
+	            	
             		msg.push({"userName":row.NAME, "date":row.TIMESTAMP, "msg":row.MSG});
 	            },
 	            function (err) {
@@ -465,8 +485,7 @@ function signupUser (username, password, email, callBack){
         db.each(
             sql, 
             function(err) { 
-            	//console.log(row);
-        		//userid.push({'userId':row.USERID});
+            
             },
             function (err) {
 				callBack(err);	
