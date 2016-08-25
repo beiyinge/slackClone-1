@@ -53,7 +53,7 @@ function createDB(filename) {
             var createMessageTableSql = "CREATE TABLE IF NOT EXISTS MESSAGE " +
                 "(ID         INTEGER     PRIMARY KEY  AUTOINCREMENT  NOT NULL," +
                 " MSG           TEXT , " +
-                " CHANNELID     INTEGER," +
+                " CHANNELID     INTEGER, " +
                 " USERID         INTEGER , " +
                 " TIMESTAMP        DATETIME DEFAULT CURRENT_TIMESTAMP," +
                 " FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID)," +
@@ -65,7 +65,7 @@ function createDB(filename) {
                 "CHANNELID     INTEGER, " +
                 "USER1         INTEGER , " +
                 "USER2         INTEGER , " +
-                "SHOW          INTEGER"
+                "SHOW          INTEGER, " +
                 "FOREIGN KEY (CHANNELID) REFERENCES CHANNELS(ID), " +
                 "FOREIGN KEY (USER1) REFERENCES USER(USERID), " +
                 "FOREIGN KEY (USER2) REFERENCES USER(USERID))";
